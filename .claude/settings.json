@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(php --version)",
+      "Bash(mysql --version)",
+      "PowerShell(& \"C:\\\\xampp\\\\mysql\\\\bin\\\\mysql.exe\" -u root -e \"SHOW DATABASES;\" 2>&1)",
+      "PowerShell(& \"C:\\\\xampp\\\\mysql\\\\bin\\\\mysql.exe\" -u root clinica -e \"SHOW TABLES;\" 2>&1)",
+      "PowerShell(cd \"c:\\\\Users\\\\ruthm\\\\OneDrive\\\\Documentos\\\\GitHub\\\\ClinicaWEB\"; Start-Process -NoNewWindow -FilePath \"php\" -ArgumentList \"artisan\", \"serve\" -RedirectStandardOutput \"$env:TEMP\\\\laravel_out.txt\" -RedirectStandardError \"$env:TEMP\\\\laravel_err.txt\"; Start-Sleep 3; $out = Get-Content \"$env:TEMP\\\\laravel_out.txt\" -ErrorAction SilentlyContinue; $err = Get-Content \"$env:TEMP\\\\laravel_err.txt\" -ErrorAction SilentlyContinue; Write-Output $out; Write-Output $err)",
+      "Bash(grep \"^\\\\.env$\")",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)"
+    ]
+  }
+}
