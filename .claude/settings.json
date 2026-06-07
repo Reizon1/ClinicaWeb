@@ -9,7 +9,21 @@
       "Bash(grep \"^\\\\.env$\")",
       "Bash(git add *)",
       "Bash(git commit -m ' *)",
-      "Bash(git push *)"
+      "Bash(git push *)",
+      "Bash(php artisan *)",
+      "PowerShell(Get-Process xampp-control)",
+      "PowerShell(netstat -ano)",
+      "PowerShell(Get-Process | Where-Object { $_.Name -match \"mysql\" } | Select-Object Name, Id, CPU)",
+      "Read(//c/xampp/mysql/**)",
+      "PowerShell(Get-ChildItem \"C:\\\\xampp\\\\mysql\\\\data\\\\\" | Where-Object { $_.Name -match \"\\\\.pid$|ibtmp|ib_logfile\" } | Select-Object Name, Length, LastWriteTime)",
+      "PowerShell(Get-WinEvent -LogName Application -MaxEvents 50 | Where-Object { $_.Message -match \"mysql|mariadb\" -or $_.ProviderName -match \"mysql|mariadb\" } | Select-Object TimeCreated, Id, LevelDisplayName, Message | Select-Object -First 5 | Format-List)",
+      "PowerShell(Get-WinEvent -LogName Application -MaxEvents 30 | Where-Object { $_.Message -match \"mysql|mariadb|mysqld\" -or $_.ProviderName -match \"mysql|mariadb\" } | Select-Object TimeCreated, LevelDisplayName, Message | Where-Object { $_.TimeCreated -gt \\(Get-Date\\).AddMinutes\\(-10\\) } | Format-List)",
+      "PowerShell(Get-ChildItem \"C:\\\\xampp\\\\mysql\\\\backup\\\\mysql\\\\\" | Where-Object { $_.Name -match \"^db\\\\.\" } | Select-Object Name)"
+    ],
+    "additionalDirectories": [
+      "C:\\xampp\\mysql\\data",
+      "C:\\xampp\\mysql\\backup\\mysql",
+      "C:\\xampp\\mysql\\backup"
     ]
   }
 }

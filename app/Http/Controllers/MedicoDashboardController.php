@@ -11,7 +11,7 @@ class MedicoDashboardController extends Controller
 
         // Todas las citas del médico para HOY
         $citasHoy = $medico->citas()
-            ->with(['paciente.user'])
+            ->with(['paciente.user', 'historialClinico'])
             ->whereDate('fecha_hora', today())
             ->orderBy('fecha_hora')
             ->get();
