@@ -1,20 +1,45 @@
 <?php
 
+use App\Http\Controllers\AdminDashboardController;
+use App\Http\Controllers\MedicoDashboardController;
+use App\Http\Controllers\PacienteDashboardController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
+// ── Landing page ──────────────────────────────────────────────────────────────
 Route::get('/', function () {
     return view('welcome');
 });
 
-// Rutas de preview de diseño (sin auth — se protegerán al agregar la lógica)
-Route::get('/preview/paciente', fn() => view('dashboards.paciente'))->name('preview.paciente');
-Route::get('/preview/admin',    fn() => view('dashboards.admin'))->name('preview.admin');
-Route::get('/preview/medico',   fn() => view('dashboards.medico'))->name('preview.medico');
-
+// ── /dashboard → redirige al dashboard correcto según rol ─────────────────────
+// El compañero que hace el login envía aquí a todos los usuarios después de entrar.
+// Esta ruta lee el rol y los manda al lugar que les corresponde.
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    $rol = auth()->user()->rol;
+    return match ($rol) {
+        'admin'  => redirect()->route('dashboard.admin'),
+        'medico' => redirect()->route('dashboard.medico'),
+        default  => redirect()->route('dashboard.paciente'),
+    };
 })->middleware(['auth', 'verified'])->name('dashboard');
+
+// ── Dashboard Paciente (solo rol: paciente) ───────────────────────────────────
+Route::middleware(['auth', 'rol:paciente'])->group(function () {
+    Route::get('/dashboard/paciente', [PacienteDashboardController::class, 'index'])
+        ->name('dashboard.paciente');
+});
+
+// ── Dashboard Médico (solo rol: medico) ───────────────────────────────────────
+Route::middleware(['auth', 'rol:medico'])->group(function () {
+    Route::get('/dashboard/medico', [MedicoDashboardController::class, 'index'])
+        ->name('dashboard.medico');
+});
+
+// ── Dashboard Administrador (solo rol: admin) ─────────────────────────────────
+Route::middleware(['auth', 'rol:admin'])->group(function () {
+    Route::get('/dashboard/admin', [AdminDashboardController::class, 'index'])
+        ->name('dashboard.admin');
+});
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

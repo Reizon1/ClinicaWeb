@@ -10,15 +10,28 @@
     <style>body{font-family:'Inter',sans-serif;}</style>
 </head>
 <body class="antialiased bg-gray-50 text-gray-900">
+
+@php
+    // Iniciales del usuario para el avatar (ej: "Carlos Eduardo" → "CE")
+    $iniciales = collect(explode(' ', auth()->user()->name))
+        ->map(fn($w) => strtoupper($w[0] ?? ''))
+        ->take(2)->join('');
+
+    // Colores de badge según estado de la cita
+    $badgeEstado = [
+        'confirmada' => 'bg-green-100 text-green-700',
+        'pendiente'  => 'bg-yellow-100 text-yellow-700',
+        'completada' => 'bg-blue-100 text-blue-700',
+        'cancelada'  => 'bg-red-100 text-red-600',
+    ];
+@endphp
+
 <div class="flex h-screen overflow-hidden">
 
-    {{-- ============================================================
-         SIDEBAR
-    ============================================================ --}}
+    {{-- SIDEBAR --}}
     <aside class="w-56 flex-shrink-0 flex flex-col"
            style="background:linear-gradient(180deg,#1e3a8a 0%,#1d4ed8 60%,#2563eb 100%);">
 
-        {{-- Logo --}}
         <div class="px-5 py-5 border-b border-white/10">
             <div class="flex items-center gap-2.5">
                 <div class="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
@@ -33,9 +46,8 @@
             </div>
         </div>
 
-        {{-- Navegación --}}
         <nav class="flex-1 px-3 py-4 space-y-0.5 overflow-y-auto">
-            <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/15 text-white text-sm font-semibold">
+            <a href="{{ route('dashboard.paciente') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/15 text-white text-sm font-semibold">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
                 Dashboard
             </a>
@@ -55,7 +67,6 @@
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
                 Pagos
             </a>
-
             <div class="pt-4 pb-1">
                 <span class="px-3 text-xs font-semibold text-blue-300 uppercase tracking-widest">Servicios</span>
             </div>
@@ -65,25 +76,26 @@
             </a>
         </nav>
 
-        {{-- Cerrar sesión --}}
+        {{-- Cerrar sesión (requiere POST con CSRF) --}}
         <div class="px-3 py-4 border-t border-white/10">
-            <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-red-300 hover:bg-red-500/20 text-sm transition-colors">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
-                Cerrar Sesión
-            </a>
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+                <button type="submit" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-red-300 hover:bg-red-500/20 text-sm transition-colors">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+                    Cerrar Sesión
+                </button>
+            </form>
         </div>
     </aside>
 
-    {{-- ============================================================
-         CONTENIDO PRINCIPAL
-    ============================================================ --}}
+    {{-- CONTENIDO PRINCIPAL --}}
     <div class="flex-1 flex flex-col overflow-hidden">
 
         {{-- Top bar --}}
         <header class="bg-white border-b border-gray-100 px-6 py-3 flex items-center justify-between flex-shrink-0">
             <div>
-                <h1 class="text-base font-bold text-gray-900">Bienvenido, Carlos Eduardo</h1>
-                <p class="text-xs text-gray-400">Hoy es Lunes, 24 de Marzo de 2026</p>
+                <h1 class="text-base font-bold text-gray-900">Bienvenido, {{ auth()->user()->name }}</h1>
+                <p class="text-xs text-gray-400">Hoy es {{ now()->isoFormat('dddd, D [de] MMMM [de] YYYY') }}</p>
             </div>
             <div class="flex items-center gap-3">
                 <button class="relative p-2 text-gray-400 hover:text-gray-600">
@@ -91,11 +103,11 @@
                 </button>
                 <div class="flex items-center gap-2 bg-gray-50 rounded-xl px-3 py-2">
                     <div class="w-7 h-7 bg-blue-600 rounded-full flex items-center justify-center">
-                        <span class="text-white text-xs font-bold">CE</span>
+                        <span class="text-white text-xs font-bold">{{ $iniciales }}</span>
                     </div>
                     <div>
-                        <div class="text-xs font-semibold text-gray-800 leading-none">Carlos Eduardo</div>
-                        <div class="text-xs text-gray-400 leading-none mt-0.5">Paciente ID: 12345</div>
+                        <div class="text-xs font-semibold text-gray-800 leading-none">{{ auth()->user()->name }}</div>
+                        <div class="text-xs text-gray-400 leading-none mt-0.5">Paciente ID: {{ $paciente->id }}</div>
                     </div>
                 </div>
                 <button class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold px-4 py-2.5 rounded-xl transition-colors flex items-center gap-1.5 shadow-sm shadow-blue-100">
@@ -105,7 +117,6 @@
             </div>
         </header>
 
-        {{-- Scroll area --}}
         <main class="flex-1 overflow-y-auto p-6 space-y-6">
 
             {{-- Resumen de Actividad --}}
@@ -121,9 +132,13 @@
                             </div>
                             <div class="text-xs text-gray-400 font-medium">Próxima Cita</div>
                         </div>
-                        <div class="text-xl font-bold text-gray-900">28 Mar, 2026</div>
-                        <div class="text-xs text-gray-400 mt-1">@ 08:30 AM</div>
-                        <div class="mt-2 text-xs text-blue-600 font-medium">Dr. Quiroga</div>
+                        @if($proximaCita)
+                            <div class="text-xl font-bold text-gray-900">{{ $proximaCita->fecha_hora->format('d M, Y') }}</div>
+                            <div class="text-xs text-gray-400 mt-1">@ {{ $proximaCita->fecha_hora->format('h:i A') }}</div>
+                            <div class="mt-2 text-xs text-blue-600 font-medium">Dr. {{ $proximaCita->medico->user->name }}</div>
+                        @else
+                            <div class="text-sm text-gray-400 mt-2">Sin citas próximas</div>
+                        @endif
                     </div>
 
                     {{-- Pagos Pendientes --}}
@@ -134,8 +149,8 @@
                             </div>
                             <div class="text-xs text-gray-400 font-medium">Pagos Pendientes</div>
                         </div>
-                        <div class="text-xl font-bold text-gray-900">2 facturas</div>
-                        <div class="text-2xl font-bold text-red-500 mt-0.5">$45.00</div>
+                        <div class="text-xl font-bold text-gray-900">{{ $pagosPendientes->count() }} {{ Str::plural('factura', $pagosPendientes->count()) }}</div>
+                        <div class="text-2xl font-bold text-red-500 mt-0.5">${{ number_format($pagosPendientes->sum('monto'), 2) }}</div>
                         <div class="mt-1 text-xs text-gray-400">Total pendiente</div>
                     </div>
 
@@ -147,76 +162,61 @@
                             </div>
                             <div class="text-xs text-blue-200 font-medium">Estado Premium</div>
                         </div>
-                        <div class="flex items-center gap-2 mb-2">
-                            <span class="text-lg font-bold">Activo</span>
-                            <span class="bg-green-400/20 border border-green-400/30 text-green-300 text-xs px-2 py-0.5 rounded-full font-medium">✓</span>
-                        </div>
-                        <div class="w-full bg-white/20 rounded-full h-1.5 mb-1">
-                            <div class="bg-yellow-300 h-1.5 rounded-full" style="width:72%"></div>
-                        </div>
-                        <div class="text-xs text-blue-200">Vence: 15 Oct. 2026</div>
+                        @if($suscripcion && $suscripcion->estaActiva())
+                            <div class="flex items-center gap-2 mb-2">
+                                <span class="text-lg font-bold">Activo</span>
+                                <span class="bg-green-400/20 border border-green-400/30 text-green-300 text-xs px-2 py-0.5 rounded-full font-medium">✓</span>
+                            </div>
+                            <div class="w-full bg-white/20 rounded-full h-1.5 mb-1">
+                                @php
+                                    $diasTotales = $suscripcion->fecha_inicio->diffInDays($suscripcion->fecha_vencimiento);
+                                    $diasRestantes = now()->diffInDays($suscripcion->fecha_vencimiento, false);
+                                    $progreso = $diasTotales > 0 ? round(($diasRestantes / $diasTotales) * 100) : 0;
+                                @endphp
+                                <div class="bg-yellow-300 h-1.5 rounded-full" style="width:{{ $progreso }}%"></div>
+                            </div>
+                            <div class="text-xs text-blue-200">Vence: {{ $suscripcion->fecha_vencimiento->format('d M. Y') }}</div>
+                        @else
+                            <div class="text-lg font-bold mb-1">Sin Plan Premium</div>
+                            <div class="text-xs text-blue-200">Activa tu plan desde $99/mes</div>
+                        @endif
                     </div>
                 </div>
             </div>
 
-            {{-- Gráfico + Próxima Consulta --}}
+            {{-- Gráfico SVG + Próxima Consulta --}}
             <div class="grid grid-cols-3 gap-4">
-
-                {{-- Seguimiento de Salud --}}
                 <div class="col-span-2 bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
                     <div class="flex items-center justify-between mb-4">
                         <h3 class="text-sm font-semibold text-gray-900">Seguimiento de Salud</h3>
                         <span class="text-xs text-gray-400 bg-gray-50 border border-gray-100 rounded-full px-3 py-1">Últimos 6 meses</span>
                     </div>
-                    {{-- Gráfico de líneas (SVG) --}}
                     <div class="relative">
                         <svg viewBox="0 0 500 160" class="w-full" xmlns="http://www.w3.org/2000/svg">
-                            {{-- Grid lines --}}
                             <line x1="0" y1="40" x2="500" y2="40" stroke="#f3f4f6" stroke-width="1"/>
                             <line x1="0" y1="80" x2="500" y2="80" stroke="#f3f4f6" stroke-width="1"/>
                             <line x1="0" y1="120" x2="500" y2="120" stroke="#f3f4f6" stroke-width="1"/>
-                            {{-- Y labels --}}
                             <text x="0" y="38" font-size="10" fill="#9ca3af">120</text>
                             <text x="0" y="78" font-size="10" fill="#9ca3af">100</text>
                             <text x="0" y="118" font-size="10" fill="#9ca3af">80</text>
-                            {{-- Línea Peso (azul) --}}
-                            <polyline points="50,100 130,90 210,95 290,80 370,85 450,78"
-                                      fill="none" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-                            {{-- Puntos Peso --}}
-                            <circle cx="50"  cy="100" r="3" fill="#2563eb"/>
-                            <circle cx="130" cy="90"  r="3" fill="#2563eb"/>
-                            <circle cx="210" cy="95"  r="3" fill="#2563eb"/>
-                            <circle cx="290" cy="80"  r="3" fill="#2563eb"/>
-                            <circle cx="370" cy="85"  r="3" fill="#2563eb"/>
-                            <circle cx="450" cy="78"  r="3" fill="#2563eb"/>
-                            {{-- Línea Presión (verde) --}}
-                            <polyline points="50,60 130,70 210,55 290,65 370,50 450,60"
-                                      fill="none" stroke="#10b981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-                            {{-- Puntos Presión --}}
-                            <circle cx="50"  cy="60" r="3" fill="#10b981"/>
-                            <circle cx="130" cy="70" r="3" fill="#10b981"/>
-                            <circle cx="210" cy="55" r="3" fill="#10b981"/>
-                            <circle cx="290" cy="65" r="3" fill="#10b981"/>
-                            <circle cx="370" cy="50" r="3" fill="#10b981"/>
-                            <circle cx="450" cy="60" r="3" fill="#10b981"/>
-                            {{-- X labels --}}
-                            <text x="42"  y="155" font-size="10" fill="#9ca3af">Ene</text>
+                            <polyline points="50,100 130,90 210,95 290,80 370,85 450,78" fill="none" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            <circle cx="50" cy="100" r="3" fill="#2563eb"/><circle cx="130" cy="90" r="3" fill="#2563eb"/>
+                            <circle cx="210" cy="95" r="3" fill="#2563eb"/><circle cx="290" cy="80" r="3" fill="#2563eb"/>
+                            <circle cx="370" cy="85" r="3" fill="#2563eb"/><circle cx="450" cy="78" r="3" fill="#2563eb"/>
+                            <polyline points="50,60 130,70 210,55 290,65 370,50 450,60" fill="none" stroke="#10b981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            <circle cx="50" cy="60" r="3" fill="#10b981"/><circle cx="130" cy="70" r="3" fill="#10b981"/>
+                            <circle cx="210" cy="55" r="3" fill="#10b981"/><circle cx="290" cy="65" r="3" fill="#10b981"/>
+                            <circle cx="370" cy="50" r="3" fill="#10b981"/><circle cx="450" cy="60" r="3" fill="#10b981"/>
+                            <text x="42" y="155" font-size="10" fill="#9ca3af">Ene</text>
                             <text x="122" y="155" font-size="10" fill="#9ca3af">Feb</text>
                             <text x="202" y="155" font-size="10" fill="#9ca3af">Mar</text>
                             <text x="282" y="155" font-size="10" fill="#9ca3af">Abr</text>
                             <text x="362" y="155" font-size="10" fill="#9ca3af">May</text>
                             <text x="442" y="155" font-size="10" fill="#9ca3af">Jul</text>
                         </svg>
-                        {{-- Leyenda --}}
                         <div class="flex items-center gap-6 mt-2">
-                            <div class="flex items-center gap-1.5">
-                                <div class="w-3 h-0.5 bg-blue-600 rounded"></div>
-                                <span class="text-xs text-gray-500">Peso (kg)</span>
-                            </div>
-                            <div class="flex items-center gap-1.5">
-                                <div class="w-3 h-0.5 bg-emerald-500 rounded"></div>
-                                <span class="text-xs text-gray-500">Presión Art.</span>
-                            </div>
+                            <div class="flex items-center gap-1.5"><div class="w-3 h-0.5 bg-blue-600 rounded"></div><span class="text-xs text-gray-500">Peso (kg)</span></div>
+                            <div class="flex items-center gap-1.5"><div class="w-3 h-0.5 bg-emerald-500 rounded"></div><span class="text-xs text-gray-500">Presión Art.</span></div>
                         </div>
                     </div>
                 </div>
@@ -224,27 +224,32 @@
                 {{-- Próxima Consulta --}}
                 <div class="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
                     <h3 class="text-sm font-semibold text-gray-900 mb-4">Próxima Consulta</h3>
-                    <div class="flex flex-col items-center text-center mb-4">
-                        <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-3">
-                            <svg class="w-8 h-8 text-gray-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg>
+                    @if($proximaCita)
+                        <div class="flex flex-col items-center text-center mb-4">
+                            <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-3">
+                                <span class="text-blue-700 font-bold text-lg">
+                                    {{ strtoupper(substr($proximaCita->medico->user->name, 0, 1)) }}
+                                </span>
+                            </div>
+                            <div class="font-bold text-gray-900 text-sm">Dr. {{ $proximaCita->medico->user->name }}</div>
+                            <div class="text-xs text-gray-400 mt-0.5">{{ $proximaCita->especialidad->nombre }}</div>
                         </div>
-                        <div class="font-bold text-gray-900 text-sm">Dr. Hernán Quiroga</div>
-                        <div class="text-xs text-gray-400 mt-0.5">Cardiología Clínica</div>
-                    </div>
-                    <div class="space-y-2.5 text-xs">
-                        <div class="flex items-center gap-2 text-gray-500">
-                            <svg class="w-3.5 h-3.5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                            Pav 4 – Consultorio 402
+                        <div class="space-y-2.5 text-xs">
+                            <div class="flex items-center gap-2 text-gray-500">
+                                <svg class="w-3.5 h-3.5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                {{ $proximaCita->fecha_hora->format('d/m/Y h:i A') }}
+                            </div>
+                            <div class="flex items-center gap-2 text-gray-500">
+                                <svg class="w-3.5 h-3.5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                                {{ $proximaCita->motivo ?? 'Sin motivo registrado' }}
+                            </div>
                         </div>
-                        <div class="flex items-center gap-2 text-gray-500">
-                            <svg class="w-3.5 h-3.5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                            Ayuno de 8 horas
+                    @else
+                        <div class="flex flex-col items-center text-center py-6 text-gray-400">
+                            <svg class="w-12 h-12 mb-2 text-gray-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                            <span class="text-sm">No tienes citas próximas</span>
                         </div>
-                    </div>
-                    <button class="mt-4 w-full bg-blue-50 hover:bg-blue-100 text-blue-700 text-xs font-semibold py-2.5 rounded-xl transition-colors flex items-center justify-center gap-1.5">
-                        <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/></svg>
-                        Cómo llegar
-                    </button>
+                    @endif
                 </div>
             </div>
 
@@ -254,10 +259,6 @@
                     <div>
                         <h3 class="text-sm font-semibold text-gray-900">Historial de Citas Recientes</h3>
                         <p class="text-xs text-gray-400">Administra tus próximas consultas y pagos</p>
-                    </div>
-                    <div class="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-xl px-3 py-1.5">
-                        <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-                        <input type="text" placeholder="buscar doctor..." class="text-xs bg-transparent outline-none text-gray-500 w-28">
                     </div>
                 </div>
                 <table class="w-full text-xs">
@@ -271,41 +272,39 @@
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-50">
-                        @php
-                        $citas = [
-                            ['Dr. Hernán Quiroga','Cardiología','28 Mar, 2026 · 08:30 AM','CONFIRMADA','confirmada'],
-                            ['Dra. Marta Sánchez','Medicina General','15 Mar, 2026 · 10:00 AM','PENDIENTE PAGO','pendiente'],
-                            ['Dr. Luis Ramos','Traumatología','01 Mar, 2026 · 02:00 PM','COMPLETADA','completada'],
-                        ];
-                        $colores = ['confirmada'=>'bg-green-100 text-green-700','pendiente'=>'bg-yellow-100 text-yellow-700','completada'=>'bg-blue-100 text-blue-700'];
-                        @endphp
-                        @foreach($citas as $c)
+                        @forelse($citasRecientes as $cita)
                         <tr class="hover:bg-gray-50 transition-colors">
                             <td class="px-5 py-3.5">
                                 <div class="flex items-center gap-2.5">
                                     <div class="w-7 h-7 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
-                                        <span class="text-blue-700 font-bold" style="font-size:9px">{{ substr($c[0],3,2) }}</span>
+                                        <span class="text-blue-700 font-bold" style="font-size:9px">{{ strtoupper(substr($cita->medico->user->name, 0, 1)) }}</span>
                                     </div>
-                                    <span class="font-medium text-gray-800">{{ $c[0] }}</span>
+                                    <span class="font-medium text-gray-800">Dr. {{ $cita->medico->user->name }}</span>
                                 </div>
                             </td>
-                            <td class="px-4 py-3.5 text-gray-500">{{ $c[1] }}</td>
-                            <td class="px-4 py-3.5 text-gray-500">{{ $c[2] }}</td>
+                            <td class="px-4 py-3.5 text-gray-500">{{ $cita->especialidad->nombre }}</td>
+                            <td class="px-4 py-3.5 text-gray-500">{{ $cita->fecha_hora->format('d M, Y · h:i A') }}</td>
                             <td class="px-4 py-3.5">
-                                <span class="px-2.5 py-1 rounded-full font-semibold text-xs {{ $colores[$c[4]] }}">{{ $c[3] }}</span>
+                                <span class="px-2.5 py-1 rounded-full font-semibold text-xs {{ $badgeEstado[$cita->estado] ?? 'bg-gray-100 text-gray-600' }}">
+                                    {{ strtoupper($cita->estado) }}
+                                </span>
                             </td>
                             <td class="px-4 py-3.5">
                                 <div class="flex items-center gap-2">
                                     <button class="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
                                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
                                     </button>
-                                    @if($c[4]==='pendiente')
-                                    <button class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold px-3 py-1.5 rounded-lg transition-colors">Pagar</button>
+                                    @if($cita->estado === 'pendiente' && $cita->pago?->estado === 'pendiente')
+                                        <button class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold px-3 py-1.5 rounded-lg transition-colors">Pagar</button>
                                     @endif
                                 </div>
                             </td>
                         </tr>
-                        @endforeach
+                        @empty
+                        <tr>
+                            <td colspan="5" class="px-5 py-8 text-center text-gray-400 text-xs">No tienes citas registradas aún.</td>
+                        </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>

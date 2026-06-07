@@ -13,6 +13,13 @@ return new class extends Migration
     {
         Schema::create('medicos', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('especialidad_id')->constrained('especialidads');
+            $table->string('numero_licencia')->unique();   // matrícula profesional
+            $table->string('telefono')->nullable();
+            $table->text('descripcion')->nullable();        // bio del médico
+            $table->string('foto')->nullable();             // ruta de imagen de perfil
+            $table->boolean('disponible')->default(true);
             $table->timestamps();
         });
     }

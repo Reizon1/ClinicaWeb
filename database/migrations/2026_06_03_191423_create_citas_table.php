@@ -13,6 +13,13 @@ return new class extends Migration
     {
         Schema::create('citas', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('paciente_id')->constrained('pacientes')->onDelete('cascade');
+            $table->foreignId('medico_id')->constrained('medicos')->onDelete('cascade');
+            $table->foreignId('especialidad_id')->constrained('especialidads');
+            $table->dateTime('fecha_hora');
+            $table->text('motivo')->nullable();            // motivo de consulta
+            $table->enum('estado', ['pendiente','confirmada','completada','cancelada'])->default('pendiente');
+            $table->text('notas_medico')->nullable();      // notas privadas del médico
             $table->timestamps();
         });
     }

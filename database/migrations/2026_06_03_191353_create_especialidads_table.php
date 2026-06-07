@@ -13,6 +13,10 @@ return new class extends Migration
     {
         Schema::create('especialidads', function (Blueprint $table) {
             $table->id();
+            $table->string('nombre');
+            $table->text('descripcion')->nullable();
+            $table->string('icono')->nullable();     // ícono representativo de la especialidad
+            $table->boolean('activa')->default(true);
             $table->timestamps();
         });
     }

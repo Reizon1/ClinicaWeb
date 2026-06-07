@@ -22,6 +22,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'rol',          // 'admin' | 'medico' | 'paciente'
     ];
 
     /**
@@ -43,7 +44,38 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
-            'password' => 'hashed',
+            'password'          => 'hashed',
         ];
+    }
+
+    // ── Relaciones ────────────────────────────────────────────────
+
+    // El usuario tiene UN perfil de paciente
+    public function paciente()
+    {
+        return $this->hasOne(Paciente::class);
+    }
+
+    // El usuario tiene UN perfil de médico
+    public function medico()
+    {
+        return $this->hasOne(Medico::class);
+    }
+
+    // ── Helpers de rol ────────────────────────────────────────────
+
+    public function esPaciente(): bool
+    {
+        return $this->rol === 'paciente';
+    }
+
+    public function esMedico(): bool
+    {
+        return $this->rol === 'medico';
+    }
+
+    public function esAdmin(): bool
+    {
+        return $this->rol === 'admin';
     }
 }

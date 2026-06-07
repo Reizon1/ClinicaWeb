@@ -13,6 +13,14 @@ return new class extends Migration
     {
         Schema::create('pacientes', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->date('fecha_nacimiento')->nullable();
+            $table->enum('genero', ['masculino', 'femenino', 'otro'])->nullable();
+            $table->string('telefono')->nullable();
+            $table->string('direccion')->nullable();
+            $table->string('tipo_sangre')->nullable();   // A+, B-, O+, etc.
+            $table->text('alergias')->nullable();
+            $table->text('enfermedades_previas')->nullable();
             $table->timestamps();
         });
     }
