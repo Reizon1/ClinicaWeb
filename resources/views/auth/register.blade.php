@@ -27,7 +27,9 @@
                               focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
                               placeholder-gray-400 transition-all">
             </div>
-            {{-- <x-input-error :messages="$errors->get('name')" class="mt-1.5 text-xs text-red-500" /> --}}
+            @error('name')
+                <span class="text-red-500 text-xs mt-1.5 block font-medium">{{ $message }}</span>
+            @enderror
         </div>
 
         {{-- Email --}}
@@ -48,7 +50,9 @@
                               focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
                               placeholder-gray-400 transition-all">
             </div>
-            {{-- <x-input-error :messages="$errors->get('email')" class="mt-1.5 text-xs text-red-500" /> --}}
+            @error('email')
+                <span class="text-red-500 text-xs mt-1.5 block font-medium">{{ $message }}</span>
+            @enderror
         </div>
 
         {{-- Contraseña --}}
@@ -69,7 +73,17 @@
                               focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
                               placeholder-gray-400 transition-all">
             </div>
-            {{-- <x-input-error :messages="$errors->get('password')" class="mt-1.5 text-xs text-red-500" /> --}}
+            {{-- Indicador de fortaleza de contraseña --}}
+            <div id="password-strength-container" class="mt-2 text-xs font-semibold hidden">
+                <span class="text-gray-500">Seguridad:</span>
+                <span id="password-strength-text" class="text-red-500 font-bold">Fácil</span>
+                <div class="w-full bg-gray-200 h-1.5 rounded-full mt-1.5 overflow-hidden">
+                    <div id="password-strength-bar" class="h-full bg-red-500 rounded-full transition-all duration-300" style="width: 25%"></div>
+                </div>
+            </div>
+            @error('password')
+                <span class="text-red-500 text-xs mt-1.5 block font-medium">{{ $message }}</span>
+            @enderror
         </div>
 
         {{-- Confirmar contraseña --}}
@@ -90,7 +104,9 @@
                               focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
                               placeholder-gray-400 transition-all">
             </div>
-            {{-- <x-input-error :messages="$errors->get('password_confirmation')" class="mt-1.5 text-xs text-red-500" /> --}}
+            @error('password_confirmation')
+                <span class="text-red-500 text-xs mt-1.5 block font-medium">{{ $message }}</span>
+            @enderror
         </div>
 
         {{-- Botón --}}
@@ -132,5 +148,58 @@
             Volver al inicio
         </a>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const passwordInput = document.getElementById('password');
+            const strengthContainer = document.getElementById('password-strength-container');
+            const strengthText = document.getElementById('password-strength-text');
+            const strengthBar = document.getElementById('password-strength-bar');
+
+            passwordInput.addEventListener('input', function() {
+                const val = passwordInput.value;
+                if (val.length === 0) {
+                    strengthContainer.classList.add('hidden');
+                    return;
+                }
+                strengthContainer.classList.remove('hidden');
+
+                // Evaluate criteria
+                const lengthOk = val.length >= 8;
+                const upperOk = /[A-Z]/.test(val);
+                const numbersCount = (val.match(/\d/g) || []).length;
+                const numbersOk = numbersCount >= 2;
+                const specialOk = /[!@#$%^&*(),.?":{}|<>_+\-\[\]\\\/]/.test(val);
+
+                let score = 0;
+                if (val.length > 0) score += 1;
+                if (lengthOk) score += 1;
+                if (upperOk) score += 1;
+                if (numbersOk) score += 1;
+                if (specialOk) score += 1;
+
+                // Determine strength level
+                const isHigh = lengthOk && upperOk && numbersOk && specialOk;
+                const isMedium = lengthOk && (upperOk || numbersOk || specialOk) && !isHigh;
+
+                if (isHigh) {
+                    strengthText.textContent = 'Alto';
+                    strengthText.className = 'text-green-500 font-bold';
+                    strengthBar.className = 'h-full bg-green-500 rounded-full transition-all duration-300';
+                    strengthBar.style.width = '100%';
+                } else if (isMedium) {
+                    strengthText.textContent = 'Medio';
+                    strengthText.className = 'text-yellow-500 font-bold';
+                    strengthBar.className = 'h-full bg-yellow-500 rounded-full transition-all duration-300';
+                    strengthBar.style.width = '60%';
+                } else {
+                    strengthText.textContent = 'Fácil';
+                    strengthText.className = 'text-red-500 font-bold';
+                    strengthBar.className = 'h-full bg-red-500 rounded-full transition-all duration-300';
+                    strengthBar.style.width = '30%';
+                }
+            });
+        });
+    </script>
 
 </x-guest-layout>

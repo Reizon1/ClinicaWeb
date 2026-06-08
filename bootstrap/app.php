@@ -11,9 +11,10 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        // Alias 'rol' → disponible en rutas como middleware('rol:admin')
+        // ── Registro unificado de Middlewares personalizados ─────────────────
         $middleware->alias([
-            'rol' => \App\Http\Middleware\CheckRol::class,
+            'rol'        => \App\Http\Middleware\CheckRol::class,              // <── Middleware de accesos de tu compañera
+            'two-factor' => \App\Http\Middleware\EnsureTwoFactorVerified::class, // <── Tu middleware de seguridad 2FA
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

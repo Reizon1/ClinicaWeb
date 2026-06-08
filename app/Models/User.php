@@ -22,7 +22,9 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'rol',          // 'admin' | 'medico' | 'paciente'
+        'role',                  // ── Estandarizado a 'role' como en tus rutas y vistas
+        'two_factor_code',       // ── Campo para tus 6 dígitos de seguridad
+        'two_factor_expires_at', // ── Campo para la expiración del 2FA
     ];
 
     /**
@@ -43,12 +45,13 @@ class User extends Authenticatable
     protected function casts(): array
     {
         return [
-            'email_verified_at' => 'datetime',
-            'password'          => 'hashed',
+            'email_verified_at'     => 'datetime',
+            'password'              => 'hashed',
+            'two_factor_expires_at' => 'datetime', // ── Cast de fecha para manipular con Carbon
         ];
     }
 
-    // ── Relaciones ────────────────────────────────────────────────
+    // ── Relaciones (Avance de tu compañera) ───────────────────────────────────
 
     // El usuario tiene UN perfil de paciente
     public function paciente()
@@ -62,20 +65,20 @@ class User extends Authenticatable
         return $this->hasOne(Medico::class);
     }
 
-    // ── Helpers de rol ────────────────────────────────────────────
+    // ── Helpers de rol (Sincronizados con 'role') ──────────────────────────────
 
     public function esPaciente(): bool
     {
-        return $this->rol === 'paciente';
+        return $this->role === 'Paciente' || $this->role === 'paciente';
     }
 
     public function esMedico(): bool
     {
-        return $this->rol === 'medico';
+        return $this->role === 'Médico' || $this->role === 'medico';
     }
 
     public function esAdmin(): bool
     {
-        return $this->rol === 'admin';
+        return $this->role === 'Administrador' || $this->role === 'admin';
     }
 }

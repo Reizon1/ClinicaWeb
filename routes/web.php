@@ -16,128 +16,138 @@ use App\Http\Controllers\PacienteDashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RecepcionistaDashboardController;
 use App\Http\Controllers\RecetaController;
+use App\Http\Controllers\Auth\TwoFactorController; // <── Importación de tu controlador 2FA
 use Illuminate\Support\Facades\Route;
 
-// ── Landing page ──────────────────────────────────────────────────────────────
+// ── Landing page (Pública) ───────────────────────────────────────────────────
 Route::get('/', function () {
     return view('welcome');
 });
 
-// ── Buscador de médicos (público) ─────────────────────────────────────────────
+// ── Buscador de médicos (Público) ─────────────────────────────────────────────
 Route::get('/medicos', [MedicoController::class, 'buscar'])->name('medicos.buscar');
 Route::get('/medicos/por-especialidad', [MedicoController::class, 'porEspecialidad'])->name('medicos.por-especialidad');
 
-// ── /dashboard → redirige según rol ──────────────────────────────────────────
-Route::get('/dashboard', function () {
-    return match (auth()->user()->rol) {
-        'admin'          => redirect()->route('dashboard.admin'),
-        'medico'         => redirect()->route('dashboard.medico'),
-        'recepcionista'  => redirect()->route('dashboard.recepcionista'),
-        default          => redirect()->route('dashboard.paciente'),
-    };
-})->middleware(['auth', 'verified'])->name('dashboard');
+// ── Rutas de Autenticación de Dos Factores (2FA) ──────────────────────────────
+// Estas rutas deben estar fuera del middleware general para poder verificar el código
+Route::get('/two-factor', [TwoFactorController::class, 'index'])->name('two-factor.index');
+Route::post('/two-factor', [TwoFactorController::class, 'store'])->name('two-factor.store');
 
-// ── Dashboard Paciente ────────────────────────────────────────────────────────
-Route::middleware(['auth', 'rol:paciente'])->group(function () {
-    Route::get('/dashboard/paciente', [PacienteDashboardController::class, 'index'])
-        ->name('dashboard.paciente');
-    Route::get('/citas/crear', [CitaController::class, 'create'])->name('citas.crear');
-    Route::post('/citas',      [CitaController::class, 'store'])->name('citas.store');
-});
+// 🔐 ── ZONA PROTEGIDA: Autenticación obligatoria y Verificación 2FA ───────────
+Route::middleware(['auth', 'two-factor'])->group(function () {
 
-// ── Dashboard Médico ──────────────────────────────────────────────────────────
-Route::middleware(['auth', 'rol:medico'])->group(function () {
-    Route::get('/dashboard/medico', [MedicoDashboardController::class, 'index'])
-        ->name('dashboard.medico');
+    // ── /dashboard → Redirige automáticamente según el rol del usuario
+    Route::get('/dashboard', function () {
+        $role = auth()->user()->role;
+        switch ($role) {
+            case 'Administrador':
+                return redirect()->route('dashboard.admin');
+            case 'Médico':
+                return redirect()->route('dashboard.medico');
+            case 'Recepcionista':
+                return redirect()->route('dashboard.recepcionista');
+            case 'Paciente':
+            default:
+                return redirect()->route('dashboard.paciente');
+        }
+    })->name('dashboard');
 
-    // Horarios del médico
-    Route::get('/horarios',          [HorarioMedicoController::class, 'index'])->name('horarios.index');
-    Route::get('/horarios/agregar',  [HorarioMedicoController::class, 'create'])->name('horarios.create');
-    Route::post('/horarios',         [HorarioMedicoController::class, 'store'])->name('horarios.store');
-    Route::delete('/horarios/{horario}', [HorarioMedicoController::class, 'destroy'])->name('horarios.destroy');
+    // ── Dashboard Paciente y sus funcionalidades ──────────────────────────────
+    Route::middleware('rol:paciente')->group(function () {
+        Route::get('/dashboard/paciente', [PacienteDashboardController::class, 'index'])->name('dashboard.paciente');
+        Route::get('/citas/crear', [CitaController::class, 'create'])->name('citas.crear');
+        Route::post('/citas',      [CitaController::class, 'store'])->name('citas.store');
+    });
 
-    // Historiales clínicos
-    Route::get('/historiales',                       [HistorialClinicoController::class, 'index'])->name('historiales.index');
-    Route::get('/historiales/nuevo',                 [HistorialClinicoController::class, 'create'])->name('historiales.create');
-    Route::post('/historiales',                      [HistorialClinicoController::class, 'store'])->name('historiales.store');
-    Route::get('/historiales/{historial}',           [HistorialClinicoController::class, 'show'])->name('historiales.show');
-    Route::get('/historiales/{historial}/editar',    [HistorialClinicoController::class, 'edit'])->name('historiales.edit');
-    Route::put('/historiales/{historial}',           [HistorialClinicoController::class, 'update'])->name('historiales.update');
-    Route::delete('/historiales/{historial}',        [HistorialClinicoController::class, 'destroy'])->name('historiales.destroy');
+    // ── Dashboard Médico y sus CRUDs (Historiales, Recetas, Horarios) ──────────
+    Route::middleware('rol:medico')->group(function () {
+        Route::get('/dashboard/medico', [MedicoDashboardController::class, 'index'])->name('dashboard.medico');
 
-    // Recetas médicas
-    Route::get('/recetas',                  [RecetaController::class, 'index'])->name('recetas.index');
-    Route::get('/recetas/nueva',            [RecetaController::class, 'create'])->name('recetas.create');
-    Route::post('/recetas',                 [RecetaController::class, 'store'])->name('recetas.store');
-    Route::get('/recetas/{receta}',         [RecetaController::class, 'show'])->name('recetas.show');
-    Route::get('/recetas/{receta}/editar',  [RecetaController::class, 'edit'])->name('recetas.edit');
-    Route::put('/recetas/{receta}',         [RecetaController::class, 'update'])->name('recetas.update');
-    Route::delete('/recetas/{receta}',      [RecetaController::class, 'destroy'])->name('recetas.destroy');
+        // Horarios del médico
+        Route::get('/horarios',              [HorarioMedicoController::class, 'index'])->name('horarios.index');
+        Route::get('/horarios/agregar',      [HorarioMedicoController::class, 'create'])->name('horarios.create');
+        Route::post('/horarios',             [HorarioMedicoController::class, 'store'])->name('horarios.store');
+        Route::delete('/horarios/{horario}', [HorarioMedicoController::class, 'destroy'])->name('horarios.destroy');
 
-    // Perfil del médico
-    Route::get('/medico/perfil',   [MedicoPerfilController::class, 'index'])->name('medico.perfil');
-    Route::put('/medico/perfil',   [MedicoPerfilController::class, 'update'])->name('medico.perfil.update');
-});
+        // Historiales clínicos
+        Route::get('/historiales',                   [HistorialClinicoController::class, 'index'])->name('historiales.index');
+        Route::get('/historiales/nuevo',             [HistorialClinicoController::class, 'create'])->name('historiales.create');
+        Route::post('/historiales',                  [HistorialClinicoController::class, 'store'])->name('historiales.store');
+        Route::get('/historiales/{historial}',       [HistorialClinicoController::class, 'show'])->name('historiales.show');
+        Route::get('/historiales/{historial}/editar', [HistorialClinicoController::class, 'edit'])->name('historiales.edit');
+        Route::put('/historiales/{historial}',       [HistorialClinicoController::class, 'update'])->name('historiales.update');
+        Route::delete('/historiales/{historial}',    [HistorialClinicoController::class, 'destroy'])->name('historiales.destroy');
 
-// ── Dashboard Recepcionista ───────────────────────────────────────────────────
-Route::middleware(['auth', 'rol:recepcionista'])->group(function () {
-    Route::get('/dashboard/recepcionista', [RecepcionistaDashboardController::class, 'index'])
-        ->name('dashboard.recepcionista');
+        // Recetas médicas
+        Route::get('/recetas',                  [RecetaController::class, 'index'])->name('recetas.index');
+        Route::get('/recetas/nueva',            [RecetaController::class, 'create'])->name('recetas.create');
+        Route::post('/recetas',                 [RecetaController::class, 'store'])->name('recetas.store');
+        Route::get('/recetas/{receta}',         [RecetaController::class, 'show'])->name('recetas.show');
+        Route::get('/recetas/{receta}/editar',  [RecetaController::class, 'edit'])->name('recetas.edit');
+        Route::put('/recetas/{receta}',         [RecetaController::class, 'update'])->name('recetas.update');
+        Route::delete('/recetas/{receta}',      [RecetaController::class, 'destroy'])->name('recetas.destroy');
 
-    // Gestión de citas
-    Route::get('/recepcionista/citas',                        [RecepcionistaDashboardController::class, 'citas'])->name('recepcionista.citas');
-    Route::get('/recepcionista/citas/crear',                  [RecepcionistaDashboardController::class, 'crearCita'])->name('recepcionista.citas.crear');
-    Route::post('/recepcionista/citas',                       [RecepcionistaDashboardController::class, 'guardarCita'])->name('recepcionista.citas.guardar');
-    Route::patch('/recepcionista/citas/{cita}/reprogramar',   [RecepcionistaDashboardController::class, 'reprogramarCita'])->name('recepcionista.citas.reprogramar');
-    Route::patch('/recepcionista/citas/{cita}/cancelar',      [RecepcionistaDashboardController::class, 'cancelarCita'])->name('recepcionista.citas.cancelar');
+        // Perfil del médico
+        Route::get('/medico/perfil',   [MedicoPerfilController::class, 'index'])->name('medico.perfil');
+        Route::put('/medico/perfil',   [MedicoPerfilController::class, 'update'])->name('medico.perfil.update');
+    });
 
-    // Registro de pacientes
-    Route::get('/recepcionista/pacientes/crear',   [RecepcionistaDashboardController::class, 'crearPaciente'])->name('recepcionista.pacientes.crear');
-    Route::post('/recepcionista/pacientes',        [RecepcionistaDashboardController::class, 'guardarPaciente'])->name('recepcionista.pacientes.guardar');
-});
+    // ── Dashboard Recepcionista y Agenda de Citas ─────────────────────────────
+    Route::middleware('rol:recepcionista')->group(function () {
+        Route::get('/dashboard/recepcionista', [RecepcionistaDashboardController::class, 'index'])->name('dashboard.recepcionista');
 
-// ── Dashboard Administrador ───────────────────────────────────────────────────
-Route::middleware(['auth', 'rol:admin'])->group(function () {
-    Route::get('/dashboard/admin', [AdminDashboardController::class, 'index'])
-        ->name('dashboard.admin');
+        // Gestión de citas
+        Route::get('/recepcionista/citas',                        [RecepcionistaDashboardController::class, 'citas'])->name('recepcionista.citas');
+        Route::get('/recepcionista/citas/crear',                  [RecepcionistaDashboardController::class, 'crearCita'])->name('recepcionista.citas.crear');
+        Route::post('/recepcionista/citas',                       [RecepcionistaDashboardController::class, 'guardarCita'])->name('recepcionista.citas.guardar');
+        Route::patch('/recepcionista/citas/{cita}/reprogramar',   [RecepcionistaDashboardController::class, 'reprogramarCita'])->name('recepcionista.citas.reprogramar');
+        Route::patch('/recepcionista/citas/{cita}/cancelar',      [RecepcionistaDashboardController::class, 'cancelarCita'])->name('recepcionista.citas.cancelar');
 
-    // CRUD Médicos
-    Route::get('/admin/medicos',                    [MedicoAdminController::class, 'index'])->name('admin.medicos.index');
-    Route::get('/admin/medicos/crear',              [MedicoAdminController::class, 'create'])->name('admin.medicos.create');
-    Route::post('/admin/medicos',                   [MedicoAdminController::class, 'store'])->name('admin.medicos.store');
-    Route::get('/admin/medicos/{medico}',           [MedicoAdminController::class, 'show'])->name('admin.medicos.show');
-    Route::get('/admin/medicos/{medico}/editar',    [MedicoAdminController::class, 'edit'])->name('admin.medicos.edit');
-    Route::put('/admin/medicos/{medico}',           [MedicoAdminController::class, 'update'])->name('admin.medicos.update');
-    Route::delete('/admin/medicos/{medico}',        [MedicoAdminController::class, 'destroy'])->name('admin.medicos.destroy');
+        // Registro de pacientes
+        Route::get('/recepcionista/pacientes/crear',   [RecepcionistaDashboardController::class, 'crearPaciente'])->name('recepcionista.pacientes.crear');
+        Route::post('/recepcionista/pacientes',        [RecepcionistaDashboardController::class, 'guardarPaciente'])->name('recepcionista.pacientes.guardar');
+    });
 
-    // CRUD Especialidades
-    Route::get('/admin/especialidades',                        [EspecialidadAdminController::class, 'index'])->name('admin.especialidades.index');
-    Route::get('/admin/especialidades/crear',                  [EspecialidadAdminController::class, 'create'])->name('admin.especialidades.create');
-    Route::post('/admin/especialidades',                       [EspecialidadAdminController::class, 'store'])->name('admin.especialidades.store');
-    Route::get('/admin/especialidades/{especialidad}/editar',  [EspecialidadAdminController::class, 'edit'])->name('admin.especialidades.edit');
-    Route::put('/admin/especialidades/{especialidad}',         [EspecialidadAdminController::class, 'update'])->name('admin.especialidades.update');
-    Route::delete('/admin/especialidades/{especialidad}',      [EspecialidadAdminController::class, 'destroy'])->name('admin.especialidades.destroy');
+    // ── Dashboard Administrador y CRUDs de Control Central ────────────────────
+    Route::middleware('rol:admin')->group(function () {
+        Route::get('/dashboard/admin', [AdminDashboardController::class, 'index'])->name('dashboard.admin');
 
-    // Usuarios
-    Route::get('/admin/usuarios',                        [UsuarioAdminController::class, 'index'])->name('admin.usuarios.index');
-    Route::get('/admin/usuarios/crear',                  [UsuarioAdminController::class, 'create'])->name('admin.usuarios.create');
-    Route::post('/admin/usuarios',                       [UsuarioAdminController::class, 'store'])->name('admin.usuarios.store');
-    Route::get('/admin/usuarios/{usuario}',              [UsuarioAdminController::class, 'show'])->name('admin.usuarios.show');
-    Route::get('/admin/usuarios/{usuario}/editar',       [UsuarioAdminController::class, 'edit'])->name('admin.usuarios.edit');
-    Route::put('/admin/usuarios/{usuario}',              [UsuarioAdminController::class, 'update'])->name('admin.usuarios.update');
-    Route::post('/admin/usuarios/{usuario}/rol',         [UsuarioAdminController::class, 'updateRol'])->name('admin.usuarios.rol');
-    Route::delete('/admin/usuarios/{usuario}',           [UsuarioAdminController::class, 'destroy'])->name('admin.usuarios.destroy');
+        // CRUD Médicos
+        Route::get('/admin/medicos',                [MedicoAdminController::class, 'index'])->name('admin.medicos.index');
+        Route::get('/admin/medicos/crear',          [MedicoAdminController::class, 'create'])->name('admin.medicos.create');
+        Route::post('/admin/medicos',               [MedicoAdminController::class, 'store'])->name('admin.medicos.store');
+        Route::get('/admin/medicos/{medico}',       [MedicoAdminController::class, 'show'])->name('admin.medicos.show');
+        Route::get('/admin/medicos/{medico}/editar', [MedicoAdminController::class, 'edit'])->name('admin.medicos.edit');
+        Route::put('/admin/medicos/{medico}',       [MedicoAdminController::class, 'update'])->name('admin.medicos.update');
+        Route::delete('/admin/medicos/{medico}',    [MedicoAdminController::class, 'destroy'])->name('admin.medicos.destroy');
 
-    // Reportes
-    Route::get('/admin/reportes', [ReporteAdminController::class, 'index'])->name('admin.reportes.index');
+        // CRUD Especialidades
+        Route::get('/admin/especialidades',                        [EspecialidadAdminController::class, 'index'])->name('admin.especialidades.index');
+        Route::get('/admin/especialidades/crear',                  [EspecialidadAdminController::class, 'create'])->name('admin.especialidades.create');
+        Route::post('/admin/especialidades',                       [EspecialidadAdminController::class, 'store'])->name('admin.especialidades.store');
+        Route::get('/admin/especialidades/{especialidad}/editar',  [EspecialidadAdminController::class, 'edit'])->name('admin.especialidades.edit');
+        Route::put('/admin/especialidades/{especialidad}',         [EspecialidadAdminController::class, 'update'])->name('admin.especialidades.update');
+        Route::delete('/admin/especialidades/{especialidad}',      [EspecialidadAdminController::class, 'destroy'])->name('admin.especialidades.destroy');
 
-    // Configuración
-    Route::get('/admin/configuracion',  [ConfiguracionAdminController::class, 'index'])->name('admin.configuracion.index');
-    Route::post('/admin/configuracion', [ConfiguracionAdminController::class, 'update'])->name('admin.configuracion.update');
-});
+        // Gestión de Usuarios del Sistema
+        Route::get('/admin/usuarios',                        [UsuarioAdminController::class, 'index'])->name('admin.usuarios.index');
+        Route::get('/admin/usuarios/crear',                  [UsuarioAdminController::class, 'create'])->name('admin.usuarios.create');
+        Route::post('/admin/usuarios',                       [UsuarioAdminController::class, 'store'])->name('admin.usuarios.store');
+        Route::get('/admin/usuarios/{usuario}',              [UsuarioAdminController::class, 'show'])->name('admin.usuarios.show');
+        Route::get('/admin/usuarios/{usuario}/editar',       [UsuarioAdminController::class, 'edit'])->name('admin.usuarios.edit');
+        Route::put('/admin/usuarios/{usuario}',              [UsuarioAdminController::class, 'update'])->name('admin.usuarios.update');
+        Route::post('/admin/usuarios/{usuario}/rol',         [UsuarioAdminController::class, 'updateRol'])->name('admin.usuarios.rol');
+        Route::delete('/admin/usuarios/{usuario}',           [UsuarioAdminController::class, 'destroy'])->name('admin.usuarios.destroy');
 
-// ── Perfil (todos los usuarios autenticados) ──────────────────────────────────
-Route::middleware('auth')->group(function () {
+        // Reportes del Hospital
+        Route::get('/admin/reportes', [ReporteAdminController::class, 'index'])->name('admin.reportes.index');
+
+        // Configuración Global del Sistema
+        Route::get('/admin/configuracion',  [ConfiguracionAdminController::class, 'index'])->name('admin.configuracion.index');
+        Route::post('/admin/configuracion', [ConfiguracionAdminController::class, 'update'])->name('admin.configuracion.update');
+    });
+
+    // ── Perfil de Usuario (Común para todos los roles logueados) ──────────────
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
