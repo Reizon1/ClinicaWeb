@@ -6,7 +6,8 @@ class PacienteDashboardController extends Controller
 {
     public function index()
     {
-        $paciente = auth()->user()->paciente;
+        $paciente = auth()->user()->paciente
+            ?? \App\Models\Paciente::create(['user_id' => auth()->id()]);
 
         $proximaCita = $paciente->citas()
             ->with(['medico.user', 'especialidad'])
@@ -38,7 +39,8 @@ class PacienteDashboardController extends Controller
 
     public function misCitas()
     {
-        $paciente = auth()->user()->paciente;
+        $paciente = auth()->user()->paciente
+            ?? \App\Models\Paciente::create(['user_id' => auth()->id()]);
 
         $proximasCitas = $paciente->citas()
             ->with(['medico.user', 'especialidad', 'pago'])
@@ -61,7 +63,8 @@ class PacienteDashboardController extends Controller
 
     public function historial()
     {
-        $paciente = auth()->user()->paciente;
+        $paciente = auth()->user()->paciente
+            ?? \App\Models\Paciente::create(['user_id' => auth()->id()]);
 
         $historiales = $paciente->historialClinico()
             ->with(['medico.user', 'cita.especialidad'])
@@ -73,7 +76,8 @@ class PacienteDashboardController extends Controller
 
     public function misRecetas()
     {
-        $paciente = auth()->user()->paciente;
+        $paciente = auth()->user()->paciente
+            ?? \App\Models\Paciente::create(['user_id' => auth()->id()]);
 
         $recetas = $paciente->recetas()
             ->with(['medico.user', 'cita.especialidad'])
@@ -85,7 +89,8 @@ class PacienteDashboardController extends Controller
 
     public function misPagos()
     {
-        $paciente = auth()->user()->paciente;
+        $paciente = auth()->user()->paciente
+            ?? \App\Models\Paciente::create(['user_id' => auth()->id()]);
 
         $pagosPendientes = $paciente->pagos()
             ->with(['cita.medico.user', 'cita.especialidad'])

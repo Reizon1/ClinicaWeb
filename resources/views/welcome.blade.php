@@ -164,7 +164,7 @@
     </section>
 
     {{-- PLAN PREMIUM --}}
-    <section id="premium" class="welcome-section" style="background:linear-gradient(135deg,#0f2a4a 0%,#1a3d6b 60%,#1e4a80 100%);">
+    <section id="premium" class="welcome-section" style="background:linear-gradient(135deg,#0f766e 0%,#0d9488 60%,#0891b2 100%);">
         <div class="container">
             <div class="row g-5 align-items-center">
                 <div class="col-lg-6 text-white">
