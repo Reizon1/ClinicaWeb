@@ -6,102 +6,98 @@
     <title>Nuevo Médico – Admin Los Mollos</title>
     <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700,800&display=swap" rel="stylesheet"/>
     @vite(['resources/css/app.css','resources/js/app.js'])
-    <style>body{font-family:'Inter',sans-serif;}</style>
 </head>
-<body class="antialiased bg-gray-50 text-gray-900">
-<div class="flex h-screen overflow-hidden">
+<body>
+<div class="d-flex" style="min-height:100vh;overflow:hidden;">
 
     @include('partials.admin-sidebar', ['activeSection' => 'medicos'])
 
-    <div class="flex-1 flex flex-col overflow-hidden">
-        <header class="bg-white border-b border-gray-100 px-6 py-4 flex items-center gap-3 flex-shrink-0">
-            <a href="{{ route('admin.medicos.index') }}" class="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+    <div class="flex-grow-1 d-flex flex-column" style="overflow:hidden;">
+        <header class="app-topbar gap-3">
+            <a href="{{ route('admin.medicos.index') }}" class="btn btn-light btn-sm p-2">
+                <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
             </a>
-            <h1 class="text-base font-bold text-gray-900">Registrar Nuevo Médico</h1>
+            <h5 class="fw-bold mb-0">Registrar Nuevo Médico</h5>
         </header>
 
-        <main class="flex-1 overflow-y-auto p-6">
-            <div class="max-w-lg mx-auto">
+        <main class="flex-grow-1 p-4" style="overflow-y:auto;">
+            <div class="mx-auto" style="max-width:520px;">
 
                 @if($errors->any())
-                    <div class="mb-5 bg-red-50 border border-red-200 rounded-xl p-4 flex items-start gap-3">
-                        <svg class="w-5 h-5 text-red-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    <div class="alert alert-danger d-flex align-items-start gap-2 mb-4">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" class="flex-shrink-0 mt-1"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                         <div>
-                            <p class="text-sm font-semibold text-red-700 mb-1">Corregí los siguientes errores:</p>
-                            <ul class="text-sm text-red-600 space-y-0.5">@foreach($errors->all() as $e)<li>• {{ $e }}</li>@endforeach</ul>
+                            <p class="fw-semibold mb-1">Corregí los siguientes errores:</p>
+                            @foreach($errors->all() as $e)<p class="mb-0 small">• {{ $e }}</p>@endforeach
                         </div>
                     </div>
                 @endif
 
-                <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
-                    <form method="POST" action="{{ route('admin.medicos.store') }}" class="space-y-4">
+                <div class="app-card p-4">
+                    <form method="POST" action="{{ route('admin.medicos.store') }}" class="d-flex flex-column gap-3">
                         @csrf
 
                         <div>
-                            <label class="block text-xs font-semibold text-gray-600 mb-1.5">Nombre completo * <span class="font-normal text-gray-400">(solo letras)</span></label>
-                            <input type="text" name="name" value="{{ old('name') }}" required maxlength="100"
-                                placeholder="Ej: Carlos Alberto García"
-                                class="w-full px-4 py-2.5 text-sm border rounded-xl focus:ring-2 focus:ring-blue-500 outline-none {{ $errors->has('name') ? 'border-red-300 bg-red-50' : 'border-gray-200' }}">
-                            @error('name')<p class="text-xs text-red-500 mt-1 flex items-center gap-1"><svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>{{ $message }}</p>@enderror
+                            <label class="form-label fw-semibold small">Nombre completo * <span class="fw-normal text-muted">(solo letras)</span></label>
+                            <input type="text" name="name" value="{{ old('name') }}" required maxlength="100" placeholder="Ej: Carlos Alberto García"
+                                   class="form-control form-control-sm @error('name') is-invalid @enderror">
+                            @error('name')<div class="invalid-feedback">{{ $message }}</div>@enderror
                         </div>
 
                         <div>
-                            <label class="block text-xs font-semibold text-gray-600 mb-1.5">Correo electrónico *</label>
-                            <input type="email" name="email" value="{{ old('email') }}" required maxlength="150"
-                                placeholder="medico@losmollos.com"
-                                class="w-full px-4 py-2.5 text-sm border rounded-xl focus:ring-2 focus:ring-blue-500 outline-none {{ $errors->has('email') ? 'border-red-300 bg-red-50' : 'border-gray-200' }}">
-                            @error('email')<p class="text-xs text-red-500 mt-1 flex items-center gap-1"><svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>{{ $message }}</p>@enderror
+                            <label class="form-label fw-semibold small">Correo electrónico *</label>
+                            <input type="email" name="email" value="{{ old('email') }}" required maxlength="150" placeholder="medico@losmollos.com"
+                                   class="form-control form-control-sm @error('email') is-invalid @enderror">
+                            @error('email')<div class="invalid-feedback">{{ $message }}</div>@enderror
                         </div>
 
-                        <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-xs font-semibold text-gray-600 mb-1.5">Contraseña * <span class="font-normal text-gray-400">(mín. 8 car.)</span></label>
+                        <div class="row g-3">
+                            <div class="col-6">
+                                <label class="form-label fw-semibold small">Contraseña * <span class="fw-normal text-muted">(mín. 8 car.)</span></label>
                                 <input type="password" name="password" required minlength="8"
-                                    class="w-full px-4 py-2.5 text-sm border rounded-xl focus:ring-2 focus:ring-blue-500 outline-none {{ $errors->has('password') ? 'border-red-300 bg-red-50' : 'border-gray-200' }}">
-                                @error('password')<p class="text-xs text-red-500 mt-1">{{ $message }}</p>@enderror
+                                       class="form-control form-control-sm @error('password') is-invalid @enderror">
+                                @error('password')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
-                            <div>
-                                <label class="block text-xs font-semibold text-gray-600 mb-1.5">Confirmar contraseña *</label>
-                                <input type="password" name="password_confirmation" required minlength="8"
-                                    class="w-full px-4 py-2.5 text-sm border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none">
+                            <div class="col-6">
+                                <label class="form-label fw-semibold small">Confirmar contraseña *</label>
+                                <input type="password" name="password_confirmation" required minlength="8" class="form-control form-control-sm">
                             </div>
                         </div>
 
                         <div>
-                            <label class="block text-xs font-semibold text-gray-600 mb-1.5">Especialidad *</label>
-                            <select name="especialidad_id" required class="w-full px-4 py-2.5 text-sm border rounded-xl focus:ring-2 focus:ring-blue-500 outline-none {{ $errors->has('especialidad_id') ? 'border-red-300 bg-red-50' : 'border-gray-200' }}">
+                            <label class="form-label fw-semibold small">Especialidad *</label>
+                            <select name="especialidad_id" required class="form-select form-select-sm @error('especialidad_id') is-invalid @enderror">
                                 <option value="">— Seleccioná la especialidad —</option>
-                                @foreach($especialidades as $e)<option value="{{ $e->id }}" {{ old('especialidad_id')==$e->id?'selected':'' }}>{{ $e->nombre }}</option>@endforeach
+                                @foreach($especialidades as $e)
+                                    <option value="{{ $e->id }}" {{ old('especialidad_id')==$e->id?'selected':'' }}>{{ $e->nombre }}</option>
+                                @endforeach
                             </select>
-                            @error('especialidad_id')<p class="text-xs text-red-500 mt-1">{{ $message }}</p>@enderror
+                            @error('especialidad_id')<div class="invalid-feedback">{{ $message }}</div>@enderror
                         </div>
 
                         <div>
-                            <label class="block text-xs font-semibold text-gray-600 mb-1.5">Número de licencia * <span class="font-normal text-gray-400">(ej: MP-10245)</span></label>
-                            <input type="text" name="numero_licencia" value="{{ old('numero_licencia') }}" required maxlength="50"
-                                placeholder="MP-10245"
-                                class="w-full px-4 py-2.5 text-sm border rounded-xl focus:ring-2 focus:ring-blue-500 outline-none font-mono {{ $errors->has('numero_licencia') ? 'border-red-300 bg-red-50' : 'border-gray-200' }}">
-                            @error('numero_licencia')<p class="text-xs text-red-500 mt-1 flex items-center gap-1"><svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>{{ $message }}</p>@enderror
+                            <label class="form-label fw-semibold small">Número de licencia * <span class="fw-normal text-muted">(ej: MP-10245)</span></label>
+                            <input type="text" name="numero_licencia" value="{{ old('numero_licencia') }}" required maxlength="50" placeholder="MP-10245"
+                                   class="form-control form-control-sm @error('numero_licencia') is-invalid @enderror" style="font-family:monospace;">
+                            @error('numero_licencia')<div class="invalid-feedback">{{ $message }}</div>@enderror
                         </div>
 
                         <div>
-                            <label class="block text-xs font-semibold text-gray-600 mb-1.5">Teléfono <span class="font-normal text-gray-400">(solo números)</span></label>
-                            <input type="text" name="telefono" value="{{ old('telefono') }}" maxlength="20"
-                                placeholder="+54 9 11 0000-0000"
-                                class="w-full px-4 py-2.5 text-sm border rounded-xl focus:ring-2 focus:ring-blue-500 outline-none {{ $errors->has('telefono') ? 'border-red-300 bg-red-50' : 'border-gray-200' }}">
-                            @error('telefono')<p class="text-xs text-red-500 mt-1">{{ $message }}</p>@enderror
+                            <label class="form-label fw-semibold small">Teléfono <span class="fw-normal text-muted">(solo números)</span></label>
+                            <input type="text" name="telefono" value="{{ old('telefono') }}" maxlength="20" placeholder="+54 9 11 0000-0000"
+                                   class="form-control form-control-sm @error('telefono') is-invalid @enderror">
+                            @error('telefono')<div class="invalid-feedback">{{ $message }}</div>@enderror
                         </div>
 
                         <div>
-                            <label class="block text-xs font-semibold text-gray-600 mb-1.5">Descripción profesional</label>
+                            <label class="form-label fw-semibold small">Descripción profesional</label>
                             <textarea name="descripcion" rows="3" maxlength="1000" placeholder="Breve descripción del médico y su experiencia..."
-                                class="w-full px-4 py-2.5 text-sm border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none resize-none">{{ old('descripcion') }}</textarea>
+                                      class="form-control form-control-sm">{{ old('descripcion') }}</textarea>
                         </div>
 
-                        <div class="flex gap-3 pt-2">
-                            <a href="{{ route('admin.medicos.index') }}" class="flex-1 text-center px-4 py-2.5 text-sm border border-gray-200 rounded-xl text-gray-600 hover:bg-gray-50 transition-colors font-medium">Cancelar</a>
-                            <button type="submit" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-4 py-2.5 rounded-xl transition-colors">Registrar Médico</button>
+                        <div class="d-flex gap-3 pt-1">
+                            <a href="{{ route('admin.medicos.index') }}" class="btn btn-outline-secondary flex-grow-1">Cancelar</a>
+                            <button type="submit" class="btn btn-primary flex-grow-1 fw-semibold">Registrar Médico</button>
                         </div>
                     </form>
                 </div>

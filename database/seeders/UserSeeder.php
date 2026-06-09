@@ -40,6 +40,14 @@ class UserSeeder extends Seeder
             'rol'      => 'medico',
         ]);
 
+        // ── Recepcionista ─────────────────────────────────────────
+        User::create([
+            'name'     => 'Laura Recepción',
+            'email'    => 'recepcion@losmollos.com',
+            'password' => Hash::make('password'),
+            'rol'      => 'recepcionista',
+        ]);
+
         // ── Pacientes ─────────────────────────────────────────────
         User::create([
             'name'     => 'Carlos Eduardo Pérez',

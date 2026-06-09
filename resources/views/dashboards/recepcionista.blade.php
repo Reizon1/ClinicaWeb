@@ -6,152 +6,189 @@
     <title>Dashboard Recepcionista – Los Mollos</title>
     <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700,800&display=swap" rel="stylesheet"/>
     @vite(['resources/css/app.css','resources/js/app.js'])
-    <style>body{font-family:'Inter',sans-serif;}</style>
 </head>
-<body class="antialiased bg-gray-50 text-gray-900">
+<body>
 
 @php
-    $badgeEstado = [
-        'confirmada' => 'bg-blue-100 text-blue-700',
-        'pendiente'  => 'bg-yellow-100 text-yellow-700',
-        'completada' => 'bg-green-100 text-green-700',
-        'cancelada'  => 'bg-red-100 text-red-600',
+    $badgeMap = [
+        'confirmada' => 'badge-confirmada',
+        'pendiente'  => 'badge-pendiente',
+        'completada' => 'badge-completada',
+        'cancelada'  => 'badge-cancelada',
     ];
 @endphp
 
-<div class="flex h-screen overflow-hidden">
+<div class="d-flex" style="min-height:100vh;overflow:hidden;">
 
-    <aside class="w-56 flex-shrink-0 flex flex-col bg-teal-900">
-        <div class="px-5 py-5 border-b border-teal-800">
-            <div class="flex items-center gap-2.5">
-                <div class="w-8 h-8 bg-teal-600 rounded-lg flex items-center justify-center">
-                    <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4zm5 3a1 1 0 012 0v1h1a1 1 0 010 2h-1v1a1 1 0 01-2 0v-1H8a1 1 0 010-2h1V7z" clip-rule="evenodd"/></svg>
+    @include('partials.recepcionista-sidebar', ['activeSection' => 'dashboard'])
+
+    <div class="flex-grow-1 d-flex flex-column" style="overflow:hidden;">
+
+        {{-- Header --}}
+        <header class="app-topbar justify-content-between">
+            <div class="d-flex align-items-center gap-2">
+                <div class="kpi-icon" style="background:#ccfbf1;width:36px;height:36px;border-radius:8px;">
+                    <svg width="18" height="18" fill="none" stroke="#0f766e" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                 </div>
                 <div>
-                    <div class="text-white font-bold text-sm">Los Mollos</div>
-                    <div class="text-teal-400 text-xs">RECEPCIÓN</div>
+                    <h5 class="fw-bold mb-0" style="font-size:0.95rem;">Panel de Recepción</h5>
+                    <p class="text-muted mb-0" style="font-size:0.75rem;">{{ now()->isoFormat('dddd, D [de] MMMM [de] YYYY') }}</p>
                 </div>
             </div>
-        </div>
-        <nav class="flex-1 px-3 py-4 space-y-0.5 overflow-y-auto">
-            <div class="px-3 py-1 mb-1"><span class="text-xs font-semibold text-teal-400 uppercase tracking-widest">Principal</span></div>
-            <a href="{{ route('dashboard.recepcionista') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-teal-700 text-white text-sm font-semibold">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
-                Dashboard
-            </a>
-            <div class="px-3 py-1 mt-3 mb-1"><span class="text-xs font-semibold text-teal-400 uppercase tracking-widest">Gestión</span></div>
-            <a href="{{ route('recepcionista.citas') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-teal-100 hover:bg-teal-800 text-sm transition-colors">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-                Todas las Citas
-            </a>
-            <a href="{{ route('recepcionista.citas.crear') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-teal-100 hover:bg-teal-800 text-sm transition-colors">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4v16m8-8H4"/></svg>
-                Nueva Cita
-            </a>
-            <a href="{{ route('recepcionista.pacientes.crear') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-teal-100 hover:bg-teal-800 text-sm transition-colors">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/></svg>
-                Registrar Paciente
-            </a>
-        </nav>
-        <div class="px-3 py-4 border-t border-teal-800">
-            <form method="POST" action="{{ route('logout') }}">@csrf
-                <button type="submit" class="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-red-300 hover:bg-red-500/20 text-xs transition-colors">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
-                    Cerrar Sesión
-                </button>
-            </form>
-        </div>
-    </aside>
-
-    <div class="flex-1 flex flex-col overflow-hidden">
-        <header class="bg-white border-b border-gray-100 px-6 py-3 flex items-center justify-between flex-shrink-0">
-            <div>
-                <h1 class="text-base font-bold text-gray-900">Recepción – Resumen del día</h1>
-                <p class="text-xs text-gray-400">{{ now()->format('d \d\e F \d\e Y') }}</p>
-            </div>
-            <div class="flex items-center gap-3">
-                <a href="{{ route('recepcionista.citas.crear') }}" class="bg-teal-600 hover:bg-teal-700 text-white text-xs font-semibold px-4 py-2.5 rounded-xl flex items-center gap-1.5 transition-colors">
-                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+            <div class="d-flex gap-2">
+                <a href="{{ route('recepcionista.citas.crear') }}" class="btn btn-sm d-flex align-items-center gap-1"
+                   style="background:#0d9488;color:white;">
+                    <svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
                     Nueva Cita
                 </a>
-                <a href="{{ route('recepcionista.pacientes.crear') }}" class="bg-white border border-gray-200 text-gray-700 text-xs font-semibold px-4 py-2.5 rounded-xl flex items-center gap-1.5 hover:bg-gray-50 transition-colors">
-                    Registrar Paciente
+                <a href="{{ route('recepcionista.pacientes.crear') }}" class="btn btn-outline-secondary btn-sm d-flex align-items-center gap-1">
+                    <svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/></svg>
+                    Nuevo Paciente
                 </a>
             </div>
         </header>
 
-        <main class="flex-1 overflow-y-auto p-6 space-y-5">
+        <main class="flex-grow-1" style="overflow-y:auto;">
 
-            @if(session('success'))
-                <div class="bg-green-50 border border-green-200 text-green-700 text-sm px-4 py-3 rounded-xl">{{ session('success') }}</div>
-            @endif
-
-            <div class="grid grid-cols-3 gap-4">
-                <div class="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
-                    <div class="w-9 h-9 bg-teal-50 rounded-xl flex items-center justify-center mb-3">
-                        <svg class="w-5 h-5 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-                    </div>
-                    <div class="text-2xl font-bold text-gray-900">{{ $citasHoy->count() }}</div>
-                    <div class="text-xs text-gray-400 mt-1">Citas de hoy</div>
-                </div>
-                <div class="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
-                    <div class="w-9 h-9 bg-yellow-50 rounded-xl flex items-center justify-center mb-3">
-                        <svg class="w-5 h-5 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                    </div>
-                    <div class="text-2xl font-bold text-gray-900">{{ $citasPendientes }}</div>
-                    <div class="text-xs text-gray-400 mt-1">Citas pendientes (total)</div>
-                </div>
-                <div class="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
-                    <div class="w-9 h-9 bg-blue-50 rounded-xl flex items-center justify-center mb-3">
-                        <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                    </div>
-                    <div class="text-2xl font-bold text-gray-900">{{ $totalPacientes }}</div>
-                    <div class="text-xs text-gray-400 mt-1">Pacientes registrados</div>
-                </div>
+            {{-- Hero Banner --}}
+            <div class="px-4 py-4" style="background:linear-gradient(135deg,#0f766e,#0d9488,#0891b2);position:relative;overflow:hidden;">
+                <div style="position:absolute;top:-30px;right:-30px;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,0.08);pointer-events:none;"></div>
+                <div style="position:absolute;bottom:-20px;left:-20px;width:150px;height:150px;border-radius:50%;background:rgba(255,255,255,0.05);pointer-events:none;"></div>
+                <p class="mb-1" style="color:rgba(204,251,241,0.8);font-size:0.7rem;text-transform:uppercase;letter-spacing:0.1em;font-weight:600;">Clínica Los Mollos</p>
+                <h2 class="text-white fw-bold mb-1" style="font-size:1.4rem;">
+                    Bienvenida, {{ explode(' ', auth()->user()->name)[0] }}
+                </h2>
+                <p style="color:rgba(204,251,241,0.9);font-size:0.875rem;" class="mb-0">
+                    @if($citasHoy->count() > 0)
+                        Tenés <strong class="text-white">{{ $citasHoy->count() }}</strong> {{ $citasHoy->count() === 1 ? 'cita programada' : 'citas programadas' }} para hoy.
+                    @else
+                        No hay citas programadas para hoy. ¡Buen momento para organizar!
+                    @endif
+                </p>
             </div>
 
-            <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-                <div class="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
-                    <h3 class="text-sm font-semibold text-gray-900">Agenda de Hoy</h3>
-                    <a href="{{ route('recepcionista.citas') }}" class="text-xs font-semibold text-teal-600 hover:underline">Ver todas</a>
+            <div class="p-4">
+
+                @if(session('success'))
+                    <div class="alert alert-success d-flex align-items-center gap-2 mb-4" role="alert">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                        {{ session('success') }}
+                    </div>
+                @endif
+
+                {{-- KPIs --}}
+                <div class="row g-3 mb-4">
+                    <div class="col-6 col-xl-3">
+                        <div class="kpi-card text-white" style="background:linear-gradient(135deg,#0d9488,#0f766e);">
+                            <div class="kpi-icon mb-2" style="background:rgba(255,255,255,0.2);">
+                                <svg width="18" height="18" fill="none" stroke="white" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                            </div>
+                            <div class="fw-bold" style="font-size:1.75rem;">{{ $citasHoy->count() }}</div>
+                            <div style="font-size:0.75rem;color:rgba(204,251,241,0.8);">Citas hoy</div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-xl-3">
+                        <div class="kpi-card text-white" style="background:linear-gradient(135deg,#f59e0b,#d97706);">
+                            <div class="kpi-icon mb-2" style="background:rgba(255,255,255,0.2);">
+                                <svg width="18" height="18" fill="none" stroke="white" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            </div>
+                            <div class="fw-bold" style="font-size:1.75rem;">{{ $citasPendientes }}</div>
+                            <div style="font-size:0.75rem;color:rgba(254,243,199,0.8);">Pendientes de confirmar</div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-xl-3">
+                        <div class="kpi-card text-white" style="background:linear-gradient(135deg,#3b82f6,#4338ca);">
+                            <div class="kpi-icon mb-2" style="background:rgba(255,255,255,0.2);">
+                                <svg width="18" height="18" fill="none" stroke="white" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                            </div>
+                            <div class="fw-bold" style="font-size:1.75rem;">{{ $totalPacientes }}</div>
+                            <div style="font-size:0.75rem;color:rgba(219,234,254,0.8);">Pacientes registrados</div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-xl-3">
+                        <div class="kpi-card text-white" style="background:linear-gradient(135deg,#10b981,#0d9488);">
+                            <div class="kpi-icon mb-2" style="background:rgba(255,255,255,0.2);">
+                                <svg width="18" height="18" fill="none" stroke="white" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                            </div>
+                            <div class="fw-bold" style="font-size:1.75rem;">{{ $medicosDisponibles }}</div>
+                            <div style="font-size:0.75rem;color:rgba(209,250,229,0.8);">Médicos disponibles</div>
+                        </div>
+                    </div>
                 </div>
-                <table class="w-full text-xs">
-                    <thead class="bg-gray-50">
-                        <tr>
-                            <th class="px-5 py-3 text-left font-semibold text-gray-500 uppercase tracking-wider">Hora</th>
-                            <th class="px-4 py-3 text-left font-semibold text-gray-500 uppercase tracking-wider">Paciente</th>
-                            <th class="px-4 py-3 text-left font-semibold text-gray-500 uppercase tracking-wider">Médico</th>
-                            <th class="px-4 py-3 text-left font-semibold text-gray-500 uppercase tracking-wider">Estado</th>
-                            <th class="px-4 py-3 text-left font-semibold text-gray-500 uppercase tracking-wider">Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-gray-50">
-                        @forelse($citasHoy as $cita)
-                        <tr class="hover:bg-gray-50 transition-colors">
-                            <td class="px-5 py-3.5 font-semibold text-gray-900">{{ $cita->fecha_hora->format('h:i A') }}</td>
-                            <td class="px-4 py-3.5 font-medium text-gray-800">{{ $cita->paciente->user->name }}</td>
-                            <td class="px-4 py-3.5 text-gray-600">Dr. {{ $cita->medico->user->name }}</td>
-                            <td class="px-4 py-3.5">
-                                <span class="px-2.5 py-1 rounded-full font-semibold text-xs {{ $badgeEstado[$cita->estado] ?? 'bg-gray-100 text-gray-600' }}">
-                                    {{ ucfirst($cita->estado) }}
-                                </span>
-                            </td>
-                            <td class="px-4 py-3.5">
-                                @if(!in_array($cita->estado, ['completada', 'cancelada']))
-                                <div class="flex items-center gap-3">
-                                    <form method="POST" action="{{ route('recepcionista.citas.cancelar', $cita) }}" onsubmit="return confirm('¿Cancelar esta cita?')">
-                                        @csrf @method('PATCH')
-                                        <button type="submit" class="text-red-500 hover:text-red-700 font-semibold">Cancelar</button>
-                                    </form>
-                                </div>
-                                @endif
-                            </td>
-                        </tr>
-                        @empty
-                        <tr><td colspan="5" class="px-5 py-8 text-center text-gray-400">No hay citas programadas para hoy.</td></tr>
-                        @endforelse
-                    </tbody>
-                </table>
+
+                {{-- Agenda del día --}}
+                <div class="app-card overflow-hidden">
+                    <div class="app-card-header d-flex align-items-center justify-content-between">
+                        <div class="d-flex align-items-center gap-2">
+                            <div style="width:4px;height:20px;background:#0d9488;border-radius:4px;"></div>
+                            <span>Agenda de Hoy</span>
+                            <span class="badge rounded-pill" style="background:#ccfbf1;color:#0f766e;">{{ $citasHoy->count() }}</span>
+                        </div>
+                        <a href="{{ route('recepcionista.citas') }}" class="btn btn-link btn-sm text-decoration-none p-0"
+                           style="color:#0d9488;font-size:0.8rem;">Ver todas →</a>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table app-table mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Hora</th>
+                                    <th>Paciente</th>
+                                    <th>Médico</th>
+                                    <th>Especialidad</th>
+                                    <th>Estado</th>
+                                    <th>Acción</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse($citasHoy as $cita)
+                                <tr>
+                                    <td>
+                                        <span class="fw-bold">{{ $cita->fecha_hora->format('h:i') }}</span>
+                                        <span class="text-muted" style="font-size:0.7rem;"> {{ $cita->fecha_hora->format('A') }}</span>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex align-items-center gap-2">
+                                            <div class="avatar-circle bg-primary bg-opacity-10 text-primary" style="width:28px;height:28px;font-size:0.65rem;">
+                                                {{ strtoupper(substr($cita->paciente->user->name,0,1)) }}
+                                            </div>
+                                            <span class="fw-medium">{{ $cita->paciente->user->name }}</span>
+                                        </div>
+                                    </td>
+                                    <td class="text-muted">Dr. {{ $cita->medico->user->name }}</td>
+                                    <td class="text-muted">{{ $cita->especialidad->nombre }}</td>
+                                    <td>
+                                        <span class="badge rounded-pill fw-semibold {{ $badgeMap[$cita->estado] ?? '' }}">
+                                            {{ ucfirst($cita->estado) }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        @if(!in_array($cita->estado, ['completada','cancelada']))
+                                        <form method="POST" action="{{ route('recepcionista.citas.cancelar', $cita) }}"
+                                              onsubmit="return confirm('¿Cancelar esta cita?')">
+                                            @csrf @method('PATCH')
+                                            <button type="submit" class="btn btn-link btn-sm text-danger p-0">Cancelar</button>
+                                        </form>
+                                        @else
+                                        <span class="text-muted">—</span>
+                                        @endif
+                                    </td>
+                                </tr>
+                                @empty
+                                <tr>
+                                    <td colspan="6" class="text-center py-5">
+                                        <div class="avatar-circle bg-light text-muted mx-auto mb-2" style="width:48px;height:48px;">
+                                            <svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                                        </div>
+                                        <p class="fw-medium text-muted mb-0">Sin citas para hoy</p>
+                                        <p class="text-muted small">Podés agendar nuevas citas desde el menú lateral.</p>
+                                    </td>
+                                </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
             </div>
         </main>
     </div>

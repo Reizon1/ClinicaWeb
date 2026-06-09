@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Admin\ConfiguracionAdminController;
+use App\Http\Controllers\Admin\SuscripcionAdminController;
+use App\Http\Controllers\Recepcionista\PagoController as RecepcionistaPagoController;
 use App\Http\Controllers\Admin\EspecialidadAdminController;
 use App\Http\Controllers\Admin\MedicoAdminController;
 use App\Http\Controllers\Admin\ReporteAdminController;
@@ -41,6 +43,10 @@ Route::get('/dashboard', function () {
 Route::middleware(['auth', 'rol:paciente'])->group(function () {
     Route::get('/dashboard/paciente', [PacienteDashboardController::class, 'index'])
         ->name('dashboard.paciente');
+    Route::get('/paciente/citas',    [PacienteDashboardController::class, 'misCitas'])->name('paciente.citas');
+    Route::get('/paciente/historial',[PacienteDashboardController::class, 'historial'])->name('paciente.historial');
+    Route::get('/paciente/recetas',  [PacienteDashboardController::class, 'misRecetas'])->name('paciente.recetas');
+    Route::get('/paciente/pagos',    [PacienteDashboardController::class, 'misPagos'])->name('paciente.pagos');
     Route::get('/citas/crear', [CitaController::class, 'create'])->name('citas.crear');
     Route::post('/citas',      [CitaController::class, 'store'])->name('citas.store');
 });
@@ -49,6 +55,8 @@ Route::middleware(['auth', 'rol:paciente'])->group(function () {
 Route::middleware(['auth', 'rol:medico'])->group(function () {
     Route::get('/dashboard/medico', [MedicoDashboardController::class, 'index'])
         ->name('dashboard.medico');
+    Route::get('/medico/agenda/semanal', [MedicoDashboardController::class, 'agendaSemanal'])
+        ->name('medico.agenda.semanal');
 
     // Horarios del médico
     Route::get('/horarios',          [HorarioMedicoController::class, 'index'])->name('horarios.index');
@@ -94,6 +102,11 @@ Route::middleware(['auth', 'rol:recepcionista'])->group(function () {
     // Registro de pacientes
     Route::get('/recepcionista/pacientes/crear',   [RecepcionistaDashboardController::class, 'crearPaciente'])->name('recepcionista.pacientes.crear');
     Route::post('/recepcionista/pacientes',        [RecepcionistaDashboardController::class, 'guardarPaciente'])->name('recepcionista.pacientes.guardar');
+
+    // Pagos
+    Route::get('/recepcionista/pagos',                   [RecepcionistaPagoController::class, 'index'])->name('recepcionista.pagos.index');
+    Route::get('/recepcionista/pagos/crear/{cita}',      [RecepcionistaPagoController::class, 'create'])->name('recepcionista.pagos.crear');
+    Route::post('/recepcionista/pagos',                  [RecepcionistaPagoController::class, 'store'])->name('recepcionista.pagos.store');
 });
 
 // ── Dashboard Administrador ───────────────────────────────────────────────────
@@ -134,6 +147,12 @@ Route::middleware(['auth', 'rol:admin'])->group(function () {
     // Configuración
     Route::get('/admin/configuracion',  [ConfiguracionAdminController::class, 'index'])->name('admin.configuracion.index');
     Route::post('/admin/configuracion', [ConfiguracionAdminController::class, 'update'])->name('admin.configuracion.update');
+
+    // Suscripciones Premium
+    Route::get('/admin/suscripciones',          [SuscripcionAdminController::class, 'index'])->name('admin.suscripciones.index');
+    Route::get('/admin/suscripciones/crear',    [SuscripcionAdminController::class, 'create'])->name('admin.suscripciones.create');
+    Route::post('/admin/suscripciones',         [SuscripcionAdminController::class, 'store'])->name('admin.suscripciones.store');
+    Route::delete('/admin/suscripciones/{suscripcion}', [SuscripcionAdminController::class, 'destroy'])->name('admin.suscripciones.destroy');
 });
 
 // ── Perfil (todos los usuarios autenticados) ──────────────────────────────────

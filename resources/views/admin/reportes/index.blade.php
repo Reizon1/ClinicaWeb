@@ -6,126 +6,135 @@
     <title>Reportes – Admin Los Mollos</title>
     <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700,800&display=swap" rel="stylesheet"/>
     @vite(['resources/css/app.css','resources/js/app.js'])
-    <style>body{font-family:'Inter',sans-serif;}</style>
 </head>
-<body class="antialiased bg-gray-50 text-gray-900">
-<div class="flex h-screen overflow-hidden">
+<body>
+<div class="d-flex" style="min-height:100vh;overflow:hidden;">
 
     @include('partials.admin-sidebar', ['activeSection' => 'reportes'])
 
-    <div class="flex-1 flex flex-col overflow-hidden">
-        <header class="bg-white border-b border-gray-100 px-6 py-4 flex items-center justify-between flex-shrink-0">
-            <div>
-                <h1 class="text-base font-bold text-gray-900">Reportes del Sistema</h1>
-                <p class="text-xs text-gray-400">Estadísticas y análisis de la clínica – {{ $anio }}</p>
-            </div>
+    <div class="flex-grow-1 d-flex flex-column" style="overflow:hidden;">
+        <header class="app-topbar">
+            <h5 class="fw-bold mb-0">Reportes del Sistema</h5>
+            <p class="text-muted mb-0 ms-2" style="font-size:0.75rem;">Estadísticas y análisis de la clínica – {{ $anio }}</p>
         </header>
 
-        <main class="flex-1 overflow-y-auto p-6 space-y-5">
+        <main class="flex-grow-1 p-4" style="overflow-y:auto;">
 
             {{-- KPIs --}}
-            <div class="grid grid-cols-4 gap-4">
-                <div class="bg-white rounded-2xl border border-gray-100 p-4 shadow-sm">
-                    <div class="text-xs font-medium text-gray-500 mb-2">Total Citas</div>
-                    <div class="text-3xl font-bold text-gray-900">{{ number_format($totalCitas) }}</div>
-                    <div class="flex items-center gap-4 mt-2">
-                        <span class="text-xs text-green-600 font-semibold">{{ $citasCompletadas }} completadas</span>
-                        <span class="text-xs text-red-500 font-semibold">{{ $citasCanceladas }} canceladas</span>
+            <div class="row g-3 mb-4">
+                <div class="col-md-3">
+                    <div class="kpi-card">
+                        <p class="text-muted small mb-2">Total Citas</p>
+                        <h4 class="fw-bold text-dark mb-1">{{ number_format($totalCitas) }}</h4>
+                        <div class="d-flex gap-3">
+                            <span class="text-success fw-semibold" style="font-size:0.72rem;">{{ $citasCompletadas }} completadas</span>
+                            <span class="text-danger fw-semibold" style="font-size:0.72rem;">{{ $citasCanceladas }} canceladas</span>
+                        </div>
                     </div>
                 </div>
-                <div class="bg-white rounded-2xl border border-gray-100 p-4 shadow-sm">
-                    <div class="text-xs font-medium text-gray-500 mb-2">Citas Pendientes</div>
-                    <div class="text-3xl font-bold text-yellow-500">{{ number_format($citasPendientes) }}</div>
-                    <div class="text-xs text-gray-400 mt-2">En espera de atención</div>
+                <div class="col-md-3">
+                    <div class="kpi-card">
+                        <p class="text-muted small mb-2">Citas Pendientes</p>
+                        <h4 class="fw-bold text-warning mb-1">{{ number_format($citasPendientes) }}</h4>
+                        <p class="text-muted mb-0" style="font-size:0.72rem;">En espera de atención</p>
+                    </div>
                 </div>
-                <div class="bg-white rounded-2xl border border-gray-100 p-4 shadow-sm">
-                    <div class="text-xs font-medium text-gray-500 mb-2">Total Pacientes</div>
-                    <div class="text-3xl font-bold text-blue-600">{{ number_format($totalPacientes) }}</div>
-                    <div class="text-xs text-gray-400 mt-2">{{ $totalMedicos }} médicos activos</div>
+                <div class="col-md-3">
+                    <div class="kpi-card">
+                        <p class="text-muted small mb-2">Total Pacientes</p>
+                        <h4 class="fw-bold text-primary mb-1">{{ number_format($totalPacientes) }}</h4>
+                        <p class="text-muted mb-0" style="font-size:0.72rem;">{{ $totalMedicos }} médicos activos</p>
+                    </div>
                 </div>
-                <div class="bg-white rounded-2xl border border-gray-100 p-4 shadow-sm">
-                    <div class="text-xs font-medium text-gray-500 mb-2">Ingresos Totales</div>
-                    <div class="text-3xl font-bold text-green-600">${{ number_format($totalPagos, 2) }}</div>
-                    <div class="text-xs text-gray-400 mt-2">Pagos completados</div>
+                <div class="col-md-3">
+                    <div class="kpi-card">
+                        <p class="text-muted small mb-2">Ingresos Totales</p>
+                        <h4 class="fw-bold text-success mb-1">${{ number_format($totalPagos, 2) }}</h4>
+                        <p class="text-muted mb-0" style="font-size:0.72rem;">Pagos completados</p>
+                    </div>
                 </div>
             </div>
 
-            <div class="grid grid-cols-3 gap-5">
+            <div class="row g-4 mb-4">
                 {{-- Gráfico citas por mes --}}
-                <div class="col-span-2 bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
-                    <h3 class="text-sm font-semibold text-gray-900 mb-4">Citas por Mes – {{ $anio }}</h3>
-                    @php $maxV = max($datosPorMes) > 0 ? max($datosPorMes) : 1; $meses = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic']; @endphp
-                    <div class="flex items-end gap-1.5" style="height:160px;">
-                        @foreach($meses as $i => $mes)
-                        @php $val = $datosPorMes[$i+1]; @endphp
-                        <div class="flex-1 flex flex-col items-center gap-1 h-full justify-end">
-                            <div class="text-center" style="font-size:9px; color:#6b7280;">{{ $val > 0 ? $val : '' }}</div>
-                            <div class="w-full rounded-t-md bg-blue-400/80 hover:bg-blue-600 transition-colors cursor-pointer"
-                                 style="height:{{ $val > 0 ? round(($val/$maxV)*120) : 4 }}px"></div>
-                            <span style="font-size:9px" class="text-gray-400">{{ $mes }}</span>
+                <div class="col-lg-8">
+                    <div class="app-card p-4">
+                        <h6 class="fw-semibold mb-4">Citas por Mes – {{ $anio }}</h6>
+                        @php $maxV = max($datosPorMes) > 0 ? max($datosPorMes) : 1; $meses = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic']; @endphp
+                        <div class="d-flex align-items-end gap-1" style="height:160px;">
+                            @foreach($meses as $i => $mes)
+                            @php $val = $datosPorMes[$i+1]; @endphp
+                            <div class="flex-grow-1 d-flex flex-column align-items-center justify-content-end gap-1 h-100">
+                                <div class="text-muted text-center" style="font-size:9px;">{{ $val > 0 ? $val : '' }}</div>
+                                <div class="w-100 rounded-top" style="background:#60a5fa;height:{{ $val > 0 ? round(($val/$maxV)*120) : 4 }}px;min-height:4px;"></div>
+                                <span class="text-muted" style="font-size:9px;">{{ $mes }}</span>
+                            </div>
+                            @endforeach
                         </div>
-                        @endforeach
                     </div>
                 </div>
 
                 {{-- Top médicos --}}
-                <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
-                    <h3 class="text-sm font-semibold text-gray-900 mb-4">Top Médicos por Citas</h3>
-                    <div class="space-y-3">
-                        @forelse($topMedicos as $i => $m)
-                        <div class="flex items-center gap-3">
-                            <div class="w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold {{ $i===0?'bg-yellow-100 text-yellow-600':($i===1?'bg-gray-100 text-gray-500':'bg-gray-50 text-gray-400') }}">{{ $i+1 }}</div>
-                            <div class="flex-1 min-w-0">
-                                <div class="text-xs font-semibold text-gray-800 truncate">Dr. {{ $m->user->name }}</div>
-                                @php $pct = $totalCitas > 0 ? round(($m->citas_count/$totalCitas)*100) : 0; @endphp
-                                <div class="w-full bg-gray-100 rounded-full h-1.5 mt-1">
-                                    <div class="bg-blue-500 h-1.5 rounded-full" style="width:{{ $pct }}%"></div>
+                <div class="col-lg-4">
+                    <div class="app-card p-4">
+                        <h6 class="fw-semibold mb-3">Top Médicos por Citas</h6>
+                        <div class="d-flex flex-column gap-3">
+                            @forelse($topMedicos as $i => $m)
+                            @php $pct = $totalCitas > 0 ? round(($m->citas_count/$totalCitas)*100) : 0; @endphp
+                            <div class="d-flex align-items-center gap-2">
+                                <div class="rounded-circle d-flex align-items-center justify-content-center fw-bold flex-shrink-0" style="width:20px;height:20px;font-size:0.6rem;background:{{ $i===0?'#fef9c3':($i===1?'#f3f4f6':'#f9fafb') }};color:{{ $i===0?'#92400e':($i===1?'#374151':'#6b7280') }};">{{ $i+1 }}</div>
+                                <div class="flex-grow-1 min-w-0">
+                                    <div class="fw-semibold text-truncate" style="font-size:0.72rem;">Dr. {{ $m->user->name }}</div>
+                                    <div class="progress mt-1" style="height:4px;">
+                                        <div class="progress-bar bg-primary" style="width:{{ $pct }}%"></div>
+                                    </div>
                                 </div>
+                                <div class="fw-bold small flex-shrink-0">{{ $m->citas_count }}</div>
                             </div>
-                            <div class="text-xs font-bold text-gray-700 w-8 text-right">{{ $m->citas_count }}</div>
+                            @empty
+                            <p class="text-muted small">Sin datos.</p>
+                            @endforelse
                         </div>
-                        @empty
-                        <p class="text-xs text-gray-400">Sin datos.</p>
-                        @endforelse
                     </div>
                 </div>
             </div>
 
             {{-- Citas por especialidad --}}
-            <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
-                <h3 class="text-sm font-semibold text-gray-900 mb-4">Citas por Especialidad</h3>
-                <div class="grid grid-cols-3 gap-3">
+            <div class="app-card p-4 mb-4">
+                <h6 class="fw-semibold mb-3">Citas por Especialidad</h6>
+                <div class="row g-3">
                     @forelse($citasPorEspecialidad as $esp)
-                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
-                        <div>
-                            <div class="text-xs font-semibold text-gray-800">{{ $esp->nombre }}</div>
-                            @php $pct = $totalCitas > 0 ? round(($esp->citas_count/$totalCitas)*100) : 0; @endphp
-                            <div class="text-xs text-gray-400 mt-0.5">{{ $pct }}% del total</div>
+                    @php $pct = $totalCitas > 0 ? round(($esp->citas_count/$totalCitas)*100) : 0; @endphp
+                    <div class="col-md-4">
+                        <div class="d-flex align-items-center justify-content-between rounded-3 p-3" style="background:#f9fafb;">
+                            <div>
+                                <p class="fw-semibold mb-0 small">{{ $esp->nombre }}</p>
+                                <p class="text-muted mb-0" style="font-size:0.7rem;">{{ $pct }}% del total</p>
+                            </div>
+                            <div class="fw-bold text-primary" style="font-size:1.3rem;">{{ $esp->citas_count }}</div>
                         </div>
-                        <div class="text-xl font-bold text-blue-600">{{ $esp->citas_count }}</div>
                     </div>
                     @empty
-                    <div class="col-span-3 text-xs text-gray-400 py-4 text-center">Sin datos de especialidades.</div>
+                    <div class="col-12 text-center text-muted small py-3">Sin datos de especialidades.</div>
                     @endforelse
                 </div>
             </div>
 
-            {{-- Resumen tasa --}}
             @if($totalCitas > 0)
-            <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
-                <h3 class="text-sm font-semibold text-gray-900 mb-4">Resumen de Rendimiento</h3>
-                <div class="grid grid-cols-3 gap-4">
-                    <div class="text-center">
-                        <div class="text-2xl font-bold text-green-600">{{ round(($citasCompletadas/$totalCitas)*100) }}%</div>
-                        <div class="text-xs text-gray-400 mt-1">Tasa de Completadas</div>
+            <div class="app-card p-4">
+                <h6 class="fw-semibold mb-3">Resumen de Rendimiento</h6>
+                <div class="row g-4 text-center">
+                    <div class="col-md-4">
+                        <div class="fw-bold text-success" style="font-size:2rem;">{{ round(($citasCompletadas/$totalCitas)*100) }}%</div>
+                        <p class="text-muted small mb-0">Tasa de Completadas</p>
                     </div>
-                    <div class="text-center">
-                        <div class="text-2xl font-bold text-red-500">{{ round(($citasCanceladas/$totalCitas)*100) }}%</div>
-                        <div class="text-xs text-gray-400 mt-1">Tasa de Cancelación</div>
+                    <div class="col-md-4">
+                        <div class="fw-bold text-danger" style="font-size:2rem;">{{ round(($citasCanceladas/$totalCitas)*100) }}%</div>
+                        <p class="text-muted small mb-0">Tasa de Cancelación</p>
                     </div>
-                    <div class="text-center">
-                        <div class="text-2xl font-bold text-blue-600">{{ $totalUsuarios }}</div>
-                        <div class="text-xs text-gray-400 mt-1">Usuarios Totales</div>
+                    <div class="col-md-4">
+                        <div class="fw-bold text-primary" style="font-size:2rem;">{{ $totalUsuarios }}</div>
+                        <p class="text-muted small mb-0">Usuarios Totales</p>
                     </div>
                 </div>
             </div>

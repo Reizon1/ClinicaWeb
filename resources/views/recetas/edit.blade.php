@@ -6,117 +6,84 @@
     <title>Editar Receta – Los Mollos</title>
     <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700,800&display=swap" rel="stylesheet"/>
     @vite(['resources/css/app.css','resources/js/app.js'])
-    <style>body{font-family:'Inter',sans-serif;}</style>
 </head>
-<body class="antialiased bg-gray-50 text-gray-900">
-<div class="flex h-screen overflow-hidden">
+<body>
+<div class="d-flex" style="min-height:100vh;overflow:hidden;">
 
     @include('partials.medico-sidebar', ['activeSection' => 'recetas'])
 
-    <div class="flex-1 flex flex-col overflow-hidden">
-        <header class="bg-white border-b border-gray-100 px-6 py-4 flex items-center gap-3 flex-shrink-0">
-            <a href="{{ route('recetas.index') }}"
-               class="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
-                </svg>
+    <div class="flex-grow-1 d-flex flex-column" style="overflow:hidden;">
+        <header class="app-topbar gap-3">
+            <a href="{{ route('recetas.index') }}" class="btn btn-light btn-sm p-2">
+                <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
             </a>
             <div>
-                <h1 class="text-base font-bold text-gray-900">Editar Receta Médica</h1>
-                <p class="text-xs text-gray-400">Paciente: {{ $receta->paciente->user->name }}</p>
+                <h5 class="fw-bold mb-0">Editar Receta Médica</h5>
+                <p class="text-muted mb-0" style="font-size:0.75rem;">Paciente: {{ $receta->paciente->user->name }}</p>
             </div>
         </header>
 
-        <main class="flex-1 overflow-y-auto p-6">
-            <div class="max-w-2xl mx-auto space-y-4">
+        <main class="flex-grow-1 p-4" style="overflow-y:auto;">
+            <div class="mx-auto d-flex flex-column gap-3" style="max-width:640px;">
 
                 @if($errors->any())
-                    <div class="bg-red-50 border border-red-200 rounded-xl p-4 flex items-start gap-3">
-                        <svg class="w-5 h-5 text-red-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                        </svg>
-                        <div>
-                            <p class="text-sm font-semibold text-red-700 mb-1">Corregí los siguientes errores:</p>
-                            <ul class="text-sm text-red-600 space-y-0.5">
-                                @foreach($errors->all() as $e)
-                                    <li>• {{ $e }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
+                    <div class="alert alert-danger mb-0">
+                        <ul class="mb-0 ps-3">@foreach($errors->all() as $e)<li>{{ $e }}</li>@endforeach</ul>
                     </div>
                 @endif
 
-                {{-- Info de la cita --}}
-                <div class="bg-blue-50 border border-blue-100 rounded-2xl p-4 flex items-start gap-3">
-                    <div class="w-9 h-9 bg-blue-100 rounded-xl flex items-center justify-center flex-shrink-0">
-                        <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                        </svg>
+                {{-- Info de la receta --}}
+                <div class="rounded-3 p-3 d-flex align-items-start gap-3" style="background:#eff6ff;border:1px solid #bfdbfe;">
+                    <div class="avatar-circle flex-shrink-0" style="background:#dbeafe;color:#2563eb;width:36px;height:36px;">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                     </div>
                     <div>
-                        <p class="text-xs font-semibold text-blue-700">Receta del</p>
-                        <p class="text-sm text-blue-800">
-                            {{ $receta->fecha_emision->format('d \d\e F \d\e Y') }}
-                            — {{ $receta->paciente->user->name }}
-                        </p>
-                        <p class="text-xs text-blue-500 mt-0.5">
-                            Cita: {{ $receta->cita?->fecha_hora->format('d/m/Y H:i') ?? 'Sin cita vinculada' }}
-                        </p>
+                        <p class="fw-semibold mb-0" style="font-size:0.75rem;color:#1d4ed8;">Receta del</p>
+                        <p class="mb-0" style="font-size:0.85rem;color:#1e40af;">{{ $receta->fecha_emision->format('d \d\e F \d\e Y') }} — {{ $receta->paciente->user->name }}</p>
+                        <p class="mb-0" style="font-size:0.7rem;color:#2563eb;">Cita: {{ $receta->cita?->fecha_hora->format('d/m/Y H:i') ?? 'Sin cita vinculada' }}</p>
                     </div>
                 </div>
 
-                <form method="POST" action="{{ route('recetas.update', $receta) }}" class="space-y-4">
+                <form method="POST" action="{{ route('recetas.update', $receta) }}">
                     @csrf
                     @method('PUT')
 
-                    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 space-y-5">
+                    <div class="app-card p-4 d-flex flex-column gap-3">
 
                         {{-- Medicamentos --}}
                         <div>
-                            <div class="flex items-center justify-between mb-3">
-                                <label class="text-xs font-semibold text-gray-600">Medicamentos *</label>
-                                <button type="button" onclick="agregarMedicamento()"
-                                        class="text-xs font-semibold text-blue-600 hover:text-blue-800 flex items-center gap-1">
-                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-                                    </svg>
+                            <div class="d-flex align-items-center justify-content-between mb-2">
+                                <label class="form-label fw-semibold small mb-0">Medicamentos *</label>
+                                <button type="button" onclick="agregarMedicamento()" class="btn btn-link btn-sm p-0 text-primary d-flex align-items-center gap-1">
+                                    <svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
                                     Agregar medicamento
                                 </button>
                             </div>
-                            <div id="medicamentosContainer" class="space-y-3">
+                            <div id="medicamentosContainer" class="d-flex flex-column gap-3">
                                 @php $medicamentos = old('medicamentos', $receta->medicamentos); @endphp
                                 @foreach($medicamentos as $i => $med)
-                                <div class="medicamento-item bg-gray-50 rounded-xl p-4 border border-gray-200">
+                                <div class="medicamento-item rounded-3 p-3 border" style="background:#f9fafb;">
                                     @if($i > 0)
-                                    <div class="flex justify-end mb-2">
-                                        <button type="button" onclick="this.closest('.medicamento-item').remove()"
-                                                class="text-xs text-red-500 hover:text-red-700">Eliminar</button>
+                                    <div class="d-flex justify-content-end mb-2">
+                                        <button type="button" onclick="this.closest('.medicamento-item').remove()" class="btn btn-link btn-sm p-0 text-danger small">Eliminar</button>
                                     </div>
                                     @endif
-                                    <div class="grid grid-cols-2 gap-3">
-                                        <div class="col-span-2">
-                                            <label class="text-xs text-gray-500 mb-1 block">Nombre del medicamento *</label>
-                                            <input type="text" name="medicamentos[{{ $i }}][nombre]" required maxlength="200"
-                                                   value="{{ $med['nombre'] ?? '' }}"
-                                                   class="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+                                    <div class="row g-2">
+                                        <div class="col-12">
+                                            <label class="form-label small text-muted mb-1">Nombre *</label>
+                                            <input type="text" name="medicamentos[{{ $i }}][nombre]" required maxlength="200" value="{{ $med['nombre'] ?? '' }}" class="form-control form-control-sm">
                                         </div>
-                                        <div>
-                                            <label class="text-xs text-gray-500 mb-1 block">Dosis *</label>
-                                            <input type="text" name="medicamentos[{{ $i }}][dosis]" required maxlength="100"
-                                                   value="{{ $med['dosis'] ?? '' }}"
-                                                   class="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+                                        <div class="col-6">
+                                            <label class="form-label small text-muted mb-1">Dosis *</label>
+                                            <input type="text" name="medicamentos[{{ $i }}][dosis]" required maxlength="100" value="{{ $med['dosis'] ?? '' }}" class="form-control form-control-sm">
                                         </div>
-                                        <div>
-                                            <label class="text-xs text-gray-500 mb-1 block">Frecuencia *</label>
-                                            <input type="text" name="medicamentos[{{ $i }}][frecuencia]" required maxlength="100"
-                                                   value="{{ $med['frecuencia'] ?? '' }}"
-                                                   class="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+                                        <div class="col-6">
+                                            <label class="form-label small text-muted mb-1">Frecuencia *</label>
+                                            <input type="text" name="medicamentos[{{ $i }}][frecuencia]" required maxlength="100" value="{{ $med['frecuencia'] ?? '' }}" class="form-control form-control-sm">
                                         </div>
-                                        <div>
-                                            <label class="text-xs text-gray-500 mb-1 block">Duración (días) *</label>
-                                            <input type="number" name="medicamentos[{{ $i }}][dias]" required min="1" max="365"
-                                                   value="{{ $med['dias'] ?? '' }}"
-                                                   class="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+                                        <div class="col-6">
+                                            <label class="form-label small text-muted mb-1">Días *</label>
+                                            <input type="number" name="medicamentos[{{ $i }}][dias]" required min="1" max="365" value="{{ $med['dias'] ?? '' }}" class="form-control form-control-sm">
                                         </div>
                                     </div>
                                 </div>
@@ -124,37 +91,23 @@
                             </div>
                         </div>
 
-                        {{-- Indicaciones --}}
                         <div>
-                            <label class="block text-xs font-semibold text-gray-600 mb-1.5">
-                                Indicaciones generales <span class="font-normal text-gray-400">(opcional)</span>
-                            </label>
-                            <textarea name="indicaciones" rows="3" maxlength="1000"
-                                      placeholder="Indicaciones adicionales para el paciente..."
-                                      class="w-full px-4 py-2.5 text-sm border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none resize-none">{{ old('indicaciones', $receta->indicaciones) }}</textarea>
+                            <label class="form-label fw-semibold small">Indicaciones generales <span class="text-muted fw-normal">(opcional)</span></label>
+                            <textarea name="indicaciones" rows="3" maxlength="1000" class="form-control form-control-sm">{{ old('indicaciones', $receta->indicaciones) }}</textarea>
                         </div>
 
-                        {{-- Fecha vencimiento --}}
                         <div>
-                            <label class="block text-xs font-semibold text-gray-600 mb-1.5">Fecha de vencimiento *</label>
+                            <label class="form-label fw-semibold small">Fecha de vencimiento *</label>
                             <input type="date" name="fecha_vencimiento"
                                    value="{{ old('fecha_vencimiento', $receta->fecha_vencimiento->format('Y-m-d')) }}"
                                    required
-                                   class="w-full px-4 py-2.5 text-sm border rounded-xl focus:ring-2 focus:ring-blue-500 outline-none {{ $errors->has('fecha_vencimiento') ? 'border-red-300 bg-red-50' : 'border-gray-200' }}">
-                            @error('fecha_vencimiento')
-                                <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
-                            @enderror
+                                   class="form-control form-control-sm @error('fecha_vencimiento') is-invalid @enderror">
+                            @error('fecha_vencimiento')<div class="invalid-feedback">{{ $message }}</div>@enderror
                         </div>
 
-                        <div class="flex gap-3 pt-2">
-                            <a href="{{ route('recetas.index') }}"
-                               class="flex-1 text-center px-4 py-2.5 text-sm border border-gray-200 rounded-xl text-gray-600 hover:bg-gray-50 font-medium transition-colors">
-                                Cancelar
-                            </a>
-                            <button type="submit"
-                                    class="flex-1 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-4 py-2.5 rounded-xl transition-colors">
-                                Guardar Cambios
-                            </button>
+                        <div class="d-flex gap-2 pt-1">
+                            <a href="{{ route('recetas.index') }}" class="btn btn-outline-secondary flex-grow-1">Cancelar</a>
+                            <button type="submit" class="btn btn-primary flex-grow-1 fw-semibold">Guardar Cambios</button>
                         </div>
                     </div>
                 </form>
@@ -169,32 +122,17 @@ function agregarMedicamento() {
     const container = document.getElementById('medicamentosContainer');
     const idx = medIdx++;
     const div = document.createElement('div');
-    div.className = 'medicamento-item bg-gray-50 rounded-xl p-4 border border-gray-200';
+    div.className = 'medicamento-item rounded-3 p-3 border';
+    div.style.background = '#f9fafb';
     div.innerHTML = `
-        <div class="flex justify-end mb-2">
-            <button type="button" onclick="this.closest('.medicamento-item').remove()" class="text-xs text-red-500 hover:text-red-700">Eliminar</button>
+        <div class="d-flex justify-content-end mb-2">
+            <button type="button" onclick="this.closest('.medicamento-item').remove()" class="btn btn-link btn-sm p-0 text-danger small">Eliminar</button>
         </div>
-        <div class="grid grid-cols-2 gap-3">
-            <div class="col-span-2">
-                <label class="text-xs text-gray-500 mb-1 block">Nombre del medicamento *</label>
-                <input type="text" name="medicamentos[${idx}][nombre]" required maxlength="200" placeholder="Nombre del medicamento"
-                    class="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
-            </div>
-            <div>
-                <label class="text-xs text-gray-500 mb-1 block">Dosis *</label>
-                <input type="text" name="medicamentos[${idx}][dosis]" required maxlength="100" placeholder="Ej: 1 comprimido"
-                    class="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
-            </div>
-            <div>
-                <label class="text-xs text-gray-500 mb-1 block">Frecuencia *</label>
-                <input type="text" name="medicamentos[${idx}][frecuencia]" required maxlength="100" placeholder="Ej: Cada 8 horas"
-                    class="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
-            </div>
-            <div>
-                <label class="text-xs text-gray-500 mb-1 block">Duración (días) *</label>
-                <input type="number" name="medicamentos[${idx}][dias]" required min="1" max="365" placeholder="7"
-                    class="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
-            </div>
+        <div class="row g-2">
+            <div class="col-12"><label class="form-label small text-muted mb-1">Nombre *</label><input type="text" name="medicamentos[${idx}][nombre]" required maxlength="200" class="form-control form-control-sm"></div>
+            <div class="col-6"><label class="form-label small text-muted mb-1">Dosis *</label><input type="text" name="medicamentos[${idx}][dosis]" required maxlength="100" class="form-control form-control-sm"></div>
+            <div class="col-6"><label class="form-label small text-muted mb-1">Frecuencia *</label><input type="text" name="medicamentos[${idx}][frecuencia]" required maxlength="100" class="form-control form-control-sm"></div>
+            <div class="col-6"><label class="form-label small text-muted mb-1">Días *</label><input type="number" name="medicamentos[${idx}][dias]" required min="1" max="365" class="form-control form-control-sm"></div>
         </div>`;
     container.appendChild(div);
 }

@@ -6,122 +6,76 @@
     <title>Nuevo Usuario – Admin Los Mollos</title>
     <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700,800&display=swap" rel="stylesheet"/>
     @vite(['resources/css/app.css','resources/js/app.js'])
-    <style>body{font-family:'Inter',sans-serif;}</style>
 </head>
-<body class="antialiased bg-gray-50 text-gray-900">
-<div class="flex h-screen overflow-hidden">
-
+<body>
+<div class="d-flex" style="min-height:100vh;overflow:hidden;">
     @include('partials.admin-sidebar', ['activeSection' => 'usuarios'])
-
-    <div class="flex-1 flex flex-col overflow-hidden">
-        <header class="bg-white border-b border-gray-100 px-6 py-4 flex items-center gap-3 flex-shrink-0">
-            <a href="{{ route('admin.usuarios.index') }}"
-               class="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
-                </svg>
+    <div class="flex-grow-1 d-flex flex-column" style="overflow:hidden;">
+        <header class="app-topbar gap-3">
+            <a href="{{ route('admin.usuarios.index') }}" class="btn btn-light btn-sm p-2">
+                <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
             </a>
             <div>
-                <h1 class="text-base font-bold text-gray-900">Nuevo Usuario</h1>
-                <p class="text-xs text-gray-400">Creá una cuenta de acceso al sistema</p>
+                <h5 class="fw-bold mb-0">Nuevo Usuario</h5>
+                <p class="text-muted mb-0" style="font-size:0.75rem;">Creá una cuenta de acceso al sistema</p>
             </div>
         </header>
-
-        <main class="flex-1 overflow-y-auto p-6">
-            <div class="max-w-lg mx-auto">
-
+        <main class="flex-grow-1 p-4" style="overflow-y:auto;">
+            <div class="mx-auto" style="max-width:520px;">
                 @if($errors->any())
-                    <div class="mb-5 bg-red-50 border border-red-200 rounded-xl p-4 flex items-start gap-3">
-                        <svg class="w-5 h-5 text-red-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                        </svg>
+                    <div class="alert alert-danger d-flex align-items-start gap-2 mb-4">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" class="flex-shrink-0 mt-1"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                         <div>
-                            <p class="text-sm font-semibold text-red-700 mb-1">Corregí los siguientes errores:</p>
-                            <ul class="text-sm text-red-600 space-y-0.5">
-                                @foreach($errors->all() as $e)
-                                    <li>• {{ $e }}</li>
-                                @endforeach
-                            </ul>
+                            <p class="fw-semibold mb-1">Corregí los siguientes errores:</p>
+                            @foreach($errors->all() as $e)<p class="mb-0 small">• {{ $e }}</p>@endforeach
                         </div>
                     </div>
                 @endif
-
-                <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 space-y-5">
-                    <form method="POST" action="{{ route('admin.usuarios.store') }}" class="space-y-4">
+                <div class="app-card p-4">
+                    <form method="POST" action="{{ route('admin.usuarios.store') }}" class="d-flex flex-column gap-3">
                         @csrf
-
-                        {{-- Nombre --}}
                         <div>
-                            <label class="block text-xs font-semibold text-gray-600 mb-1.5">
-                                Nombre completo *
-                                <span class="font-normal text-gray-400">(solo letras)</span>
-                            </label>
-                            <input type="text" name="name" value="{{ old('name') }}"
-                                   placeholder="Ej: María González"
-                                   class="w-full px-4 py-2.5 text-sm border rounded-xl focus:ring-2 focus:ring-blue-500 outline-none {{ $errors->has('name') ? 'border-red-300 bg-red-50' : 'border-gray-200' }}">
-                            @error('name')
-                                <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
-                            @enderror
+                            <label class="form-label fw-semibold small">Nombre completo * <span class="fw-normal text-muted">(solo letras)</span></label>
+                            <input type="text" name="name" value="{{ old('name') }}" placeholder="Ej: María González"
+                                   class="form-control form-control-sm @error('name') is-invalid @enderror">
+                            @error('name')<div class="invalid-feedback">{{ $message }}</div>@enderror
                         </div>
-
-                        {{-- Email --}}
                         <div>
-                            <label class="block text-xs font-semibold text-gray-600 mb-1.5">Correo electrónico *</label>
-                            <input type="email" name="email" value="{{ old('email') }}"
-                                   placeholder="usuario@clinica.com"
-                                   class="w-full px-4 py-2.5 text-sm border rounded-xl focus:ring-2 focus:ring-blue-500 outline-none {{ $errors->has('email') ? 'border-red-300 bg-red-50' : 'border-gray-200' }}">
-                            @error('email')
-                                <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
-                            @enderror
+                            <label class="form-label fw-semibold small">Correo electrónico *</label>
+                            <input type="email" name="email" value="{{ old('email') }}" placeholder="usuario@clinica.com"
+                                   class="form-control form-control-sm @error('email') is-invalid @enderror">
+                            @error('email')<div class="invalid-feedback">{{ $message }}</div>@enderror
                         </div>
-
-                        {{-- Rol --}}
                         <div>
-                            <label class="block text-xs font-semibold text-gray-600 mb-1.5">Rol del usuario *</label>
-                            <select name="rol" class="w-full px-4 py-2.5 text-sm border rounded-xl focus:ring-2 focus:ring-blue-500 outline-none bg-white {{ $errors->has('rol') ? 'border-red-300 bg-red-50' : 'border-gray-200' }}">
+                            <label class="form-label fw-semibold small">Rol del usuario *</label>
+                            <select name="rol" class="form-select form-select-sm @error('rol') is-invalid @enderror">
                                 <option value="">Seleccioná un rol…</option>
-                                <option value="admin"         {{ old('rol')==='admin'?'selected':'' }}>Administrador</option>
-                                <option value="medico"        {{ old('rol')==='medico'?'selected':'' }}>Médico</option>
-                                <option value="recepcionista" {{ old('rol')==='recepcionista'?'selected':'' }}>Recepcionista</option>
-                                <option value="paciente"      {{ old('rol')==='paciente'?'selected':'' }}>Paciente</option>
+                                <option value="admin"         {{ old('rol')==='admin'         ?'selected':'' }}>Administrador</option>
+                                <option value="medico"        {{ old('rol')==='medico'        ?'selected':'' }}>Médico</option>
+                                <option value="recepcionista" {{ old('rol')==='recepcionista' ?'selected':'' }}>Recepcionista</option>
+                                <option value="paciente"      {{ old('rol')==='paciente'      ?'selected':'' }}>Paciente</option>
                             </select>
-                            @error('rol')
-                                <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
-                            @enderror
+                            @error('rol')<div class="invalid-feedback">{{ $message }}</div>@enderror
                         </div>
-
-                        <div class="border-t border-gray-100 pt-4">
-                            <p class="text-xs font-semibold text-gray-600 mb-3">Contraseña *</p>
-                            <div class="space-y-3">
-                                {{-- Password --}}
-                                <div>
-                                    <label class="block text-xs text-gray-500 mb-1.5">Contraseña <span class="text-gray-400">(mín. 8 caracteres)</span></label>
-                                    <input type="password" name="password"
-                                           placeholder="••••••••"
-                                           class="w-full px-4 py-2.5 text-sm border rounded-xl focus:ring-2 focus:ring-blue-500 outline-none {{ $errors->has('password') ? 'border-red-300 bg-red-50' : 'border-gray-200' }}">
-                                    @error('password')
-                                        <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
-                                    @enderror
+                        <div class="border-top pt-3">
+                            <p class="fw-semibold small mb-1">Contraseña *</p>
+                            <p class="text-muted mb-3" style="font-size:0.78rem;">Mínimo 8 caracteres.</p>
+                            <div class="row g-3">
+                                <div class="col-6">
+                                    <label class="form-label small text-muted">Contraseña</label>
+                                    <input type="password" name="password" placeholder="••••••••"
+                                           class="form-control form-control-sm @error('password') is-invalid @enderror">
+                                    @error('password')<div class="invalid-feedback">{{ $message }}</div>@enderror
                                 </div>
-                                {{-- Confirm --}}
-                                <div>
-                                    <label class="block text-xs text-gray-500 mb-1.5">Confirmar contraseña</label>
-                                    <input type="password" name="password_confirmation"
-                                           placeholder="••••••••"
-                                           class="w-full px-4 py-2.5 text-sm border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none">
+                                <div class="col-6">
+                                    <label class="form-label small text-muted">Confirmar contraseña</label>
+                                    <input type="password" name="password_confirmation" placeholder="••••••••" class="form-control form-control-sm">
                                 </div>
                             </div>
                         </div>
-
-                        <div class="flex gap-3 pt-2">
-                            <a href="{{ route('admin.usuarios.index') }}"
-                               class="flex-1 text-center px-4 py-2.5 text-sm border border-gray-200 rounded-xl text-gray-600 hover:bg-gray-50 transition-colors font-medium">
-                                Cancelar
-                            </a>
-                            <button type="submit"
-                                    class="flex-1 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-4 py-2.5 rounded-xl transition-colors">
-                                Crear Usuario
-                            </button>
+                        <div class="d-flex gap-3 pt-1">
+                            <a href="{{ route('admin.usuarios.index') }}" class="btn btn-outline-secondary flex-grow-1">Cancelar</a>
+                            <button type="submit" class="btn btn-primary flex-grow-1 fw-semibold">Crear Usuario</button>
                         </div>
                     </form>
                 </div>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\CitaConfirmada;
 use App\Models\Cita;
 use App\Models\Especialidad;
 use App\Models\Medico;
@@ -9,12 +10,13 @@ use App\Models\Paciente;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 
 class RecepcionistaDashboardController extends Controller
 {
     public function index()
     {
-        $citasHoy = Cita::with(['paciente.user', 'medico.user', 'especialidad'])
+        $citasHoy = Cita::with(['paciente.user', 'medico.user', 'especialidad', 'pago'])
             ->whereDate('fecha_hora', today())
             ->orderBy('fecha_hora')
             ->get();
@@ -32,7 +34,7 @@ class RecepcionistaDashboardController extends Controller
 
     public function citas(Request $request)
     {
-        $query = Cita::with(['paciente.user', 'medico.user', 'especialidad']);
+        $query = Cita::with(['paciente.user', 'medico.user', 'especialidad', 'pago']);
 
         if ($request->filled('fecha')) {
             $query->whereDate('fecha_hora', $request->fecha);
@@ -99,7 +101,7 @@ class RecepcionistaDashboardController extends Controller
                 ->withInput();
         }
 
-        Cita::create([
+        $cita = Cita::create([
             'paciente_id'     => $request->paciente_id,
             'medico_id'       => $request->medico_id,
             'especialidad_id' => $request->especialidad_id,
@@ -108,7 +110,10 @@ class RecepcionistaDashboardController extends Controller
             'estado'          => 'confirmada',
         ]);
 
-        return redirect()->route('recepcionista.citas')->with('success', 'Cita agendada correctamente.');
+        $cita->load(['paciente.user', 'medico.user', 'especialidad']);
+        Mail::to($cita->paciente->user->email)->send(new CitaConfirmada($cita));
+
+        return redirect()->route('recepcionista.citas')->with('success', 'Cita agendada correctamente. Se envió confirmación por email.');
     }
 
     public function reprogramarCita(Request $request, Cita $cita)

@@ -6,37 +6,45 @@
     <title>Editar Especialidad – Admin Los Mollos</title>
     <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700,800&display=swap" rel="stylesheet"/>
     @vite(['resources/css/app.css','resources/js/app.js'])
-    <style>body{font-family:'Inter',sans-serif;}</style>
 </head>
-<body class="antialiased bg-gray-50 text-gray-900">
-<div class="flex h-screen overflow-hidden">
+<body>
+<div class="d-flex" style="min-height:100vh;overflow:hidden;">
     @include('partials.admin-sidebar', ['activeSection' => 'especialidades'])
-    <div class="flex-1 flex flex-col overflow-hidden">
-        <header class="bg-white border-b border-gray-100 px-6 py-4 flex items-center gap-3 flex-shrink-0">
-            <a href="{{ route('admin.especialidades.index') }}" class="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+    <div class="flex-grow-1 d-flex flex-column" style="overflow:hidden;">
+        <header class="app-topbar gap-3">
+            <a href="{{ route('admin.especialidades.index') }}" class="btn btn-light btn-sm p-2">
+                <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
             </a>
-            <h1 class="text-base font-bold text-gray-900">Editar Especialidad: {{ $especialidad->nombre }}</h1>
+            <h5 class="fw-bold mb-0">Editar Especialidad: {{ $especialidad->nombre }}</h5>
         </header>
-        <main class="flex-1 overflow-y-auto p-6">
-            <div class="max-w-lg mx-auto bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
+        <main class="flex-grow-1 p-4" style="overflow-y:auto;">
+            <div class="mx-auto app-card p-4" style="max-width:520px;">
                 @if($errors->any())
-                    <div class="mb-5 bg-red-50 border border-red-200 rounded-xl p-4"><ul class="text-sm text-red-600 space-y-1">@foreach($errors->all() as $e)<li>• {{ $e }}</li>@endforeach</ul></div>
-                @endif
-                <form method="POST" action="{{ route('admin.especialidades.update', $especialidad) }}" class="space-y-4">
-                    @csrf @method('PUT')
-                    <div><label class="block text-xs font-semibold text-gray-600 mb-1.5">Nombre de la especialidad *</label>
-                    <input type="text" name="nombre" value="{{ old('nombre', $especialidad->nombre) }}" required maxlength="100" class="w-full px-4 py-2.5 text-sm border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none @error('nombre') border-red-300 @enderror">
-                    @error('nombre')<p class="text-xs text-red-500 mt-1">{{ $message }}</p>@enderror</div>
-                    <div><label class="block text-xs font-semibold text-gray-600 mb-1.5">Descripción</label>
-                    <textarea name="descripcion" rows="3" maxlength="500" class="w-full px-4 py-2.5 text-sm border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none resize-none">{{ old('descripcion', $especialidad->descripcion) }}</textarea></div>
-                    <div class="flex items-center gap-3">
-                        <input type="checkbox" name="activa" id="activa" value="1" {{ old('activa', $especialidad->activa) ? 'checked' : '' }} class="rounded border-gray-300 text-blue-600">
-                        <label for="activa" class="text-sm text-gray-700">Especialidad activa (visible para pacientes)</label>
+                    <div class="alert alert-danger mb-4">
+                        @foreach($errors->all() as $e)<p class="mb-0">• {{ $e }}</p>@endforeach
                     </div>
-                    <div class="flex gap-3 pt-2">
-                        <a href="{{ route('admin.especialidades.index') }}" class="flex-1 text-center px-4 py-2.5 text-sm border border-gray-200 rounded-xl text-gray-600 hover:bg-gray-50 transition-colors">Cancelar</a>
-                        <button type="submit" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-4 py-2.5 rounded-xl transition-colors">Actualizar</button>
+                @endif
+                <form method="POST" action="{{ route('admin.especialidades.update', $especialidad) }}" class="d-flex flex-column gap-3">
+                    @csrf @method('PUT')
+                    <div>
+                        <label class="form-label fw-semibold small">Nombre de la especialidad *</label>
+                        <input type="text" name="nombre" value="{{ old('nombre', $especialidad->nombre) }}" required maxlength="100"
+                               class="form-control form-control-sm @error('nombre') is-invalid @enderror">
+                        @error('nombre')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                    </div>
+                    <div>
+                        <label class="form-label fw-semibold small">Descripción</label>
+                        <textarea name="descripcion" rows="3" maxlength="500"
+                                  class="form-control form-control-sm">{{ old('descripcion', $especialidad->descripcion) }}</textarea>
+                    </div>
+                    <div class="d-flex align-items-center gap-2 rounded-3 p-3" style="background:#f9fafb;">
+                        <input type="checkbox" name="activa" id="activa" value="1"
+                               class="form-check-input" {{ old('activa', $especialidad->activa) ? 'checked' : '' }}>
+                        <label for="activa" class="form-check-label fw-semibold small mb-0">Especialidad activa (visible para pacientes)</label>
+                    </div>
+                    <div class="d-flex gap-3 pt-1">
+                        <a href="{{ route('admin.especialidades.index') }}" class="btn btn-outline-secondary flex-grow-1">Cancelar</a>
+                        <button type="submit" class="btn btn-primary flex-grow-1 fw-semibold">Actualizar</button>
                     </div>
                 </form>
             </div>
