@@ -318,17 +318,31 @@
                 </p>
             </div>
 
+            @php
+                $iconos = [
+                    'heart' => '❤️',
+                    'stethoscope' => '🩺',
+                    'bone' => '🦴',
+                    'child' => '👶',
+                    'brain' => '🧠',
+                ];
+            @endphp
+
             <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                 @forelse($especialidades as $especialidad)
                     <a href="{{ route('especialidades.show', $especialidad) }}"
-                       class="group bg-white rounded-2xl border border-gray-100 p-8 hover:border-blue-300 hover:shadow-lg transition-all duration-200">
+                       class="group bg-white rounded-3xl border border-gray-100 p-8 hover:border-blue-300 hover:shadow-2xl transition-all duration-200">
                         
                         {{-- Header --}}
-                        <div class="flex items-start justify-between mb-5">
-                            <div class="text-4xl">{{ $especialidad->icono ?? '🏥' }}</div>
-                            <svg class="w-5 h-5 text-gray-300 group-hover:text-blue-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                            </svg>
+                        <div class="flex items-center justify-between mb-6">
+                            <div class="w-16 h-16 rounded-3xl bg-blue-50 text-blue-600 text-3xl flex items-center justify-center">
+                                {{ $iconos[$especialidad->icono] ?? '🏥' }}
+                            </div>
+                            <div class="w-11 h-11 rounded-full bg-gray-100 text-blue-600 flex items-center justify-center transition-colors group-hover:bg-blue-100 group-hover:text-blue-700">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                                </svg>
+                            </div>
                         </div>
 
                         {{-- Content --}}
@@ -337,7 +351,7 @@
                         </h3>
                         
                         @if($especialidad->descripcion)
-                            <p class="text-gray-400 text-sm leading-relaxed mb-5 line-clamp-2">
+                            <p class="text-gray-500 text-sm leading-relaxed mb-6">
                                 {{ $especialidad->descripcion }}
                             </p>
                         @endif
