@@ -73,7 +73,7 @@
 
             {{-- Filtro --}}
             <form method="GET" action="{{ route('admin.suscripciones.index') }}" class="app-card p-3 mb-3 d-flex gap-2 align-items-center">
-                <select name="estado" class="form-select form-select-sm" style="width:auto;">
+                <select name="estado" class="form-select form-select-sm" style="width:auto;" onchange="this.form.submit()">
                     <option value="">Todos los estados</option>
                     <option value="activa"    {{ request('estado') === 'activa'    ? 'selected' : '' }}>Activas</option>
                     <option value="vencida"   {{ request('estado') === 'vencida'   ? 'selected' : '' }}>Vencidas</option>
@@ -122,11 +122,9 @@
                             </td>
                             <td>
                                 @if($s->estado === 'activa')
-                                <form method="POST" action="{{ route('admin.suscripciones.destroy', $s) }}"
-                                      onsubmit="return confirm('¿Cancelar esta suscripción?')">
-                                    @csrf @method('DELETE')
-                                    <button type="submit" class="btn btn-link btn-sm p-0 text-danger fw-semibold" style="font-size:0.75rem;">Cancelar</button>
-                                </form>
+                                <button type="button"
+                                        onclick="confirmarCancelar('{{ route('admin.suscripciones.destroy', $s) }}', '{{ addslashes($s->paciente->user->name) }}')"
+                                        class="btn btn-link btn-sm p-0 text-danger fw-semibold" style="font-size:0.75rem;">Cancelar</button>
                                 @else
                                 <span class="text-muted">—</span>
                                 @endif
@@ -144,5 +142,47 @@
         </main>
     </div>
 </div>
+{{-- Modal cancelar suscripción --}}
+<div class="modal fade" id="modalCancelar" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content border-0 shadow-lg">
+            <div class="modal-body p-4">
+                <div class="d-flex align-items-start gap-3 mb-3">
+                    <div class="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0"
+                         style="width:44px;height:44px;background:#fef2f2;">
+                        <svg width="20" height="20" fill="none" stroke="#dc2626" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h6 class="fw-bold mb-1">¿Cancelar suscripción?</h6>
+                        <p class="text-muted small mb-0">Esta acción no se puede deshacer.</p>
+                    </div>
+                </div>
+                <p class="small mb-4">Se cancelará la membresía activa de <strong id="nombrePacCanc" class="text-dark"></strong>. El paciente perderá acceso a los beneficios Premium.</p>
+                <div class="d-flex gap-2">
+                    <button type="button" class="btn btn-outline-secondary flex-grow-1 btn-sm fw-semibold" data-bs-dismiss="modal">No, mantener</button>
+                    <button type="button" onclick="ejecutarCancelacion()" class="btn btn-danger flex-grow-1 btn-sm fw-semibold">Sí, cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<form id="formCancelar" method="POST" style="display:none;">
+    @csrf @method('DELETE')
+</form>
+
+<script>
+let urlCancelar = '';
+function confirmarCancelar(url, nombre) {
+    urlCancelar = url;
+    document.getElementById('nombrePacCanc').textContent = nombre;
+    new BSLib.Modal(document.getElementById('modalCancelar')).show();
+}
+function ejecutarCancelacion() {
+    document.getElementById('formCancelar').action = urlCancelar;
+    document.getElementById('formCancelar').submit();
+}
+</script>
 </body>
 </html>

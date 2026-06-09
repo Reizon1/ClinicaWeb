@@ -92,7 +92,7 @@
                             <svg width="18" height="18" fill="none" stroke="#ea580c" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                         </div>
                         <div class="fw-bold fs-4">{{ $citasPendientes }}</div>
-                        <div class="text-muted" style="font-size:0.75rem;">Pendientes</div>
+                        <div class="text-muted" style="font-size:0.75rem;">Próximas pendientes</div>
                     </div>
                 </div>
                 <div class="col-6 col-xl-3">
@@ -101,8 +101,9 @@
                             <svg width="18" height="18" fill="none" stroke="#9333ea" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
                         </div>
                         @if($proximaCita)
-                            <div class="fw-bold" style="font-size:1rem;">{{ $proximaCita->fecha_hora->format('h:i A') }}</div>
-                            <div class="text-muted" style="font-size:0.75rem;">{{ $proximaCita->paciente->user->name }}</div>
+                            <div class="fw-bold" style="font-size:0.95rem;">{{ $proximaCita->fecha_hora->format('h:i A') }}</div>
+                            <div class="fw-semibold text-muted" style="font-size:0.72rem;">{{ $proximaCita->fecha_hora->format('d M Y') }}</div>
+                            <div class="text-muted" style="font-size:0.72rem;">{{ $proximaCita->paciente->user->name }}</div>
                         @else
                             <div class="fw-bold text-muted">Sin citas</div>
                             <div class="text-muted" style="font-size:0.75rem;">Próxima cita</div>

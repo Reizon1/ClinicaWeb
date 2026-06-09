@@ -54,13 +54,39 @@
                         <div class="row g-3">
                             <div class="col-6">
                                 <label class="form-label fw-semibold small">Contraseña * <span class="fw-normal text-muted">(mín. 8 car.)</span></label>
-                                <input type="password" name="password" required minlength="8"
-                                       class="form-control form-control-sm @error('password') is-invalid @enderror">
-                                @error('password')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                                <div class="input-group input-group-sm has-validation">
+                                    <input type="password" name="password" id="medico_password" required minlength="8"
+                                           class="form-control form-control-sm @error('password') is-invalid @enderror"
+                                           oninput="checkPasswordStrength(this.value)">
+                                    <button type="button" class="btn btn-outline-secondary" onclick="togglePassword('medico_password','eyeIcon1')">
+                                        <svg id="eyeIcon1" width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                        </svg>
+                                    </button>
+                                    @error('password')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                                </div>
+                                <div class="mt-1">
+                                    <div class="progress" style="height:3px;"><div id="strengthBar" class="progress-bar" style="width:0%;transition:width 0.3s,background 0.3s;"></div></div>
+                                    <div class="d-flex flex-wrap gap-2 mt-1" style="font-size:0.68rem;">
+                                        <span id="req-len" class="text-muted">✗ 8+ car.</span>
+                                        <span id="req-upper" class="text-muted">✗ Mayúscula</span>
+                                        <span id="req-num" class="text-muted">✗ Número</span>
+                                        <span id="req-special" class="text-muted">✗ Especial</span>
+                                    </div>
+                                </div>
                             </div>
                             <div class="col-6">
                                 <label class="form-label fw-semibold small">Confirmar contraseña *</label>
-                                <input type="password" name="password_confirmation" required minlength="8" class="form-control form-control-sm">
+                                <div class="input-group input-group-sm">
+                                    <input type="password" name="password_confirmation" id="medico_password_conf" required minlength="8" class="form-control form-control-sm">
+                                    <button type="button" class="btn btn-outline-secondary" onclick="togglePassword('medico_password_conf','eyeIcon2')">
+                                        <svg id="eyeIcon2" width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                        </svg>
+                                    </button>
+                                </div>
                             </div>
                         </div>
 
@@ -105,5 +131,35 @@
         </main>
     </div>
 </div>
+<script>
+const pwLabels = {'req-len':'8+ car.','req-upper':'Mayúscula','req-num':'Número','req-special':'Especial'};
+function togglePassword(fieldId, iconId) {
+    const field = document.getElementById(fieldId);
+    const icon  = document.getElementById(iconId);
+    const show  = field.type === 'password';
+    field.type  = show ? 'text' : 'password';
+    icon.innerHTML = show
+        ? '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/>'
+        : '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>';
+}
+function checkPasswordStrength(val) {
+    const checks = {
+        'req-len':     val.length >= 8,
+        'req-upper':   /[A-Z]/.test(val),
+        'req-num':     /[0-9]/.test(val),
+        'req-special': /[^A-Za-z0-9]/.test(val),
+    };
+    const score  = Object.values(checks).filter(Boolean).length;
+    const bar    = document.getElementById('strengthBar');
+    const colors = ['#ef4444','#f97316','#eab308','#22c55e'];
+    bar.style.width      = (score * 25) + '%';
+    bar.style.background = score > 0 ? colors[score - 1] : '#e5e7eb';
+    Object.entries(checks).forEach(([id, met]) => {
+        const el = document.getElementById(id);
+        el.textContent = (met ? '✓ ' : '✗ ') + pwLabels[id];
+        el.className   = met ? 'text-success fw-semibold' : 'text-muted';
+    });
+}
+</script>
 </body>
 </html>

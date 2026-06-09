@@ -163,6 +163,51 @@
         </div>
     </section>
 
+    {{-- MÉDICOS --}}
+    <section id="medicos" class="welcome-section" style="background:#f0fdfa;">
+        <div class="container">
+            <div class="text-center mb-5">
+                <div class="d-inline-flex align-items-center gap-2 rounded-pill px-3 py-2 mb-4 border" style="background:#ccfbf1;border-color:#99f6e4!important;">
+                    <span style="width:6px;height:6px;background:#0d9488;border-radius:50%;display:inline-block;flex-shrink:0;"></span>
+                    <span class="fw-semibold" style="font-size:0.72rem;color:#0f766e;letter-spacing:.04em;">Equipo Médico</span>
+                </div>
+                <h2 class="fw-bold mb-3" style="font-size:clamp(1.6rem,3vw,2.2rem);">Conocé a nuestros especialistas</h2>
+                <p class="text-muted mx-auto" style="max-width:520px;line-height:1.7;">Profesionales certificados y disponibles para brindarte la mejor atención médica.</p>
+            </div>
+
+            <div class="row g-4 justify-content-center">
+                @forelse($medicos as $medico)
+                <div class="col-sm-6 col-md-4 col-lg-3">
+                    <div class="service-card bg-white rounded-3 border p-4 text-center shadow-sm h-100">
+                        <div class="mx-auto mb-3 fw-bold rounded-circle d-flex align-items-center justify-content-center"
+                             style="width:64px;height:64px;font-size:1.5rem;background:linear-gradient(135deg,#0f766e,#0d9488);color:white;">
+                            {{ strtoupper(substr($medico->user->name, 0, 1)) }}
+                        </div>
+                        <h6 class="fw-semibold mb-1">{{ $medico->user->name }}</h6>
+                        <p class="text-muted small mb-3" style="font-size:0.8rem;">{{ $medico->especialidad->nombre ?? '—' }}</p>
+                        <span class="badge rounded-pill" style="background:#f0fdfa;color:#0f766e;border:1px solid #99f6e4;font-size:0.68rem;">
+                            ✓ Disponible
+                        </span>
+                        @if($medico->descripcion)
+                        <p class="text-muted mt-3 mb-0" style="font-size:0.75rem;line-height:1.5;">{{ Str::limit($medico->descripcion, 80) }}</p>
+                        @endif
+                    </div>
+                </div>
+                @empty
+                <div class="col-12 text-center text-muted py-4">
+                    <p>No hay médicos disponibles en este momento.</p>
+                </div>
+                @endforelse
+            </div>
+
+            <div class="text-center mt-5">
+                <a href="{{ route('register') }}" class="btn btn-primary fw-semibold px-4 py-2 shadow-sm">
+                    Agendar con un especialista
+                </a>
+            </div>
+        </div>
+    </section>
+
     {{-- PLAN PREMIUM --}}
     <section id="premium" class="welcome-section" style="background:linear-gradient(135deg,#0f766e 0%,#0d9488 60%,#0891b2 100%);">
         <div class="container">

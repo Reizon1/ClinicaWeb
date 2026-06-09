@@ -53,7 +53,7 @@ class SuscripcionAdminController extends Controller
             'plan'             => $request->plan,
             'precio'           => $request->precio,
             'fecha_inicio'     => $request->fecha_inicio,
-            'fecha_vencimiento'=> now()->parse($request->fecha_inicio)->addMonths($request->duracion_mes),
+            'fecha_vencimiento'=> \Carbon\Carbon::parse($request->fecha_inicio)->addMonths((int)$request->duracion_mes),
             'estado'           => 'activa',
             'metodo_pago'      => $request->metodo_pago,
         ]);

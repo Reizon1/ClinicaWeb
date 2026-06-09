@@ -50,7 +50,10 @@ class MedicoDashboardController extends Controller
         // Estadísticas rápidas del día
         $totalCitasHoy     = $citasHoy->count();
         $citasAtendidas    = $citasHoy->where('estado', 'completada')->count();
-        $citasPendientes   = $citasHoy->whereIn('estado', ['pendiente', 'confirmada'])->count();
+        $citasPendientes   = $medico->citas()
+            ->whereIn('estado', ['pendiente', 'confirmada'])
+            ->where('fecha_hora', '>=', now())
+            ->count();
 
         // Próxima cita futura del médico
         $proximaCita = $medico->citas()

@@ -22,7 +22,10 @@ use Illuminate\Support\Facades\Route;
 
 // ── Landing page ──────────────────────────────────────────────────────────────
 Route::get('/', function () {
-    return view('welcome');
+    $medicos = \App\Models\Medico::with(['user', 'especialidad'])
+        ->where('disponible', true)
+        ->get();
+    return view('welcome', compact('medicos'));
 });
 
 // ── Buscador de médicos (público) ─────────────────────────────────────────────
@@ -122,6 +125,7 @@ Route::middleware(['auth', 'rol:admin'])->group(function () {
     Route::get('/admin/medicos/{medico}/editar',    [MedicoAdminController::class, 'edit'])->name('admin.medicos.edit');
     Route::put('/admin/medicos/{medico}',           [MedicoAdminController::class, 'update'])->name('admin.medicos.update');
     Route::delete('/admin/medicos/{medico}',        [MedicoAdminController::class, 'destroy'])->name('admin.medicos.destroy');
+    Route::post('/admin/medicos/{medico}/toggle',   [MedicoAdminController::class, 'toggle'])->name('admin.medicos.toggle');
 
     // CRUD Especialidades
     Route::get('/admin/especialidades',                        [EspecialidadAdminController::class, 'index'])->name('admin.especialidades.index');
@@ -130,6 +134,7 @@ Route::middleware(['auth', 'rol:admin'])->group(function () {
     Route::get('/admin/especialidades/{especialidad}/editar',  [EspecialidadAdminController::class, 'edit'])->name('admin.especialidades.edit');
     Route::put('/admin/especialidades/{especialidad}',         [EspecialidadAdminController::class, 'update'])->name('admin.especialidades.update');
     Route::delete('/admin/especialidades/{especialidad}',      [EspecialidadAdminController::class, 'destroy'])->name('admin.especialidades.destroy');
+    Route::post('/admin/especialidades/{especialidad}/toggle', [EspecialidadAdminController::class, 'toggle'])->name('admin.especialidades.toggle');
 
     // Usuarios
     Route::get('/admin/usuarios',                        [UsuarioAdminController::class, 'index'])->name('admin.usuarios.index');

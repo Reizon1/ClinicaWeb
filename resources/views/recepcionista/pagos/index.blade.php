@@ -63,27 +63,28 @@
             {{-- Filtros --}}
             <form method="GET" action="{{ route('recepcionista.pagos.index') }}" class="app-card p-3 mb-3">
                 <div class="d-flex gap-2 flex-wrap align-items-center">
-                    <select name="estado" class="form-select form-select-sm" style="width:auto;">
+                    <select name="estado" class="form-select form-select-sm" style="width:auto;" onchange="this.form.submit()">
                         <option value="">Todos los estados</option>
                         <option value="completado"  {{ request('estado') === 'completado'  ? 'selected' : '' }}>Completado</option>
                         <option value="pendiente"   {{ request('estado') === 'pendiente'   ? 'selected' : '' }}>Pendiente</option>
                         <option value="fallido"     {{ request('estado') === 'fallido'     ? 'selected' : '' }}>Fallido</option>
                         <option value="reembolsado" {{ request('estado') === 'reembolsado' ? 'selected' : '' }}>Reembolsado</option>
                     </select>
-                    <select name="metodo_pago" class="form-select form-select-sm" style="width:auto;">
+                    <select name="metodo_pago" class="form-select form-select-sm" style="width:auto;" onchange="this.form.submit()">
                         <option value="">Todos los métodos</option>
                         <option value="efectivo" {{ request('metodo_pago') === 'efectivo' ? 'selected' : '' }}>Efectivo</option>
                         <option value="stripe"   {{ request('metodo_pago') === 'stripe'   ? 'selected' : '' }}>Stripe</option>
                         <option value="paypal"   {{ request('metodo_pago') === 'paypal'   ? 'selected' : '' }}>PayPal</option>
                     </select>
-                    <select name="paciente_id" class="form-select form-select-sm" style="width:auto;">
+                    <select name="paciente_id" class="form-select form-select-sm" style="width:auto;" onchange="this.form.submit()">
                         <option value="">Todos los pacientes</option>
                         @foreach($pacientes as $p)
                             <option value="{{ $p->id }}" {{ request('paciente_id') == $p->id ? 'selected' : '' }}>{{ $p->user->name }}</option>
                         @endforeach
                     </select>
-                    <button type="submit" class="btn btn-sm fw-semibold text-white" style="background:#0d9488;">Filtrar</button>
-                    <a href="{{ route('recepcionista.pagos.index') }}" class="text-muted small">Limpiar</a>
+                    @if(request()->hasAny(['estado','metodo_pago','paciente_id']))
+                        <a href="{{ route('recepcionista.pagos.index') }}" class="btn btn-outline-secondary btn-sm">Limpiar</a>
+                    @endif
                 </div>
             </form>
 

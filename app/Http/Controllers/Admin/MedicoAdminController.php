@@ -25,7 +25,7 @@ class MedicoAdminController extends Controller
             $query->where('especialidad_id', $request->especialidad_id);
         }
 
-        if ($request->filled('disponible') && $request->disponible !== '') {
+        if ($request->has('disponible') && $request->disponible !== '') {
             $query->where('disponible', (bool) $request->disponible);
         }
 
@@ -151,6 +151,13 @@ class MedicoAdminController extends Controller
 
         return redirect()->route('admin.medicos.index')
             ->with('success', "Médico {$medico->user->name} actualizado correctamente.");
+    }
+
+    public function toggle(Medico $medico)
+    {
+        $medico->update(['disponible' => !$medico->disponible]);
+        $estado = $medico->disponible ? 'disponible' : 'inactivo';
+        return back()->with('success', "Dr. {$medico->user->name} marcado como {$estado}.");
     }
 
     public function destroy(Medico $medico)

@@ -36,6 +36,27 @@
                 <div class="alert alert-danger mb-3">{{ $errors->first() }}</div>
             @endif
 
+            {{-- Filtros --}}
+            <form method="GET" action="{{ route('admin.especialidades.index') }}" class="app-card p-3 mb-3">
+                <div class="d-flex gap-2 flex-wrap align-items-center">
+                    <div class="input-group input-group-sm flex-grow-1" style="max-width:280px;">
+                        <span class="input-group-text bg-white">
+                            <svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                        </span>
+                        <input type="text" name="buscar" value="{{ request('buscar') }}" placeholder="Buscar especialidad..." class="form-control">
+                    </div>
+                    <select name="activa" class="form-select form-select-sm" style="width:auto;" onchange="this.form.submit()">
+                        <option value="">Todos los estados</option>
+                        <option value="1" {{ request('activa')==='1' ? 'selected' : '' }}>Activas</option>
+                        <option value="0" {{ request('activa')==='0' ? 'selected' : '' }}>Inactivas</option>
+                    </select>
+                    <button type="submit" class="btn btn-primary btn-sm fw-semibold">Filtrar</button>
+                    @if(request()->hasAny(['buscar','activa']))
+                        <a href="{{ route('admin.especialidades.index') }}" class="text-muted small">Limpiar</a>
+                    @endif
+                </div>
+            </form>
+
             <div class="app-card overflow-hidden">
                 <table class="app-table">
                     <thead>
@@ -56,9 +77,13 @@
                                 <span class="badge" style="background:#dbeafe;color:#1d4ed8;">{{ $esp->medicos_count }}</span>
                             </td>
                             <td>
-                                <span class="badge {{ $esp->activa ? 'bg-success' : 'bg-secondary' }}">
-                                    {{ $esp->activa ? 'Activa' : 'Inactiva' }}
-                                </span>
+                                <form method="POST" action="{{ route('admin.especialidades.toggle', $esp) }}" class="d-inline">
+                                    @csrf
+                                    <button type="submit" class="badge border-0 {{ $esp->activa ? 'bg-success' : 'bg-secondary' }}"
+                                            style="cursor:pointer;font-size:0.72rem;" title="Clic para cambiar estado">
+                                        {{ $esp->activa ? '✓ Activa' : '✗ Inactiva' }}
+                                    </button>
+                                </form>
                             </td>
                             <td>
                                 <div class="d-flex gap-3 align-items-center">

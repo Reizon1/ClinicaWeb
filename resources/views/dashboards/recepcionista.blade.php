@@ -163,11 +163,9 @@
                                     </td>
                                     <td>
                                         @if(!in_array($cita->estado, ['completada','cancelada']))
-                                        <form method="POST" action="{{ route('recepcionista.citas.cancelar', $cita) }}"
-                                              onsubmit="return confirm('¿Cancelar esta cita?')">
-                                            @csrf @method('PATCH')
-                                            <button type="submit" class="btn btn-link btn-sm text-danger p-0">Cancelar</button>
-                                        </form>
+                                        <button type="button"
+                                                onclick="confirmarCancelarDash('{{ route('recepcionista.citas.cancelar', $cita) }}')"
+                                                class="btn btn-link btn-sm text-danger p-0">Cancelar</button>
                                         @else
                                         <span class="text-muted">—</span>
                                         @endif
@@ -193,5 +191,46 @@
         </main>
     </div>
 </div>
+
+{{-- Modal cancelar cita (dashboard) --}}
+<div class="modal fade" id="modalCancelarDash" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content border-0 shadow-lg">
+            <div class="modal-body p-4">
+                <div class="d-flex align-items-start gap-3 mb-3">
+                    <div class="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0"
+                         style="width:44px;height:44px;background:#fef2f2;">
+                        <svg width="20" height="20" fill="none" stroke="#dc2626" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h6 class="fw-bold mb-1">¿Cancelar esta cita?</h6>
+                        <p class="text-muted small mb-0">Esta acción no se puede deshacer.</p>
+                    </div>
+                </div>
+                <div class="d-flex gap-2">
+                    <button type="button" class="btn btn-outline-secondary flex-grow-1 btn-sm fw-semibold" data-bs-dismiss="modal">No, mantener</button>
+                    <button type="button" onclick="ejecutarCancelarDash()" class="btn btn-danger flex-grow-1 btn-sm fw-semibold">Sí, cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<form id="formCancelarDash" method="POST" style="display:none;">
+    @csrf @method('PATCH')
+</form>
+
+<script>
+let urlCancelarDash = '';
+function confirmarCancelarDash(url) {
+    urlCancelarDash = url;
+    new BSLib.Modal(document.getElementById('modalCancelarDash')).show();
+}
+function ejecutarCancelarDash() {
+    document.getElementById('formCancelarDash').action = urlCancelarDash;
+    document.getElementById('formCancelarDash').submit();
+}
+</script>
 </body>
 </html>

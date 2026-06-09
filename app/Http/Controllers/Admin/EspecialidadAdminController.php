@@ -8,9 +8,19 @@ use Illuminate\Http\Request;
 
 class EspecialidadAdminController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $especialidades = Especialidad::withCount('medicos')->paginate(15);
+        $query = Especialidad::withCount('medicos');
+
+        if ($request->filled('buscar')) {
+            $query->whereRaw('nombre COLLATE utf8mb4_general_ci LIKE ?', ['%' . $request->buscar . '%']);
+        }
+
+        if ($request->has('activa') && $request->activa !== '') {
+            $query->where('activa', (bool) $request->activa);
+        }
+
+        $especialidades = $query->orderBy('nombre')->paginate(15)->withQueryString();
         return view('admin.especialidades.index', compact('especialidades'));
     }
 
@@ -60,6 +70,13 @@ class EspecialidadAdminController extends Controller
         ]);
 
         return redirect()->route('admin.especialidades.index')->with('success', 'Especialidad actualizada correctamente.');
+    }
+
+    public function toggle(Especialidad $especialidad)
+    {
+        $especialidad->update(['activa' => !$especialidad->activa]);
+        $estado = $especialidad->activa ? 'activada' : 'desactivada';
+        return back()->with('success', "Especialidad «{$especialidad->nombre}» {$estado}.");
     }
 
     public function destroy(Especialidad $especialidad)

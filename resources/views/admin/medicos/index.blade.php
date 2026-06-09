@@ -47,13 +47,13 @@
                         </span>
                         <input type="text" name="buscar" value="{{ request('buscar') }}" placeholder="Buscar por nombre o correo..." class="form-control">
                     </div>
-                    <select name="especialidad_id" class="form-select form-select-sm" style="width:auto;">
+                    <select name="especialidad_id" class="form-select form-select-sm" style="width:auto;" onchange="this.form.submit()">
                         <option value="">Todas las especialidades</option>
                         @foreach($especialidades as $e)
                             <option value="{{ $e->id }}" {{ request('especialidad_id')==$e->id?'selected':'' }}>{{ $e->nombre }}</option>
                         @endforeach
                     </select>
-                    <select name="disponible" class="form-select form-select-sm" style="width:auto;">
+                    <select name="disponible" class="form-select form-select-sm" style="width:auto;" onchange="this.form.submit()">
                         <option value="">Todos los estados</option>
                         <option value="1" {{ request('disponible')==='1'?'selected':'' }}>Disponible</option>
                         <option value="0" {{ request('disponible')==='0'?'selected':'' }}>Inactivo</option>
@@ -94,9 +94,13 @@
                             <td class="text-muted small">{{ $medico->especialidad->nombre }}</td>
                             <td class="text-muted" style="font-family:monospace;font-size:0.75rem;">{{ $medico->numero_licencia }}</td>
                             <td>
-                                <span class="badge {{ $medico->disponible ? 'bg-success' : 'bg-secondary' }}">
-                                    {{ $medico->disponible ? 'Disponible' : 'Inactivo' }}
-                                </span>
+                                <form method="POST" action="{{ route('admin.medicos.toggle', $medico) }}" class="d-inline">
+                                    @csrf
+                                    <button type="submit" class="badge border-0 {{ $medico->disponible ? 'bg-success' : 'bg-secondary' }}"
+                                            style="cursor:pointer;font-size:0.72rem;" title="Clic para cambiar estado">
+                                        {{ $medico->disponible ? '✓ Disponible' : '✗ Inactivo' }}
+                                    </button>
+                                </form>
                             </td>
                             <td>
                                 <div class="d-flex gap-3 align-items-center">
