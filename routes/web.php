@@ -1,12 +1,15 @@
 <?php
 
 use App\Http\Controllers\Admin\ConfiguracionAdminController;
+use App\Http\Controllers\Admin\SuscripcionAdminController;
+use App\Http\Controllers\Recepcionista\PagoController as RecepcionistaPagoController;
 use App\Http\Controllers\Admin\EspecialidadAdminController;
 use App\Http\Controllers\Admin\MedicoAdminController;
 use App\Http\Controllers\Admin\ReporteAdminController;
 use App\Http\Controllers\Admin\UsuarioAdminController;
 use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\CitaController;
+use App\Http\Controllers\EspecialidadController;
 use App\Http\Controllers\HistorialClinicoController;
 use App\Http\Controllers\HorarioMedicoController;
 use App\Http\Controllers\MedicoDashboardController;
@@ -16,16 +19,22 @@ use App\Http\Controllers\PacienteDashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RecepcionistaDashboardController;
 use App\Http\Controllers\RecetaController;
+use App\Models\Especialidad;
 use Illuminate\Support\Facades\Route;
 
 // ── Landing page ──────────────────────────────────────────────────────────────
 Route::get('/', function () {
-    return view('welcome');
+    $especialidades = Especialidad::where('activa', true)->get();
+    return view('welcome', compact('especialidades'));
 });
 
 // ── Buscador de médicos (público) ─────────────────────────────────────────────
 Route::get('/medicos', [MedicoController::class, 'buscar'])->name('medicos.buscar');
 Route::get('/medicos/por-especialidad', [MedicoController::class, 'porEspecialidad'])->name('medicos.por-especialidad');
+
+// ── Especialidades (público) ──────────────────────────────────────────────────
+Route::get('/especialidades', [EspecialidadController::class, 'index'])->name('especialidades.index');
+Route::get('/especialidades/{especialidad}', [EspecialidadController::class, 'show'])->name('especialidades.show');
 
 // ── /dashboard → redirige según rol ──────────────────────────────────────────
 Route::get('/dashboard', function () {
@@ -49,6 +58,8 @@ Route::middleware(['auth', 'rol:paciente'])->group(function () {
 Route::middleware(['auth', 'rol:medico'])->group(function () {
     Route::get('/dashboard/medico', [MedicoDashboardController::class, 'index'])
         ->name('dashboard.medico');
+    Route::get('/medico/agenda/semanal', [MedicoDashboardController::class, 'agendaSemanal'])
+        ->name('medico.agenda.semanal');
 
     // Horarios del médico
     Route::get('/horarios',          [HorarioMedicoController::class, 'index'])->name('horarios.index');
@@ -94,6 +105,11 @@ Route::middleware(['auth', 'rol:recepcionista'])->group(function () {
     // Registro de pacientes
     Route::get('/recepcionista/pacientes/crear',   [RecepcionistaDashboardController::class, 'crearPaciente'])->name('recepcionista.pacientes.crear');
     Route::post('/recepcionista/pacientes',        [RecepcionistaDashboardController::class, 'guardarPaciente'])->name('recepcionista.pacientes.guardar');
+
+    // Pagos
+    Route::get('/recepcionista/pagos',                   [RecepcionistaPagoController::class, 'index'])->name('recepcionista.pagos.index');
+    Route::get('/recepcionista/pagos/crear/{cita}',      [RecepcionistaPagoController::class, 'create'])->name('recepcionista.pagos.crear');
+    Route::post('/recepcionista/pagos',                  [RecepcionistaPagoController::class, 'store'])->name('recepcionista.pagos.store');
 });
 
 // ── Dashboard Administrador ───────────────────────────────────────────────────
@@ -134,6 +150,12 @@ Route::middleware(['auth', 'rol:admin'])->group(function () {
     // Configuración
     Route::get('/admin/configuracion',  [ConfiguracionAdminController::class, 'index'])->name('admin.configuracion.index');
     Route::post('/admin/configuracion', [ConfiguracionAdminController::class, 'update'])->name('admin.configuracion.update');
+
+    // Suscripciones Premium
+    Route::get('/admin/suscripciones',          [SuscripcionAdminController::class, 'index'])->name('admin.suscripciones.index');
+    Route::get('/admin/suscripciones/crear',    [SuscripcionAdminController::class, 'create'])->name('admin.suscripciones.create');
+    Route::post('/admin/suscripciones',         [SuscripcionAdminController::class, 'store'])->name('admin.suscripciones.store');
+    Route::delete('/admin/suscripciones/{suscripcion}', [SuscripcionAdminController::class, 'destroy'])->name('admin.suscripciones.destroy');
 });
 
 // ── Perfil (todos los usuarios autenticados) ──────────────────────────────────

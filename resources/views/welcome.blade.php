@@ -7,6 +7,7 @@
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700,800&display=swap" rel="stylesheet" />
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>body { font-family: 'Inter', sans-serif; }</style>
 </head>
 <body class="antialiased bg-white text-gray-900">
@@ -34,8 +35,8 @@
                 {{-- Nav links --}}
                 <div class="hidden md:flex items-center gap-8">
                     <a href="#inicio"       class="text-sm font-semibold text-blue-600 border-b-2 border-blue-600 pb-0.5">Inicio</a>
-                    <a href="#servicios"    class="text-sm text-gray-500 hover:text-gray-900 transition-colors">Especialidades</a>
-                    <a href="#medicos"      class="text-sm text-gray-500 hover:text-gray-900 transition-colors">Médicos</a>
+                    <a href="#especialidades"    class="text-sm text-gray-500 hover:text-gray-900 transition-colors">Especialidades</a>
+                    <a href="{{ route('medicos.buscar') }}"      class="text-sm text-gray-500 hover:text-gray-900 transition-colors">Médicos</a>
                     <a href="#ubicacion"   class="text-sm text-gray-500 hover:text-gray-900 transition-colors">Ubicación</a>
                 </div>
 
@@ -79,17 +80,17 @@
                     </p>
 
                     <div class="flex flex-wrap items-center gap-4 mb-8">
-                        <a href="#" class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3.5 rounded-xl transition-colors shadow-lg shadow-blue-100">
+                        <a href="{{ route('register') }}" class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3.5 rounded-xl transition-colors shadow-lg shadow-blue-100">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                             </svg>
                             Agendar Cita
                         </a>
-                        <a href="#" class="inline-flex items-center gap-2 text-gray-700 font-semibold px-6 py-3.5 rounded-xl border border-gray-200 hover:bg-gray-50 transition-colors bg-white">
+                        <a href="{{ route('especialidades.index') }}" class="inline-flex items-center gap-2 text-gray-700 font-semibold px-6 py-3.5 rounded-xl border border-gray-200 hover:bg-gray-50 transition-colors bg-white">
                             <svg class="w-4 h-4 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"/>
                             </svg>
-                            Ver Demo
+                            Ver Especialidades
                         </a>
                     </div>
 
@@ -298,6 +299,78 @@
     </section>
 
     {{-- ============================================================
+         ESPECIALIDADES
+    ============================================================ --}}
+    <section id="especialidades" class="py-28 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <div class="inline-flex items-center gap-2 bg-blue-50 border border-blue-100 rounded-full px-4 py-1.5 mb-4">
+                    <svg class="w-4 h-4 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"/>
+                    </svg>
+                    <span class="text-xs font-semibold text-blue-700">Nuestras Especialidades</span>
+                </div>
+                <h2 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+                    Especialidades Médicas de Excelencia
+                </h2>
+                <p class="text-lg text-gray-400 max-w-2xl mx-auto leading-relaxed">
+                    Contamos con especialistas altamente capacitados en diversas áreas de la medicina para brindarte la mejor atención.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                @forelse($especialidades as $especialidad)
+                    <a href="{{ route('especialidades.show', $especialidad) }}"
+                       class="group bg-white rounded-2xl border border-gray-100 p-8 hover:border-blue-300 hover:shadow-lg transition-all duration-200">
+                        
+                        {{-- Header --}}
+                        <div class="flex items-start justify-between mb-5">
+                            <div class="text-4xl">{{ $especialidad->icono ?? '🏥' }}</div>
+                            <svg class="w-5 h-5 text-gray-300 group-hover:text-blue-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                            </svg>
+                        </div>
+
+                        {{-- Content --}}
+                        <h3 class="text-xl font-semibold text-gray-900 mb-3 group-hover:text-blue-600 transition-colors">
+                            {{ $especialidad->nombre }}
+                        </h3>
+                        
+                        @if($especialidad->descripcion)
+                            <p class="text-gray-400 text-sm leading-relaxed mb-5 line-clamp-2">
+                                {{ $especialidad->descripcion }}
+                            </p>
+                        @endif
+
+                        {{-- Médicos count --}}
+                        <div class="flex items-center gap-2 text-sm text-gray-500 border-t border-gray-100 pt-5">
+                            <svg class="w-4 h-4 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"/>
+                            </svg>
+                            <span>{{ $especialidad->medicos->count() }} médico{{ $especialidad->medicos->count() !== 1 ? 's' : '' }} disponible{{ $especialidad->medicos->count() !== 1 ? 's' : '' }}</span>
+                        </div>
+                    </a>
+                @empty
+                    <div class="col-span-full text-center py-12">
+                        <p class="text-gray-500 text-lg">No hay especialidades disponibles en este momento</p>
+                    </div>
+                @endforelse
+            </div>
+
+            {{-- Ver todas --}}
+            <div class="text-center mt-12">
+                <a href="{{ route('especialidades.index') }}"
+                   class="inline-flex items-center gap-2 text-blue-600 font-semibold px-6 py-3 rounded-xl border border-blue-200 hover:bg-blue-50 transition-colors">
+                    Ver todas las especialidades
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    {{-- ============================================================
          UBICACIÓN
     ============================================================ --}}
     <section id="ubicacion" class="py-28 bg-gray-50">
@@ -360,28 +433,8 @@
                     </div>
                 </div>
 
-                {{-- Mapa (placeholder — Leaflet se integra en la etapa de lógica) --}}
-                <div class="rounded-2xl overflow-hidden border border-gray-200 relative bg-gray-100 shadow-sm" style="height:360px;">
-                    <div class="absolute inset-0 flex flex-col items-center justify-center text-gray-300">
-                        <svg class="w-20 h-20 mb-2" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/>
-                        </svg>
-                        <span class="text-sm font-medium">Mapa Interactivo — Leaflet</span>
-                        <span class="text-xs mt-1 text-gray-300">Se integrará en la etapa de lógica</span>
-                    </div>
-                    <div class="absolute top-3 right-3 flex flex-col gap-1">
-                        <div class="w-7 h-7 bg-white rounded border border-gray-200 flex items-center justify-center shadow-sm text-gray-500 font-bold text-sm">+</div>
-                        <div class="w-7 h-7 bg-white rounded border border-gray-200 flex items-center justify-center shadow-sm text-gray-500 font-bold text-sm">−</div>
-                    </div>
-                    <div class="absolute bottom-3 right-3">
-                        <button class="bg-white text-gray-600 text-xs font-semibold px-3 py-1.5 rounded-lg border border-gray-200 shadow-sm hover:bg-gray-50 inline-flex items-center gap-1.5">
-                            <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/>
-                            </svg>
-                            Cómo llegar
-                        </button>
-                    </div>
-                </div>
+                {{-- Mapa Interactivo con Leaflet.js + OpenStreetMap --}}
+                <div id="mapa-clinica" class="rounded-2xl overflow-hidden border border-gray-200 shadow-sm" style="height:360px;"></div>
             </div>
         </div>
     </section>
@@ -449,5 +502,32 @@
         </div>
     </footer>
 
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        // Coordenadas de la clínica "Los Mollos" — ajusta latitud/longitud si es necesario
+        const lat  = -17.3895;
+        const lng  = -66.1568;
+        const zoom = 16;
+
+        const mapa = L.map('mapa-clinica').setView([lat, lng], zoom);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+            maxZoom: 19,
+        }).addTo(mapa);
+
+        const icono = L.icon({
+            iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
+            shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+            iconSize: [25, 41],
+            iconAnchor: [12, 41],
+            popupAnchor: [1, -34],
+        });
+
+        L.marker([lat, lng], { icon: icono })
+            .addTo(mapa)
+            .bindPopup('<b>Clínica Los Mollos</b><br>Cochabamba, Bolivia')
+            .openPopup();
+    </script>
 </body>
 </html>

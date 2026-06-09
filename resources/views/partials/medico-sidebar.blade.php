@@ -20,6 +20,13 @@
             Dashboard
         </a>
 
+        <div class="px-3 py-1 mt-3 mb-1"><span class="text-xs font-semibold text-blue-300 uppercase tracking-widest">Agenda</span></div>
+        <a href="{{ route('medico.agenda.semanal') }}"
+           class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-colors {{ $s==='agenda-semanal' ? 'bg-white/20 text-white font-semibold' : 'text-blue-100 hover:bg-white/10' }}">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+            Vista Semanal
+        </a>
+
         <div class="px-3 py-1 mt-3 mb-1"><span class="text-xs font-semibold text-blue-300 uppercase tracking-widest">Gestión Médica</span></div>
         <a href="{{ route('historiales.index') }}"
            class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-colors {{ $s==='historiales' ? 'bg-white/20 text-white font-semibold' : 'text-blue-100 hover:bg-white/10' }}">

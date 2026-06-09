@@ -2,8 +2,39 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
+use Illuminate\Http\Request;
+
 class MedicoDashboardController extends Controller
 {
+    public function agendaSemanal(Request $request)
+    {
+        $medico = auth()->user()->medico->load('especialidad');
+
+        $inicioSemana = $request->filled('semana')
+            ? Carbon::parse($request->semana)->startOfWeek(Carbon::MONDAY)
+            : Carbon::now()->startOfWeek(Carbon::MONDAY);
+
+        $finSemana = $inicioSemana->copy()->endOfWeek(Carbon::SUNDAY);
+
+        $dias = collect(range(0, 6))->map(fn($i) => $inicioSemana->copy()->addDays($i));
+
+        $citas = $medico->citas()
+            ->with(['paciente.user', 'historialClinico', 'especialidad'])
+            ->whereBetween('fecha_hora', [$inicioSemana->copy()->startOfDay(), $finSemana->copy()->endOfDay()])
+            ->whereNotIn('estado', ['cancelada'])
+            ->orderBy('fecha_hora')
+            ->get()
+            ->groupBy(fn($c) => $c->fecha_hora->format('Y-m-d'));
+
+        $semanaPrev = $inicioSemana->copy()->subWeek()->format('Y-m-d');
+        $semanaNext = $inicioSemana->copy()->addWeek()->format('Y-m-d');
+
+        return view('medico.agenda-semanal', compact(
+            'medico', 'citas', 'dias', 'inicioSemana', 'finSemana', 'semanaPrev', 'semanaNext'
+        ));
+    }
+
     public function index()
     {
         // Perfil del médico del usuario autenticado

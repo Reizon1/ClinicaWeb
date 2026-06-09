@@ -29,6 +29,12 @@
             Especialidades
         </a>
 
+        <div class="px-3 py-1 mt-3 mb-1"><span class="text-xs font-semibold text-gray-500 uppercase tracking-widest">Premium</span></div>
+        <a href="{{ route('admin.suscripciones.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl {{ $s==='suscripciones'?'bg-purple-600 text-white font-semibold':'text-gray-400 hover:bg-gray-800' }} text-sm transition-colors">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
+            Suscripciones
+        </a>
+
         <div class="px-3 py-1 mt-3 mb-1"><span class="text-xs font-semibold text-gray-500 uppercase tracking-widest">Sistema</span></div>
         <a href="{{ route('admin.usuarios.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl {{ $s==='usuarios'?'bg-blue-600 text-white font-semibold':'text-gray-400 hover:bg-gray-800' }} text-sm transition-colors">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
