@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="scroll-smooth">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -8,6 +8,7 @@
     <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700,800&display=swap" rel="stylesheet"/>
     @vite(['resources/css/app.css','resources/js/app.js'])
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <style>
         body { font-family: 'Inter', sans-serif; }
         .welcome-section { padding: 5rem 0; }
@@ -32,7 +33,7 @@
 
             <div class="d-none d-md-flex align-items-center gap-4">
                 <a href="#inicio" class="text-primary fw-semibold small text-decoration-none border-bottom border-primary pb-1">Inicio</a>
-                <a href="#servicios" class="text-muted small text-decoration-none fw-medium">Especialidades</a>
+                <a href="#especialidades" class="text-muted small text-decoration-none fw-medium">Especialidades</a>
                 <a href="#medicos" class="text-muted small text-decoration-none fw-medium">Médicos</a>
                 <a href="#ubicacion" class="text-muted small text-decoration-none fw-medium">Ubicación</a>
             </div>
@@ -110,6 +111,160 @@
             </div>
         </div>
     </section>
+
+    {{-- ESPECIALIDADES --}}
+    <section id="especialidades" class="welcome-section" style="background: linear-gradient(135deg, #f0fdfa 0%, #e0f2fe 100%);">
+        <div class="container">
+            <div class="text-center mb-5">
+                <div class="d-inline-flex align-items-center gap-2 rounded-pill px-4 py-2 mb-4 border" style="background: rgba(13, 148, 136, 0.1); border-color: #0d9488 !important;">
+                    <span style="width:8px;height:8px;background:#0d9488;border-radius:50%;display:inline-block;flex-shrink:0;"></span>
+                    <span class="fw-bold" style="font-size:0.75rem;color:#0d9488;letter-spacing:.06em;text-transform:uppercase;">Especialidades Médicas</span>
+                </div>
+                <h2 class="fw-bold mb-3" style="font-size:clamp(2rem,4vw,2.8rem);line-height:1.2;color:#0f766e;">Servicios especializados de <span style="background: linear-gradient(135deg, #0d9488, #0891b2); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">excelencia médica</span></h2>
+                <p class="text-muted mx-auto" style="max-width:580px;line-height:1.8;font-size:1.05rem;">Contamos con profesionales certificados en diversas especialidades, equipados con tecnología de vanguardia para tu mejor atención y bienestar integral.</p>
+            </div>
+
+            <div x-data="{ modalOpen: false, nombre: '', descripcion: '', recursos: [] }" @keydown.escape="modalOpen = false" style="position: relative;">
+                {{-- TARJETAS DE ESPECIALIDADES --}}
+                <div class="row g-4">
+                    {{-- Cardiología --}}
+                    <div class="col-md-6 col-lg-3">
+                        <div class="specialty-card rounded-4 h-100 cursor-pointer overflow-hidden" 
+                             style="background: white; border: 1px solid #e5e7eb; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); position: relative;"
+                             @mouseenter="$el.style.boxShadow = '0 20px 50px rgba(13, 148, 136, 0.2)'; $el.style.transform = 'translateY(-8px) scale(1.02)'"
+                             @mouseleave="$el.style.boxShadow = ''; $el.style.transform = 'translateY(0) scale(1)'"
+                             @click="modalOpen = true; nombre = 'Cardiología'; descripcion = 'Especialidad dedicada al diagnóstico y tratamiento de enfermedades del corazón y sistema cardiovascular con tecnología de última generación.'; recursos = ['Electrocardiógrafos avanzados', 'Ecocardiogramas 3D en tiempo real', 'Monitores de presión arterial de 24h', 'Sala de cuidados post-operatorios con tecnología cardíaca', 'Equipo de cateterismo cardíaco']">
+                            <div style="position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, #0d9488, #0891b2);"></div>
+                            <div class="p-5">
+                                <div class="rounded-3 d-flex align-items-center justify-content-center mb-4" 
+                                     style="width:64px;height:64px;background: linear-gradient(135deg, #ccfbf1, #a1f3e4); position: relative;">
+                                    <svg width="28" height="28" fill="none" stroke="#0d9488" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m7.8-4.3a9 9 0 11-17.6 0M12 2.25a6.75 6.75 0 100 13.5 6.75 6.75 0 000-13.5z"/></svg>
+                                </div>
+                                <h5 class="fw-bold mb-2" style="font-size: 1.25rem; color: #0f766e;">Cardiología</h5>
+                                <p class="text-muted small mb-4" style="line-height:1.7;font-size:0.95rem;">Cuidado integral del corazón y sistema cardiovascular con diagnósticos avanzados.</p>
+                                <div class="d-flex align-items-center gap-2 cursor-pointer" style="color: #0d9488; font-weight: 600; font-size: 0.95rem;">
+                                    Ver especialidad
+                                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="transition: transform 0.3s;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- Pediatría --}}
+                    <div class="col-md-6 col-lg-3">
+                        <div class="specialty-card rounded-4 h-100 cursor-pointer overflow-hidden" 
+                             style="background: white; border: 1px solid #e5e7eb; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); position: relative;"
+                             @mouseenter="$el.style.boxShadow = '0 20px 50px rgba(13, 148, 136, 0.2)'; $el.style.transform = 'translateY(-8px) scale(1.02)'"
+                             @mouseleave="$el.style.boxShadow = ''; $el.style.transform = 'translateY(0) scale(1)'"
+                             @click="modalOpen = true; nombre = 'Pediatría'; descripcion = 'Atención médica especializada para bebés, niños y adolescentes con profesionales certificados en su cuidado y desarrollo.'; recursos = ['Área pediátrica de internación con entretenimiento', 'Incubadoras neonatales de última generación', 'Monitores pediátricos especializados', 'Farmacoteca pediátrica completa', 'Espacio de vacunación con protocolos internacionales']">
+                            <div style="position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, #0d9488, #0891b2);"></div>
+                            <div class="p-5">
+                                <div class="rounded-3 d-flex align-items-center justify-content-center mb-4" 
+                                     style="width:64px;height:64px;background: linear-gradient(135deg, #ccfbf1, #a1f3e4);">
+                                    <svg width="28" height="28" fill="none" stroke="#0d9488" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M14 10l-2 1m0 0l-2-1m2 1v2.5M20 7l-2.293-2.293a1 1 0 00-1.414 0L13.414 5m0 0l-1-1a1 1 0 00-1.414 1.414L11 6.414m0 0L5.707 11.707a1 1 0 000 1.414l1 1a1 1 0 001.414 0L13 8m0 0l2.293 2.293"/></svg>
+                                </div>
+                                <h5 class="fw-bold mb-2" style="font-size: 1.25rem; color: #0f766e;">Pediatría</h5>
+                                <p class="text-muted small mb-4" style="line-height:1.7;font-size:0.95rem;">Atención especializada para bebés, niños y adolescentes en un ambiente acogedor.</p>
+                                <div class="d-flex align-items-center gap-2 cursor-pointer" style="color: #0d9488; font-weight: 600; font-size: 0.95rem;">
+                                    Ver especialidad
+                                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="transition: transform 0.3s;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- Traumatología --}}
+                    <div class="col-md-6 col-lg-3">
+                        <div class="specialty-card rounded-4 h-100 cursor-pointer overflow-hidden" 
+                             style="background: white; border: 1px solid #e5e7eb; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); position: relative;"
+                             @mouseenter="$el.style.boxShadow = '0 20px 50px rgba(13, 148, 136, 0.2)'; $el.style.transform = 'translateY(-8px) scale(1.02)'"
+                             @mouseleave="$el.style.boxShadow = ''; $el.style.transform = 'translateY(0) scale(1)'"
+                             @click="modalOpen = true; nombre = 'Traumatología'; descripcion = 'Tratamiento integral de fracturas, lesiones óseas, articulares y traumatismos de alta complejidad con recuperación optimizada.'; recursos = ['Rayos X digitales con 3D', 'Resonancia magnética de alta resolución', 'Quirófano especializado en traumatología', 'Equipamiento de fijación externa e interna', 'Rehabilitación post-quirúrgica integrada']">
+                            <div style="position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, #0d9488, #0891b2);"></div>
+                            <div class="p-5">
+                                <div class="rounded-3 d-flex align-items-center justify-content-center mb-4" 
+                                     style="width:64px;height:64px;background: linear-gradient(135deg, #ccfbf1, #a1f3e4);">
+                                    <svg width="28" height="28" fill="none" stroke="#0d9488" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 4h12v7H6z M7 11h4M13 11h4M8.5 18h7m-7-3h7M5 21h14a2 2 0 002-2V4a2 2 0 00-2-2H5a2 2 0 00-2 2v15a2 2 0 002 2z"/></svg>
+                                </div>
+                                <h5 class="fw-bold mb-2" style="font-size: 1.25rem; color: #0f766e;">Traumatología</h5>
+                                <p class="text-muted small mb-4" style="line-height:1.7;font-size:0.95rem;">Tratamiento de fracturas, lesiones óseas y traumatismos con tecnología.</p>
+                                <div class="d-flex align-items-center gap-2 cursor-pointer" style="color: #0d9488; font-weight: 600; font-size: 0.95rem;">
+                                    Ver especialidad
+                                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="transition: transform 0.3s;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- Ginecología --}}
+                    <div class="col-md-6 col-lg-3">
+                        <div class="specialty-card rounded-4 h-100 cursor-pointer overflow-hidden" 
+                             style="background: white; border: 1px solid #e5e7eb; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); position: relative;"
+                             @mouseenter="$el.style.boxShadow = '0 20px 50px rgba(13, 148, 136, 0.2)'; $el.style.transform = 'translateY(-8px) scale(1.02)'"
+                             @mouseleave="$el.style.boxShadow = ''; $el.style.transform = 'translateY(0) scale(1)'"
+                             @click="modalOpen = true; nombre = 'Ginecología'; descripcion = 'Cuidado integral de la salud femenina, servicios de obstetricia, ginecología general y medicina reproductiva especializada.'; recursos = ['Sala de partos humanizada con tecnología avanzada', 'Ecosonografía obstétrica 4D', 'Laboratorio de reproducción asistida', 'Servicio de parto natural y familiar', 'Banco de sangre para transfusiones']">
+                            <div style="position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, #0d9488, #0891b2);"></div>
+                            <div class="p-5">
+                                <div class="rounded-3 d-flex align-items-center justify-content-center mb-4" 
+                                     style="width:64px;height:64px;background: linear-gradient(135deg, #ccfbf1, #a1f3e4);">
+                                    <svg width="28" height="28" fill="none" stroke="#0d9488" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 14c0 1.049-.469 2.05-1.318 2.747m0 0A8.967 8.967 0 0112 21c-4.477 0-8-3.582-8-8s3.523-8 8-8c1.659 0 3.217.501 4.518 1.469m-4.518-1.469A8.965 8.965 0 0120 12m-8-9v18"/></svg>
+                                </div>
+                                <h5 class="fw-bold mb-2" style="font-size: 1.25rem; color: #0f766e;">Ginecología</h5>
+                                <p class="text-muted small mb-4" style="line-height:1.7;font-size:0.95rem;">Cuidado integral de la salud femenina, obstetricia y medicina reproductiva.</p>
+                                <div class="d-flex align-items-center gap-2 cursor-pointer" style="color: #0d9488; font-weight: 600; font-size: 0.95rem;">
+                                    Ver especialidad
+                                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="transition: transform 0.3s;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- MODAL ESPECIALIDADES --}}
+                <div x-show="modalOpen" 
+                     style="display: none; position: fixed; inset: 0; z-index: 50; backdrop-filter: blur(4px); background-color: rgba(0, 0, 0, 0.5);"
+                     x-transition
+                     @click.away="modalOpen = false">
+                    <div class="d-flex align-items-center justify-content-center" style="height: 100%; padding: 1rem;">
+                        <div style="background: white; border-radius: 1rem; padding: 2rem; max-width: 32rem; width: 100%; max-height: 90vh; overflow-y: auto; position: relative; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);">
+                            
+                            {{-- Botón Cerrar --}}
+                            <button @click="modalOpen = false" style="position: absolute; top: 1.25rem; right: 1.25rem; background: none; border: none; color: #6b7280; cursor: pointer; font-size: 1.5rem; padding: 0; width: 2rem; height: 2rem; display: flex; align-items: center; justify-content: center;">
+                                ✕
+                            </button>
+
+                            {{-- Header --}}
+                            <div style="background: linear-gradient(135deg, #0d9488, #0f766e); border-radius: 0.75rem; padding: 1.5rem; margin: -2rem -2rem 1.5rem -2rem;">
+                                <h3 x-text="nombre" style="font-size: 1.875rem; font-weight: bold; color: white; margin: 0 0 0.5rem 0;"></h3>
+                                <p x-text="descripcion" style="color: rgba(255, 255, 255, 0.95); line-height: 1.6; margin: 0; font-size: 0.95rem;"></p>
+                            </div>
+
+                            {{-- Recursos --}}
+                            <div style="margin-bottom: 1.5rem;">
+                                <h4 style="font-size: 0.875rem; font-weight: 600; color: #0f766e; text-transform: uppercase; letter-spacing: 0.05em; margin: 0 0 1rem 0;">Recursos y Equipamiento</h4>
+                                <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.5rem;">
+                                    <template x-for="recurso in recursos">
+                                        <li style="color: #6b7280; display: flex; align-items: center; gap: 0.5rem; font-size: 0.95rem; line-height: 1.6;">
+                                            <span style="color: #0d9488; font-weight: bold; flex-shrink: 0;">✓</span> 
+                                            <span x-text="recurso"></span>
+                                        </li>
+                                    </template>
+                                </ul>
+                            </div>
+
+                            {{-- Botón CTA --}}
+                            <a href="{{ route('register') }}" style="display: block; width: 100%; background: linear-gradient(135deg, #0d9488, #0891b2); color: white; font-weight: 600; padding: 0.75rem 1rem; border-radius: 0.75rem; text-align: center; text-decoration: none; transition: all 0.3s; cursor: pointer; border: none; margin-bottom: 1rem;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
+                                Agendar Cita Médica
+                            </a>
+                            <p style="text-align: center; color: #6b7280; font-size: 0.85rem; margin: 0;">Nuestros médicos especialistas te atenderán con profesionalismo y dedicación</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
 
     {{-- SERVICIOS --}}
     <section id="servicios" class="welcome-section bg-white">
