@@ -3,11 +3,22 @@
 namespace App\Http\Controllers;
 
 use App\Models\HorarioMedico;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class HorarioMedicoController extends Controller
 {
     private const DIAS = ['lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado', 'domingo'];
+
+    private const DIA_MAP = [
+        'Monday'    => 'lunes',
+        'Tuesday'   => 'martes',
+        'Wednesday' => 'miércoles',
+        'Thursday'  => 'jueves',
+        'Friday'    => 'viernes',
+        'Saturday'  => 'sábado',
+        'Sunday'    => 'domingo',
+    ];
 
     public function index()
     {
@@ -17,7 +28,18 @@ class HorarioMedicoController extends Controller
             ->get()
             ->groupBy('dia_semana');
 
-        return view('horarios.index', compact('horarios', 'medico'));
+        $inicioSemana = Carbon::now()->startOfWeek(Carbon::MONDAY)->startOfDay();
+        $finSemana    = $inicioSemana->copy()->endOfWeek(Carbon::SUNDAY)->endOfDay();
+
+        $citasSemana = $medico->citas()
+            ->with(['paciente.user'])
+            ->whereBetween('fecha_hora', [$inicioSemana, $finSemana])
+            ->whereNotIn('estado', ['cancelada'])
+            ->orderBy('fecha_hora')
+            ->get()
+            ->groupBy(fn($c) => self::DIA_MAP[$c->fecha_hora->format('l')] ?? '');
+
+        return view('horarios.index', compact('horarios', 'medico', 'citasSemana'));
     }
 
     public function create()

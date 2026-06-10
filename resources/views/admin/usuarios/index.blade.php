@@ -6,224 +6,170 @@
     <title>Usuarios – Admin Los Mollos</title>
     <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700,800&display=swap" rel="stylesheet"/>
     @vite(['resources/css/app.css','resources/js/app.js'])
-    <style>body{font-family:'Inter',sans-serif;}</style>
 </head>
-<body class="antialiased bg-gray-50 text-gray-900">
-<div class="flex h-screen overflow-hidden">
+<body>
+<div class="d-flex" style="min-height:100vh;overflow:hidden;">
 
     @include('partials.admin-sidebar', ['activeSection' => 'usuarios'])
 
-    <div class="flex-1 flex flex-col overflow-hidden">
-        <header class="bg-white border-b border-gray-100 px-6 py-4 flex items-center justify-between flex-shrink-0">
+    <div class="flex-grow-1 d-flex flex-column" style="overflow:hidden;">
+        <header class="app-topbar justify-content-between">
             <div>
-                <h1 class="text-base font-bold text-gray-900">Gestión de Usuarios</h1>
-                <p class="text-xs text-gray-400">Administrá los roles y accesos del sistema</p>
+                <h5 class="fw-bold mb-0">Gestión de Usuarios</h5>
+                <p class="text-muted mb-0" style="font-size:0.75rem;">Administrá los roles y accesos del sistema</p>
             </div>
-            <div class="flex items-center gap-3">
-                <span class="text-xs text-gray-500 bg-gray-100 px-3 py-1.5 rounded-lg">
-                    {{ $usuarios->total() }} usuarios en total
-                </span>
-                <a href="{{ route('admin.usuarios.create') }}"
-                   class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold px-4 py-2.5 rounded-xl flex items-center gap-1.5 transition-colors shadow-sm">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-                    </svg>
+            <div class="d-flex align-items-center gap-2">
+                <span class="badge bg-light text-muted border">{{ $usuarios->total() }} usuarios en total</span>
+                <a href="{{ route('admin.usuarios.create') }}" class="btn btn-primary btn-sm fw-semibold d-flex align-items-center gap-1">
+                    <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
                     Nuevo Usuario
                 </a>
             </div>
         </header>
 
-        <main class="flex-1 overflow-y-auto p-6 space-y-4">
+        <main class="flex-grow-1 p-4" style="overflow-y:auto;">
 
             @if(session('success'))
-                <div class="flex items-center gap-3 bg-green-50 border border-green-200 text-green-800 text-sm px-4 py-3 rounded-xl">
-                    <svg class="w-5 h-5 text-green-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                <div class="alert alert-success d-flex align-items-center gap-2 mb-3">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                     {{ session('success') }}
                 </div>
             @endif
             @if(session('error'))
-                <div class="flex items-center gap-3 bg-red-50 border border-red-200 text-red-800 text-sm px-4 py-3 rounded-xl">
-                    <svg class="w-5 h-5 text-red-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                <div class="alert alert-danger d-flex align-items-center gap-2 mb-3">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                     {{ session('error') }}
                 </div>
             @endif
 
             {{-- Filtros --}}
-            <form method="GET" action="{{ route('admin.usuarios.index') }}" id="filtroForm"
-                  class="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
-                <div class="flex items-center gap-3 flex-wrap">
-                    <div class="relative flex-1 min-w-48">
-                        <svg class="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                        </svg>
-                        <input type="text" name="buscar" value="{{ request('buscar') }}"
-                               placeholder="Buscar por nombre o correo..."
-                               class="w-full pl-9 pr-4 py-2.5 text-sm border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none">
+            <form method="GET" action="{{ route('admin.usuarios.index') }}" id="filtroForm" class="app-card p-3 mb-3">
+                <div class="d-flex gap-2 flex-wrap align-items-center">
+                    <div class="input-group input-group-sm flex-grow-1" style="max-width:280px;">
+                        <span class="input-group-text bg-white">
+                            <svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                        </span>
+                        <input type="text" name="buscar" value="{{ request('buscar') }}" placeholder="Buscar por nombre o correo..." class="form-control">
                     </div>
                     <select name="filtro_rol" onchange="document.getElementById('filtroForm').submit()"
-                            class="px-3 py-2.5 text-sm border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none bg-white">
+                            class="form-select form-select-sm" style="width:auto;">
                         <option value="">Todos los roles</option>
-                        <option value="admin"         {{ request('filtro_rol')==='admin'?'selected':'' }}>Administrador</option>
-                        <option value="medico"        {{ request('filtro_rol')==='medico'?'selected':'' }}>Médico</option>
-                        <option value="recepcionista" {{ request('filtro_rol')==='recepcionista'?'selected':'' }}>Recepcionista</option>
-                        <option value="paciente"      {{ request('filtro_rol')==='paciente'?'selected':'' }}>Paciente</option>
+                        <option value="admin"         {{ request('filtro_rol')==='admin'         ?'selected':'' }}>Administrador</option>
+                        <option value="medico"        {{ request('filtro_rol')==='medico'        ?'selected':'' }}>Médico</option>
+                        <option value="recepcionista" {{ request('filtro_rol')==='recepcionista' ?'selected':'' }}>Recepcionista</option>
+                        <option value="paciente"      {{ request('filtro_rol')==='paciente'      ?'selected':'' }}>Paciente</option>
                     </select>
-                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-4 py-2.5 rounded-xl transition-colors">
-                        Filtrar
-                    </button>
+                    <button type="submit" class="btn btn-primary btn-sm fw-semibold">Filtrar</button>
                     @if(request()->hasAny(['buscar','filtro_rol']))
-                        <a href="{{ route('admin.usuarios.index') }}"
-                           class="text-sm text-gray-500 hover:text-gray-700 px-2 py-2.5 flex items-center gap-1">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-                            Limpiar
-                        </a>
+                        <a href="{{ route('admin.usuarios.index') }}" class="text-muted small">Limpiar</a>
                     @endif
                 </div>
             </form>
 
             {{-- Tabla --}}
-            <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-                <table class="w-full text-sm">
-                    <thead class="bg-gray-50 border-b border-gray-100">
+            <div class="app-card overflow-hidden">
+                <table class="app-table">
+                    <thead>
                         <tr>
-                            <th class="px-5 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Usuario</th>
-                            <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Rol Actual</th>
-                            <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Registrado</th>
-                            <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Cambiar Rol</th>
-                            <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Acciones</th>
+                            <th>Usuario</th>
+                            <th>Rol Actual</th>
+                            <th>Registrado</th>
+                            <th>Cambiar Rol</th>
+                            <th>Acciones</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-gray-50">
+                    <tbody>
                         @php
-                            $rolColors = [
-                                'admin'         => 'bg-purple-100 text-purple-700',
-                                'medico'        => 'bg-blue-100 text-blue-700',
-                                'recepcionista' => 'bg-teal-100 text-teal-700',
-                                'paciente'      => 'bg-gray-100 text-gray-600',
-                            ];
-                            $rolLabels = [
-                                'admin'         => 'Administrador',
-                                'medico'        => 'Médico',
-                                'recepcionista' => 'Recepcionista',
-                                'paciente'      => 'Paciente',
-                            ];
+                            $rolStyles = ['admin'=>'background:#f3e8ff;color:#6d28d9','medico'=>'background:#dbeafe;color:#1d4ed8','recepcionista'=>'background:#ccfbf1;color:#0f766e','paciente'=>'background:#f3f4f6;color:#374151'];
+                            $rolLabels = ['admin'=>'Administrador','medico'=>'Médico','recepcionista'=>'Recepcionista','paciente'=>'Paciente'];
                         @endphp
-
                         @forelse($usuarios as $usuario)
-                        <tr class="hover:bg-gray-50 transition-colors {{ $usuario->id === auth()->id() ? 'bg-blue-50/40' : '' }}">
-                            {{-- Usuario --}}
-                            <td class="px-5 py-3.5">
-                                <div class="flex items-center gap-2.5">
-                                    <div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center flex-shrink-0">
-                                        <span class="text-white font-bold text-xs">{{ strtoupper(substr($usuario->name,0,1)) }}</span>
+                        <tr class="{{ $usuario->id === auth()->id() ? 'table-primary' : '' }}">
+                            <td>
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="avatar-circle fw-bold text-white flex-shrink-0" style="width:32px;height:32px;font-size:0.7rem;background:linear-gradient(135deg,#3b82f6,#2563eb);">
+                                        {{ strtoupper(substr($usuario->name,0,1)) }}
                                     </div>
                                     <div>
-                                        <div class="font-medium text-gray-800 flex items-center gap-1.5">
+                                        <div class="fw-semibold small d-flex align-items-center gap-1">
                                             {{ $usuario->name }}
                                             @if($usuario->id === auth()->id())
-                                                <span class="text-xs text-blue-500 font-normal">(tú)</span>
+                                                <span class="text-primary" style="font-size:0.7rem;">(tú)</span>
                                             @endif
                                         </div>
-                                        <div class="text-xs text-gray-400">{{ $usuario->email }}</div>
+                                        <div class="text-muted" style="font-size:0.7rem;">{{ $usuario->email }}</div>
                                     </div>
                                 </div>
                             </td>
-
-                            {{-- Rol actual --}}
-                            <td class="px-4 py-3.5">
-                                <span class="px-2.5 py-1 rounded-full text-xs font-semibold {{ $rolColors[$usuario->rol] ?? 'bg-gray-100 text-gray-600' }}">
+                            <td>
+                                <span class="badge" style="{{ $rolStyles[$usuario->rol] ?? 'background:#f3f4f6;color:#374151' }}">
                                     {{ $rolLabels[$usuario->rol] ?? $usuario->rol }}
                                 </span>
                             </td>
-
-                            {{-- Fecha --}}
-                            <td class="px-4 py-3.5 text-gray-500 text-xs">{{ $usuario->created_at->format('d M Y') }}</td>
-
-                            {{-- Cambiar rol inline --}}
-                            <td class="px-4 py-3.5">
+                            <td class="text-muted small">{{ $usuario->created_at->format('d M Y') }}</td>
+                            <td>
                                 @if($usuario->id !== auth()->id())
                                 <form method="POST" action="{{ route('admin.usuarios.rol', $usuario) }}">
                                     @csrf
-                                    <div class="flex items-center gap-2">
-                                        <select name="rol" class="px-2 py-1.5 text-xs border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none bg-white">
-                                            <option value="admin"         {{ $usuario->rol==='admin'?'selected':'' }}>Administrador</option>
-                                            <option value="medico"        {{ $usuario->rol==='medico'?'selected':'' }}>Médico</option>
-                                            <option value="recepcionista" {{ $usuario->rol==='recepcionista'?'selected':'' }}>Recepcionista</option>
-                                            <option value="paciente"      {{ $usuario->rol==='paciente'?'selected':'' }}>Paciente</option>
+                                    <div class="d-flex gap-2 align-items-center">
+                                        <select name="rol" class="form-select form-select-sm" style="width:auto;">
+                                            <option value="admin"         {{ $usuario->rol==='admin'         ?'selected':'' }}>Administrador</option>
+                                            <option value="medico"        {{ $usuario->rol==='medico'        ?'selected':'' }}>Médico</option>
+                                            <option value="recepcionista" {{ $usuario->rol==='recepcionista' ?'selected':'' }}>Recepcionista</option>
+                                            <option value="paciente"      {{ $usuario->rol==='paciente'      ?'selected':'' }}>Paciente</option>
                                         </select>
-                                        <button type="submit"
-                                                class="text-xs bg-blue-600 hover:bg-blue-700 text-white font-semibold px-2.5 py-1.5 rounded-lg transition-colors">
-                                            Guardar
-                                        </button>
+                                        <button type="submit" class="btn btn-primary btn-sm fw-semibold">Guardar</button>
                                     </div>
                                 </form>
                                 @else
-                                    <span class="text-xs text-gray-400 italic">No editable</span>
+                                    <span class="text-muted small fst-italic">No editable</span>
                                 @endif
                             </td>
-
-                            {{-- Acciones --}}
-                            <td class="px-4 py-3.5">
-                                <div class="flex items-center gap-3">
-                                    <a href="{{ route('admin.usuarios.show', $usuario) }}"
-                                       class="text-xs font-semibold text-gray-500 hover:text-gray-700">Ver</a>
-                                    <a href="{{ route('admin.usuarios.edit', $usuario) }}"
-                                       class="text-xs font-semibold text-blue-600 hover:text-blue-800">Editar</a>
+                            <td>
+                                <div class="d-flex gap-3 align-items-center">
+                                    <a href="{{ route('admin.usuarios.show', $usuario) }}" class="text-muted fw-semibold" style="font-size:0.75rem;">Ver</a>
+                                    <a href="{{ route('admin.usuarios.edit', $usuario) }}" class="text-primary fw-semibold" style="font-size:0.75rem;">Editar</a>
                                     @if($usuario->id !== auth()->id())
                                         <button onclick="abrirModalUsuario('{{ route('admin.usuarios.destroy', $usuario) }}', '{{ addslashes($usuario->name) }}')"
-                                                class="text-xs font-semibold text-red-500 hover:text-red-700">
-                                            Eliminar
-                                        </button>
+                                                class="btn btn-link btn-sm p-0 text-danger fw-semibold" style="font-size:0.75rem;">Eliminar</button>
                                     @else
-                                        <span class="text-xs text-gray-300">—</span>
+                                        <span class="text-muted">—</span>
                                     @endif
                                 </div>
                             </td>
                         </tr>
                         @empty
-                        <tr>
-                            <td colspan="5" class="px-5 py-12 text-center text-gray-400">
-                                No se encontraron usuarios con los filtros aplicados.
-                            </td>
-                        </tr>
+                        <tr><td colspan="5" class="text-center text-muted py-4">No se encontraron usuarios con los filtros aplicados.</td></tr>
                         @endforelse
                     </tbody>
                 </table>
                 @if($usuarios->hasPages())
-                <div class="px-5 py-4 border-t border-gray-50">{{ $usuarios->links() }}</div>
+                <div class="px-4 py-3 border-top">{{ $usuarios->links() }}</div>
                 @endif
             </div>
         </main>
     </div>
 </div>
 
-{{-- Modal de eliminación --}}
-<div id="modalUsuario" class="hidden fixed inset-0 z-50 flex items-center justify-center">
-    <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" onclick="cerrarModalUsuario()"></div>
-    <div class="relative bg-white rounded-2xl shadow-2xl p-6 max-w-sm w-full mx-4">
-        <div class="flex items-center gap-3 mb-4">
-            <div class="w-11 h-11 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0">
-                <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
-                </svg>
+<div class="modal fade" id="modalUsuario" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content">
+            <div class="modal-body p-4">
+                <div class="d-flex align-items-start gap-3 mb-3">
+                    <div class="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0" style="width:40px;height:40px;background:#fee2e2;">
+                        <svg width="18" height="18" fill="none" stroke="#dc2626" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                    </div>
+                    <div>
+                        <h6 class="fw-bold mb-0">¿Eliminar usuario?</h6>
+                        <p class="text-muted mb-0" style="font-size:0.75rem;">Esta acción no se puede deshacer.</p>
+                    </div>
+                </div>
+                <p class="small text-muted mb-4">Se eliminará permanentemente la cuenta de <strong id="nombreUsuario" class="text-dark"></strong>.</p>
+                <div class="d-flex gap-2">
+                    <button type="button" class="btn btn-outline-secondary flex-grow-1 btn-sm" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" onclick="confirmarEliminarUsuario()" class="btn btn-danger flex-grow-1 btn-sm fw-semibold">Eliminar</button>
+                </div>
             </div>
-            <div>
-                <h3 class="text-sm font-bold text-gray-900">¿Eliminar usuario?</h3>
-                <p class="text-xs text-gray-500">Esta acción no se puede deshacer.</p>
-            </div>
-        </div>
-        <p class="text-sm text-gray-600 mb-5">
-            Se eliminará permanentemente la cuenta de <strong id="nombreUsuario" class="text-gray-900"></strong>.
-        </p>
-        <div class="flex gap-3">
-            <button onclick="cerrarModalUsuario()"
-                    class="flex-1 px-4 py-2.5 text-sm border border-gray-200 rounded-xl text-gray-600 hover:bg-gray-50 font-medium transition-colors">
-                Cancelar
-            </button>
-            <button onclick="confirmarEliminarUsuario()"
-                    class="flex-1 bg-red-600 hover:bg-red-700 text-white text-sm font-semibold px-4 py-2.5 rounded-xl transition-colors">
-                Sí, eliminar
-            </button>
         </div>
     </div>
 </div>
@@ -234,10 +180,7 @@ let urlUsuario = '';
 function abrirModalUsuario(url, nombre) {
     urlUsuario = url;
     document.getElementById('nombreUsuario').textContent = nombre;
-    document.getElementById('modalUsuario').classList.remove('hidden');
-}
-function cerrarModalUsuario() {
-    document.getElementById('modalUsuario').classList.add('hidden');
+    new BSLib.Modal(document.getElementById('modalUsuario')).show();
 }
 function confirmarEliminarUsuario() {
     document.getElementById('formUsuario').action = urlUsuario;

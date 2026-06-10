@@ -1,3 +1,301 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'bootstrap/dist/css/bootstrap.min.css';
+
+/* ============================================================
+   VARIABLES Y BASE
+============================================================ */
+:root {
+    --sidebar-width: 224px;
+    --bs-primary: #0d9488;
+    --bs-primary-rgb: 13, 148, 136;
+    --bs-link-color: #0d9488;
+    --bs-link-color-rgb: 13, 148, 136;
+    --bs-link-hover-color: #0f766e;
+    --bs-link-hover-color-rgb: 15, 118, 110;
+}
+
+/* Bootstrap primary overrides — teal */
+.btn-primary {
+    --bs-btn-bg: #0d9488;
+    --bs-btn-border-color: #0d9488;
+    --bs-btn-hover-bg: #0f766e;
+    --bs-btn-hover-border-color: #0f766e;
+    --bs-btn-focus-shadow-rgb: 13, 148, 136;
+    --bs-btn-active-bg: #115e59;
+    --bs-btn-active-border-color: #115e59;
+    --bs-btn-disabled-bg: #0d9488;
+    --bs-btn-disabled-border-color: #0d9488;
+}
+.btn-outline-primary {
+    --bs-btn-color: #0d9488;
+    --bs-btn-border-color: #0d9488;
+    --bs-btn-hover-bg: #0d9488;
+    --bs-btn-hover-border-color: #0d9488;
+    --bs-btn-active-color: #fff;
+    --bs-btn-active-bg: #0d9488;
+    --bs-btn-active-border-color: #0d9488;
+    --bs-btn-focus-shadow-rgb: 13, 148, 136;
+}
+.text-primary { color: #0d9488 !important; }
+.bg-primary   { background-color: #0d9488 !important; }
+.bg-primary-subtle { background-color: #ccfbf1 !important; }
+.text-primary-emphasis { color: #0f766e !important; }
+.border-primary { border-color: #0d9488 !important; }
+.bg-primary.bg-opacity-10 { background-color: rgba(13,148,136,0.1) !important; }
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f8fafc;
+}
+
+/* ============================================================
+   SIDEBAR
+============================================================ */
+.app-sidebar {
+    width: var(--sidebar-width);
+    min-height: 100vh;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+.app-sidebar .sidebar-brand {
+    padding: 1.25rem;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.app-sidebar .sidebar-nav-label {
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 0.75rem 0.75rem 0.25rem;
+    color: #6b7280;
+}
+
+.sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.6rem 0.75rem;
+    border-radius: 0.625rem;
+    font-size: 0.875rem;
+    text-decoration: none;
+    transition: background-color 0.15s ease;
+    color: #9ca3af;
+    margin-bottom: 1px;
+}
+
+.sidebar-link:hover {
+    background-color: rgba(255,255,255,0.07);
+    color: #e5e7eb;
+}
+
+.sidebar-link.active {
+    background-color: #0d9488;
+    color: #ffffff;
+    font-weight: 600;
+}
+
+.sidebar-link svg {
+    flex-shrink: 0;
+    width: 16px;
+    height: 16px;
+}
+
+/* Patient sidebar links */
+.sidebar-patient .sidebar-link {
+    color: rgba(204,251,241,0.85);
+}
+.sidebar-patient .sidebar-link:hover {
+    background-color: rgba(255,255,255,0.1);
+    color: #fff;
+}
+.sidebar-patient .sidebar-link.active {
+    background-color: rgba(255,255,255,0.2);
+    color: #fff;
+    font-weight: 600;
+}
+
+/* Receptionist sidebar links */
+.sidebar-recep .sidebar-link {
+    color: rgba(204,251,241,0.85);
+}
+.sidebar-recep .sidebar-link:hover {
+    background-color: rgba(255,255,255,0.1);
+    color: #fff;
+}
+.sidebar-recep .sidebar-link.active {
+    background-color: rgba(255,255,255,0.2);
+    color: #fff;
+    font-weight: 600;
+}
+
+/* ============================================================
+   TOP BAR
+============================================================ */
+.app-topbar {
+    background: #fff;
+    border-bottom: 1px solid #f1f5f9;
+    padding: 0.75rem 1.5rem;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+/* ============================================================
+   KPI CARDS
+============================================================ */
+.kpi-card {
+    background: #fff;
+    border: 1px solid #f1f5f9;
+    border-radius: 1rem;
+    padding: 1rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+
+.kpi-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 0.625rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+/* ============================================================
+   TABLES
+============================================================ */
+.app-table th {
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #6b7280;
+    padding: 0.75rem 1.25rem;
+    background-color: #f9fafb;
+    border-bottom: 1px solid #f3f4f6;
+}
+
+.app-table td {
+    font-size: 0.8rem;
+    padding: 0.75rem 1.25rem;
+    vertical-align: middle;
+    border-bottom: 1px solid #f9fafb;
+    color: #374151;
+}
+
+.app-table tbody tr:hover {
+    background-color: #f9fafb;
+}
+
+/* ============================================================
+   BADGES DE ESTADO
+============================================================ */
+.badge-confirmada { background-color: #d1fae5; color: #065f46; font-size: 0.7rem; }
+.badge-pendiente  { background-color: #fef3c7; color: #92400e; font-size: 0.7rem; }
+.badge-completada { background-color: #dbeafe; color: #1e40af; font-size: 0.7rem; }
+.badge-cancelada  { background-color: #fee2e2; color: #991b1b; font-size: 0.7rem; }
+
+/* ============================================================
+   FORMULARIOS
+============================================================ */
+.form-control, .form-select {
+    border-radius: 0.625rem;
+    font-size: 0.875rem;
+    padding: 0.625rem 0.875rem;
+    border-color: #e5e7eb;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: #0d9488;
+    box-shadow: 0 0 0 3px rgba(13,148,136,0.12);
+}
+
+.form-label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #374151;
+    margin-bottom: 0.375rem;
+}
+
+.input-icon-wrapper {
+    position: relative;
+}
+.input-icon-wrapper .input-icon {
+    position: absolute;
+    left: 0.875rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #9ca3af;
+    pointer-events: none;
+    width: 16px;
+    height: 16px;
+}
+.input-icon-wrapper .form-control {
+    padding-left: 2.5rem;
+}
+
+/* ============================================================
+   BOTONES
+============================================================ */
+.btn {
+    border-radius: 0.625rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    padding: 0.55rem 1rem;
+}
+
+.btn-sm {
+    font-size: 0.78rem;
+    padding: 0.35rem 0.75rem;
+    border-radius: 0.5rem;
+}
+
+/* ============================================================
+   CARDS GENERALES
+============================================================ */
+.app-card {
+    background: #fff;
+    border: 1px solid #f1f5f9;
+    border-radius: 1rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+
+.app-card .app-card-header {
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid #f3f4f6;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #111827;
+}
+
+/* ============================================================
+   AVATAR CIRCLE
+============================================================ */
+.avatar-circle {
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-weight: 700;
+}
+
+/* ============================================================
+   GUEST LAYOUT (AUTH)
+============================================================ */
+.auth-panel-left {
+    background: linear-gradient(145deg,#0f4a43 0%,#0c6b61 55%,#0d9488 100%);
+}
+
+/* ============================================================
+   RESPONSIVE
+============================================================ */
+@media (max-width: 991.98px) {
+    .app-sidebar {
+        display: none;
+    }
+}

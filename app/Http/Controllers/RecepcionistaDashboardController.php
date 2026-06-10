@@ -36,8 +36,9 @@ class RecepcionistaDashboardController extends Controller
     {
         $query = Cita::with(['paciente.user', 'medico.user', 'especialidad', 'pago']);
 
-        if ($request->filled('fecha')) {
-            $query->whereDate('fecha_hora', $request->fecha);
+        if ($request->filled('buscar')) {
+            $b = $request->buscar;
+            $query->whereHas('paciente.user', fn($q) => $q->where('name', 'like', "%$b%"));
         }
         if ($request->filled('estado')) {
             $query->where('estado', $request->estado);

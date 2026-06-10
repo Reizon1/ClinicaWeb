@@ -6,136 +6,134 @@
     <title>Pagos – Los Mollos</title>
     <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700,800&display=swap" rel="stylesheet"/>
     @vite(['resources/css/app.css','resources/js/app.js'])
-    <style>body{font-family:'Inter',sans-serif;}</style>
 </head>
-<body class="antialiased bg-gray-50 text-gray-900">
-
-@php
-$badgeEstado = [
-    'completado'  => 'bg-green-100 text-green-700',
-    'pendiente'   => 'bg-yellow-100 text-yellow-700',
-    'fallido'     => 'bg-red-100 text-red-600',
-    'reembolsado' => 'bg-purple-100 text-purple-700',
-];
-$badgeMetodo = [
-    'efectivo' => 'bg-teal-50 text-teal-700',
-    'stripe'   => 'bg-blue-50 text-blue-700',
-    'paypal'   => 'bg-indigo-50 text-indigo-700',
-];
-@endphp
-
-<div class="flex h-screen overflow-hidden">
+<body>
+<div class="d-flex" style="min-height:100vh;overflow:hidden;">
 
     @include('partials.recepcionista-sidebar', ['activeSection' => 'pagos'])
 
-    <div class="flex-1 flex flex-col overflow-hidden">
-        <header class="bg-white border-b border-gray-100 px-6 py-4 flex items-center justify-between flex-shrink-0">
-            <div>
-                <h1 class="text-base font-bold text-gray-900">Gestión de Pagos</h1>
-                <p class="text-xs text-gray-400">Registros de pagos por consultas médicas</p>
-            </div>
+    <div class="flex-grow-1 d-flex flex-column" style="overflow:hidden;">
+        <header class="app-topbar">
+            <h5 class="fw-bold mb-0">Gestión de Pagos</h5>
+            <p class="text-muted mb-0 ms-2" style="font-size:0.75rem;">Registros de pagos por consultas médicas</p>
         </header>
 
-        <main class="flex-1 overflow-y-auto p-6 space-y-5">
+        <main class="flex-grow-1 p-4" style="overflow-y:auto;">
 
             @if(session('success'))
-                <div class="bg-green-50 border border-green-200 text-green-700 text-sm px-4 py-3 rounded-xl">{{ session('success') }}</div>
+                <div class="alert alert-success mb-3">{{ session('success') }}</div>
             @endif
             @if(session('info'))
-                <div class="bg-blue-50 border border-blue-200 text-blue-700 text-sm px-4 py-3 rounded-xl">{{ session('info') }}</div>
+                <div class="alert alert-info mb-3">{{ session('info') }}</div>
             @endif
             @if($errors->any())
-                <div class="bg-red-50 border border-red-200 text-red-700 text-sm px-4 py-3 rounded-xl">{{ $errors->first() }}</div>
+                <div class="alert alert-danger mb-3">{{ $errors->first() }}</div>
             @endif
 
-            {{-- Tarjetas resumen --}}
-            <div class="grid grid-cols-2 gap-4">
-                <div class="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
-                    <div class="w-9 h-9 bg-green-50 rounded-xl flex items-center justify-center mb-3">
-                        <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            {{-- KPI Cards --}}
+            <div class="row g-3 mb-4">
+                <div class="col-md-6">
+                    <div class="kpi-card">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div>
+                                <p class="text-muted mb-1" style="font-size:0.72rem;">Total recaudado</p>
+                                <h4 class="fw-bold mb-0">${{ number_format($totalCompletado, 2) }}</h4>
+                            </div>
+                            <div class="kpi-icon" style="background:#f0fdf4;">
+                                <svg width="18" height="18" fill="none" stroke="#16a34a" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            </div>
+                        </div>
                     </div>
-                    <div class="text-2xl font-bold text-gray-900">${{ number_format($totalCompletado, 2) }}</div>
-                    <div class="text-xs text-gray-400 mt-1">Total recaudado</div>
                 </div>
-                <div class="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
-                    <div class="w-9 h-9 bg-yellow-50 rounded-xl flex items-center justify-center mb-3">
-                        <svg class="w-5 h-5 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                <div class="col-md-6">
+                    <div class="kpi-card">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div>
+                                <p class="text-muted mb-1" style="font-size:0.72rem;">Pagos pendientes</p>
+                                <h4 class="fw-bold mb-0">{{ $totalPendiente }}</h4>
+                            </div>
+                            <div class="kpi-icon" style="background:#fffbeb;">
+                                <svg width="18" height="18" fill="none" stroke="#d97706" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            </div>
+                        </div>
                     </div>
-                    <div class="text-2xl font-bold text-gray-900">{{ $totalPendiente }}</div>
-                    <div class="text-xs text-gray-400 mt-1">Pagos pendientes</div>
                 </div>
             </div>
 
             {{-- Filtros --}}
-            <form method="GET" action="{{ route('recepcionista.pagos.index') }}" class="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
-                <div class="flex items-center gap-3 flex-wrap">
-                    <select name="estado" class="px-3 py-2 text-sm border border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-500 outline-none">
+            <form method="GET" action="{{ route('recepcionista.pagos.index') }}" class="app-card p-3 mb-3">
+                <div class="d-flex gap-2 flex-wrap align-items-center">
+                    <select name="estado" class="form-select form-select-sm" style="width:auto;" onchange="this.form.submit()">
                         <option value="">Todos los estados</option>
                         <option value="completado"  {{ request('estado') === 'completado'  ? 'selected' : '' }}>Completado</option>
                         <option value="pendiente"   {{ request('estado') === 'pendiente'   ? 'selected' : '' }}>Pendiente</option>
                         <option value="fallido"     {{ request('estado') === 'fallido'     ? 'selected' : '' }}>Fallido</option>
                         <option value="reembolsado" {{ request('estado') === 'reembolsado' ? 'selected' : '' }}>Reembolsado</option>
                     </select>
-                    <select name="metodo_pago" class="px-3 py-2 text-sm border border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-500 outline-none">
+                    <select name="metodo_pago" class="form-select form-select-sm" style="width:auto;" onchange="this.form.submit()">
                         <option value="">Todos los métodos</option>
                         <option value="efectivo" {{ request('metodo_pago') === 'efectivo' ? 'selected' : '' }}>Efectivo</option>
                         <option value="stripe"   {{ request('metodo_pago') === 'stripe'   ? 'selected' : '' }}>Stripe</option>
                         <option value="paypal"   {{ request('metodo_pago') === 'paypal'   ? 'selected' : '' }}>PayPal</option>
                     </select>
-                    <select name="paciente_id" class="px-3 py-2 text-sm border border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-500 outline-none">
+                    <select name="paciente_id" class="form-select form-select-sm" style="width:auto;" onchange="this.form.submit()">
                         <option value="">Todos los pacientes</option>
                         @foreach($pacientes as $p)
                             <option value="{{ $p->id }}" {{ request('paciente_id') == $p->id ? 'selected' : '' }}>{{ $p->user->name }}</option>
                         @endforeach
                     </select>
-                    <button type="submit" class="bg-teal-600 text-white text-xs font-semibold px-4 py-2.5 rounded-xl hover:bg-teal-700 transition-colors">Filtrar</button>
-                    <a href="{{ route('recepcionista.pagos.index') }}" class="text-xs text-gray-500 hover:text-gray-700">Limpiar</a>
+                    @if(request()->hasAny(['estado','metodo_pago','paciente_id']))
+                        <a href="{{ route('recepcionista.pagos.index') }}" class="btn btn-outline-secondary btn-sm">Limpiar</a>
+                    @endif
                 </div>
             </form>
 
             {{-- Tabla --}}
-            <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-                <table class="w-full text-xs">
-                    <thead class="bg-gray-50 border-b border-gray-100">
+            <div class="app-card overflow-hidden">
+                <table class="app-table">
+                    <thead>
                         <tr>
-                            <th class="px-5 py-3 text-left font-semibold text-gray-500 uppercase tracking-wider">Fecha</th>
-                            <th class="px-4 py-3 text-left font-semibold text-gray-500 uppercase tracking-wider">Paciente</th>
-                            <th class="px-4 py-3 text-left font-semibold text-gray-500 uppercase tracking-wider">Concepto</th>
-                            <th class="px-4 py-3 text-left font-semibold text-gray-500 uppercase tracking-wider">Monto</th>
-                            <th class="px-4 py-3 text-left font-semibold text-gray-500 uppercase tracking-wider">Método</th>
-                            <th class="px-4 py-3 text-left font-semibold text-gray-500 uppercase tracking-wider">Estado</th>
+                            <th>Fecha</th>
+                            <th>Paciente</th>
+                            <th>Concepto</th>
+                            <th>Monto</th>
+                            <th>Método</th>
+                            <th>Estado</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-gray-50">
+                    <tbody>
                         @forelse($pagos as $pago)
-                        <tr class="hover:bg-gray-50 transition-colors">
-                            <td class="px-5 py-3.5 text-gray-700">
-                                {{ $pago->fecha_pago ? $pago->fecha_pago->format('d/m/Y H:i') : $pago->created_at->format('d/m/Y') }}
-                            </td>
-                            <td class="px-4 py-3.5 font-medium text-gray-800">{{ $pago->paciente->user->name }}</td>
-                            <td class="px-4 py-3.5 text-gray-600">{{ $pago->concepto }}</td>
-                            <td class="px-4 py-3.5 font-bold text-gray-900">${{ number_format($pago->monto, 2) }}</td>
-                            <td class="px-4 py-3.5">
-                                <span class="px-2.5 py-1 rounded-full font-semibold {{ $badgeMetodo[$pago->metodo_pago] ?? 'bg-gray-100 text-gray-600' }}">
+                        <tr>
+                            <td class="text-muted">{{ $pago->fecha_pago ? $pago->fecha_pago->format('d/m/Y H:i') : $pago->created_at->format('d/m/Y') }}</td>
+                            <td class="fw-semibold">{{ $pago->paciente->user->name }}</td>
+                            <td class="text-muted">{{ $pago->concepto }}</td>
+                            <td class="fw-bold">${{ number_format($pago->monto, 2) }}</td>
+                            <td>
+                                @php
+                                    $metStyles = ['efectivo'=>'background:#f0fdfa;color:#0f766e','stripe'=>'background:#eff6ff;color:#1d4ed8','paypal'=>'background:#eef2ff;color:#4338ca'];
+                                @endphp
+                                <span class="badge" style="{{ $metStyles[$pago->metodo_pago] ?? 'background:#f3f4f6;color:#374151' }}">
                                     {{ ucfirst($pago->metodo_pago) }}
                                 </span>
                             </td>
-                            <td class="px-4 py-3.5">
-                                <span class="px-2.5 py-1 rounded-full font-semibold {{ $badgeEstado[$pago->estado] ?? 'bg-gray-100 text-gray-600' }}">
+                            <td>
+                                @php
+                                    $estStyles = ['completado'=>'background:#f0fdf4;color:#14532d','pendiente'=>'background:#fffbeb;color:#92400e','fallido'=>'background:#fef2f2;color:#991b1b','reembolsado'=>'background:#faf5ff;color:#5b21b6'];
+                                @endphp
+                                <span class="badge" style="{{ $estStyles[$pago->estado] ?? 'background:#f3f4f6;color:#374151' }}">
                                     {{ ucfirst($pago->estado) }}
                                 </span>
                             </td>
                         </tr>
                         @empty
-                        <tr><td colspan="6" class="px-5 py-10 text-center text-gray-400">No se encontraron pagos con los filtros aplicados.</td></tr>
+                        <tr><td colspan="6" class="text-center text-muted py-4">No se encontraron pagos con los filtros aplicados.</td></tr>
                         @endforelse
                     </tbody>
                 </table>
                 @if($pagos->hasPages())
-                <div class="px-5 py-4 border-t border-gray-50">{{ $pagos->links() }}</div>
+                <div class="px-4 py-3 border-top">{{ $pagos->links() }}</div>
                 @endif
             </div>
-
         </main>
     </div>
 </div>
