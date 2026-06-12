@@ -29,7 +29,7 @@
         <main class="flex-grow-1 p-4" style="overflow-y:auto;">
 
             @php
-                $rolStyles = ['admin'=>'background:#f3e8ff;color:#6d28d9','medico'=>'background:#dbeafe;color:#1d4ed8','recepcionista'=>'background:#ccfbf1;color:#0f766e','paciente'=>'background:#f3f4f6;color:#374151'];
+                $rolStyles = ['admin'=>'background:#f3e8ff;color:#6d28d9','medico'=>'background:#dbeafe;color:#1d4ed8','recepcionista'=>'background:#CFFAFE;color:#0E7490','paciente'=>'background:#f3f4f6;color:#374151'];
                 $rolLabels = ['admin'=>'Administrador','medico'=>'Médico','recepcionista'=>'Recepcionista','paciente'=>'Paciente'];
             @endphp
 

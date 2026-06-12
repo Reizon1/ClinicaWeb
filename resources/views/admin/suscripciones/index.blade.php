@@ -57,7 +57,7 @@
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <div class="kpi-card text-white" style="background:linear-gradient(135deg,#059669,#0d9488);">
+                    <div class="kpi-card text-white" style="background:linear-gradient(135deg,#059669,#16a34a);">
                         <div class="d-flex align-items-center justify-content-between">
                             <div>
                                 <p class="mb-1 opacity-75" style="font-size:0.72rem;">Ingresos activos</p>

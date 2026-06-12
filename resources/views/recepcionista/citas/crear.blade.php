@@ -91,7 +91,7 @@
 
                     <div class="d-flex gap-3 pt-1">
                         <a href="{{ route('recepcionista.citas') }}" class="btn btn-outline-secondary flex-grow-1">Cancelar</a>
-                        <button type="submit" class="btn fw-semibold flex-grow-1 text-white" style="background:#0d9488;">Agendar Cita</button>
+                        <button type="submit" class="btn btn-primary fw-semibold flex-grow-1">Agendar Cita</button>
                     </div>
                 </form>
             </div>

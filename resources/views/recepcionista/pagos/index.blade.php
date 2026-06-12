@@ -110,7 +110,7 @@
                             <td class="fw-bold">${{ number_format($pago->monto, 2) }}</td>
                             <td>
                                 @php
-                                    $metStyles = ['efectivo'=>'background:#f0fdfa;color:#0f766e','stripe'=>'background:#eff6ff;color:#1d4ed8','paypal'=>'background:#eef2ff;color:#4338ca'];
+                                    $metStyles = ['efectivo'=>'background:#EFF6FF;color:#2563EB','stripe'=>'background:#eff6ff;color:#1d4ed8','paypal'=>'background:#eef2ff;color:#4338ca'];
                                 @endphp
                                 <span class="badge" style="{{ $metStyles[$pago->metodo_pago] ?? 'background:#f3f4f6;color:#374151' }}">
                                     {{ ucfirst($pago->metodo_pago) }}

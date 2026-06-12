@@ -30,8 +30,8 @@
         {{-- Header --}}
         <header class="app-topbar justify-content-between">
             <div class="d-flex align-items-center gap-2">
-                <div class="kpi-icon" style="background:#ccfbf1;width:36px;height:36px;border-radius:8px;">
-                    <svg width="18" height="18" fill="none" stroke="#0f766e" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                <div class="kpi-icon" style="background:#EFF6FF;width:36px;height:36px;border-radius:8px;">
+                    <svg width="18" height="18" fill="none" stroke="#1d4ed8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
                 </div>
                 <div>
                     <h5 class="fw-bold mb-0" style="font-size:0.95rem;">Bienvenido, {{ auth()->user()->name }}</h5>
@@ -39,7 +39,7 @@
                 </div>
             </div>
             <div class="d-flex align-items-center gap-2">
-                <div class="avatar-circle text-white" style="background:#0d9488;width:28px;height:28px;font-size:0.65rem;">{{ $iniciales }}</div>
+                <div class="avatar-circle text-white" style="background:#2563EB;width:28px;height:28px;font-size:0.65rem;">{{ $iniciales }}</div>
                 <div>
                     <div class="fw-semibold" style="font-size:0.8rem;">{{ auth()->user()->name }}</div>
                     <div class="text-muted" style="font-size:0.7rem;">Paciente ID: {{ $paciente->id }}</div>
@@ -54,10 +54,10 @@
         <main class="flex-grow-1" style="overflow-y:auto;">
 
             {{-- Hero Banner --}}
-            <div class="px-4 py-4" style="background:linear-gradient(135deg,#0f766e,#0d9488,#0891b2);position:relative;overflow:hidden;">
+            <div class="px-4 py-4" style="background:linear-gradient(135deg,#1d4ed8,#2563EB,#0284c7);position:relative;overflow:hidden;">
                 <div style="position:absolute;top:-30px;right:-30px;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,0.08);pointer-events:none;"></div>
                 <div style="position:absolute;bottom:-20px;left:-20px;width:150px;height:150px;border-radius:50%;background:rgba(255,255,255,0.05);pointer-events:none;"></div>
-                <p class="mb-1" style="color:rgba(204,251,241,0.8);font-size:0.7rem;text-transform:uppercase;letter-spacing:0.1em;font-weight:600;">Mi Panel de Salud</p>
+                <p class="mb-1" style="color:rgba(191,219,254,0.8);font-size:0.7rem;text-transform:uppercase;letter-spacing:0.1em;font-weight:600;">Mi Panel de Salud</p>
                 <h2 class="text-white fw-bold mb-0" style="font-size:1.4rem;">{{ explode(' ', auth()->user()->name)[0] }}, aquí está tu resumen</h2>
             </div>
 
@@ -75,15 +75,15 @@
                     <div class="col-md-4">
                         <div class="kpi-card">
                             <div class="d-flex align-items-center gap-2 mb-2">
-                                <div class="kpi-icon" style="background:#ccfbf1;">
-                                    <svg width="18" height="18" fill="none" stroke="#0d9488" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                                <div class="kpi-icon" style="background:#EFF6FF;">
+                                    <svg width="18" height="18" fill="none" stroke="#2563EB" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                                 </div>
                                 <span class="text-muted" style="font-size:0.75rem;">Próxima Cita</span>
                             </div>
                             @if($proximaCita)
                                 <div class="fw-bold fs-5">{{ $proximaCita->fecha_hora->format('d M, Y') }}</div>
                                 <div class="text-muted small">@ {{ $proximaCita->fecha_hora->format('h:i A') }}</div>
-                                <div class="fw-medium mt-1" style="font-size:0.8rem;color:#0d9488;">Dr. {{ $proximaCita->medico->user->name }}</div>
+                                <div class="fw-medium mt-1" style="font-size:0.8rem;color:#2563EB;">Dr. {{ $proximaCita->medico->user->name }}</div>
                             @else
                                 <div class="text-muted small mt-1">Sin citas próximas</div>
                                 <a href="{{ route('citas.crear') }}" class="btn btn-primary btn-sm mt-2">Agendar ahora</a>
@@ -103,12 +103,12 @@
                         </div>
                     </div>
                     <div class="col-md-4">
-                        <div class="kpi-card text-white" style="background:linear-gradient(135deg,#0f766e,#0d9488);">
+                        <div class="kpi-card text-white" style="background:linear-gradient(135deg,#1d4ed8,#2563EB);">
                             <div class="d-flex align-items-center gap-2 mb-2">
                                 <div class="kpi-icon" style="background:rgba(255,255,255,0.2);">
                                     <svg width="18" height="18" fill="#fde047" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
                                 </div>
-                                <span style="font-size:0.75rem;color:rgba(204,251,241,0.85);">Estado Premium</span>
+                                <span style="font-size:0.75rem;color:rgba(191,219,254,0.85);">Estado Premium</span>
                             </div>
                             @if($suscripcion && $suscripcion->estaActiva())
                                 <div class="fw-bold fs-5 d-flex align-items-center gap-2">
@@ -123,10 +123,10 @@
                                 <div class="progress mt-2 mb-1" style="height:4px;background:rgba(255,255,255,0.2);">
                                     <div class="progress-bar bg-warning" style="width:{{ $progreso }}%"></div>
                                 </div>
-                                <div style="font-size:0.7rem;color:rgba(204,251,241,0.85);">Vence: {{ $suscripcion->fecha_vencimiento->format('d M. Y') }}</div>
+                                <div style="font-size:0.7rem;color:rgba(191,219,254,0.85);">Vence: {{ $suscripcion->fecha_vencimiento->format('d M. Y') }}</div>
                             @else
                                 <div class="fw-bold fs-5">Sin Plan Premium</div>
-                                <div style="font-size:0.7rem;color:rgba(204,251,241,0.85);">Activa tu plan desde $99/mes</div>
+                                <div style="font-size:0.7rem;color:rgba(191,219,254,0.85);">Activa tu plan desde $99/mes</div>
                             @endif
                         </div>
                     </div>
@@ -148,10 +148,10 @@
                                     <text x="0" y="38" font-size="10" fill="#9ca3af">120</text>
                                     <text x="0" y="78" font-size="10" fill="#9ca3af">100</text>
                                     <text x="0" y="118" font-size="10" fill="#9ca3af">80</text>
-                                    <polyline points="50,100 130,90 210,95 290,80 370,85 450,78" fill="none" stroke="#0d9488" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                    <circle cx="50" cy="100" r="3" fill="#0d9488"/><circle cx="130" cy="90" r="3" fill="#0d9488"/>
-                                    <circle cx="210" cy="95" r="3" fill="#0d9488"/><circle cx="290" cy="80" r="3" fill="#0d9488"/>
-                                    <circle cx="370" cy="85" r="3" fill="#0d9488"/><circle cx="450" cy="78" r="3" fill="#0d9488"/>
+                                    <polyline points="50,100 130,90 210,95 290,80 370,85 450,78" fill="none" stroke="#2563EB" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <circle cx="50" cy="100" r="3" fill="#2563EB"/><circle cx="130" cy="90" r="3" fill="#2563EB"/>
+                                    <circle cx="210" cy="95" r="3" fill="#2563EB"/><circle cx="290" cy="80" r="3" fill="#2563EB"/>
+                                    <circle cx="370" cy="85" r="3" fill="#2563EB"/><circle cx="450" cy="78" r="3" fill="#2563EB"/>
                                     <polyline points="50,60 130,70 210,55 290,65 370,50 450,60" fill="none" stroke="#10b981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
                                     <circle cx="50" cy="60" r="3" fill="#10b981"/><circle cx="130" cy="70" r="3" fill="#10b981"/>
                                     <circle cx="210" cy="55" r="3" fill="#10b981"/><circle cx="290" cy="65" r="3" fill="#10b981"/>
@@ -165,7 +165,7 @@
                                 </svg>
                                 <div class="d-flex gap-4 mt-2">
                                     <div class="d-flex align-items-center gap-1 small text-muted">
-                                        <div style="width:12px;height:2px;background:#0d9488;border-radius:2px;"></div> Peso (kg)
+                                        <div style="width:12px;height:2px;background:#2563EB;border-radius:2px;"></div> Peso (kg)
                                     </div>
                                     <div class="d-flex align-items-center gap-1 small text-muted">
                                         <div style="width:12px;height:2px;background:#10b981;border-radius:2px;"></div> Presión Art.
@@ -180,7 +180,7 @@
                             <div class="p-3">
                                 @if($proximaCita)
                                     <div class="text-center mb-3">
-                                        <div class="avatar-circle text-white mx-auto mb-2" style="width:56px;height:56px;font-size:1.2rem;background:#0d9488;">
+                                        <div class="avatar-circle text-white mx-auto mb-2" style="width:56px;height:56px;font-size:1.2rem;background:#2563EB;">
                                             {{ strtoupper(substr($proximaCita->medico->user->name,0,1)) }}
                                         </div>
                                         <div class="fw-bold" style="font-size:0.9rem;">Dr. {{ $proximaCita->medico->user->name }}</div>
@@ -188,11 +188,11 @@
                                     </div>
                                     <div class="d-flex flex-column gap-2">
                                         <div class="d-flex align-items-center gap-2 text-muted small">
-                                            <svg width="14" height="14" fill="none" stroke="#0d9488" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                            <svg width="14" height="14" fill="none" stroke="#2563EB" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                                             {{ $proximaCita->fecha_hora->format('d/m/Y h:i A') }}
                                         </div>
                                         <div class="d-flex align-items-center gap-2 text-muted small">
-                                            <svg width="14" height="14" fill="none" stroke="#0d9488" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                                            <svg width="14" height="14" fill="none" stroke="#2563EB" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
                                             {{ $proximaCita->motivo ?? 'Sin motivo registrado' }}
                                         </div>
                                     </div>
@@ -217,11 +217,11 @@
                 <div class="app-card overflow-hidden">
                     <div class="app-card-header d-flex align-items-center justify-content-between">
                         <div class="d-flex align-items-center gap-2">
-                            <div style="width:4px;height:20px;background:#0d9488;border-radius:4px;"></div>
+                            <div style="width:4px;height:20px;background:#2563EB;border-radius:4px;"></div>
                             <span>Historial de Citas Recientes</span>
                         </div>
                         <a href="{{ route('paciente.citas') }}" class="btn btn-link btn-sm text-decoration-none p-0"
-                           style="color:#0d9488;font-size:0.8rem;">Ver todas →</a>
+                           style="color:#2563EB;font-size:0.8rem;">Ver todas →</a>
                     </div>
                     <div class="table-responsive">
                         <table class="table app-table mb-0">
@@ -239,7 +239,7 @@
                                 <tr>
                                     <td>
                                         <div class="d-flex align-items-center gap-2">
-                                            <div class="avatar-circle text-white" style="width:28px;height:28px;font-size:0.65rem;background:#0d9488;">
+                                            <div class="avatar-circle text-white" style="width:28px;height:28px;font-size:0.65rem;background:#2563EB;">
                                                 {{ strtoupper(substr($cita->medico->user->name,0,1)) }}
                                             </div>
                                             <span class="fw-medium">Dr. {{ $cita->medico->user->name }}</span>
@@ -256,7 +256,7 @@
                                         @if($cita->pago && $cita->pago->estado === 'pendiente')
                                             <a href="{{ route('paciente.pagos') }}" class="btn btn-primary btn-sm">Pagar</a>
                                         @elseif($cita->historialClinico)
-                                            <a href="{{ route('paciente.historial') }}" class="btn btn-link btn-sm p-0" style="color:#0d9488;">Ver historial</a>
+                                            <a href="{{ route('paciente.historial') }}" class="btn btn-link btn-sm p-0" style="color:#2563EB;">Ver historial</a>
                                         @else
                                             <span class="text-muted">—</span>
                                         @endif

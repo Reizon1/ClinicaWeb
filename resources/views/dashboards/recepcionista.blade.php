@@ -27,8 +27,8 @@
         {{-- Header --}}
         <header class="app-topbar justify-content-between">
             <div class="d-flex align-items-center gap-2">
-                <div class="kpi-icon" style="background:#ccfbf1;width:36px;height:36px;border-radius:8px;">
-                    <svg width="18" height="18" fill="none" stroke="#0f766e" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                <div class="kpi-icon" style="background:#EFF6FF;width:36px;height:36px;border-radius:8px;">
+                    <svg width="18" height="18" fill="none" stroke="#2563EB" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                 </div>
                 <div>
                     <h5 class="fw-bold mb-0" style="font-size:0.95rem;">Panel de Recepción</h5>
@@ -36,8 +36,7 @@
                 </div>
             </div>
             <div class="d-flex gap-2">
-                <a href="{{ route('recepcionista.citas.crear') }}" class="btn btn-sm d-flex align-items-center gap-1"
-                   style="background:#0d9488;color:white;">
+                <a href="{{ route('recepcionista.citas.crear') }}" class="btn btn-primary btn-sm d-flex align-items-center gap-1">
                     <svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
                     Nueva Cita
                 </a>
@@ -51,14 +50,14 @@
         <main class="flex-grow-1" style="overflow-y:auto;">
 
             {{-- Hero Banner --}}
-            <div class="px-4 py-4" style="background:linear-gradient(135deg,#0f766e,#0d9488,#0891b2);position:relative;overflow:hidden;">
+            <div class="px-4 py-4" style="background:linear-gradient(135deg,#1e3a8a,#2563EB,#0891b2);position:relative;overflow:hidden;">
                 <div style="position:absolute;top:-30px;right:-30px;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,0.08);pointer-events:none;"></div>
                 <div style="position:absolute;bottom:-20px;left:-20px;width:150px;height:150px;border-radius:50%;background:rgba(255,255,255,0.05);pointer-events:none;"></div>
-                <p class="mb-1" style="color:rgba(204,251,241,0.8);font-size:0.7rem;text-transform:uppercase;letter-spacing:0.1em;font-weight:600;">Clínica Los Mollos</p>
+                <p class="mb-1" style="color:rgba(191,219,254,0.8);font-size:0.7rem;text-transform:uppercase;letter-spacing:0.1em;font-weight:600;">Clínica Los Mollos</p>
                 <h2 class="text-white fw-bold mb-1" style="font-size:1.4rem;">
                     Bienvenida, {{ explode(' ', auth()->user()->name)[0] }}
                 </h2>
-                <p style="color:rgba(204,251,241,0.9);font-size:0.875rem;" class="mb-0">
+                <p style="color:rgba(191,219,254,0.9);font-size:0.875rem;" class="mb-0">
                     @if($citasHoy->count() > 0)
                         Tenés <strong class="text-white">{{ $citasHoy->count() }}</strong> {{ $citasHoy->count() === 1 ? 'cita programada' : 'citas programadas' }} para hoy.
                     @else
@@ -79,12 +78,12 @@
                 {{-- KPIs --}}
                 <div class="row g-3 mb-4">
                     <div class="col-6 col-xl-3">
-                        <div class="kpi-card text-white" style="background:linear-gradient(135deg,#0d9488,#0f766e);">
+                        <div class="kpi-card kpi-gradient-blue text-white">
                             <div class="kpi-icon mb-2" style="background:rgba(255,255,255,0.2);">
                                 <svg width="18" height="18" fill="none" stroke="white" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                             </div>
                             <div class="fw-bold" style="font-size:1.75rem;">{{ $citasHoy->count() }}</div>
-                            <div style="font-size:0.75rem;color:rgba(204,251,241,0.8);">Citas hoy</div>
+                            <div style="font-size:0.75rem;color:rgba(191,219,254,0.9);">Citas hoy</div>
                         </div>
                     </div>
                     <div class="col-6 col-xl-3">
@@ -106,12 +105,12 @@
                         </div>
                     </div>
                     <div class="col-6 col-xl-3">
-                        <div class="kpi-card text-white" style="background:linear-gradient(135deg,#10b981,#0d9488);">
+                        <div class="kpi-card kpi-gradient-green text-white">
                             <div class="kpi-icon mb-2" style="background:rgba(255,255,255,0.2);">
                                 <svg width="18" height="18" fill="none" stroke="white" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
                             </div>
                             <div class="fw-bold" style="font-size:1.75rem;">{{ $medicosDisponibles }}</div>
-                            <div style="font-size:0.75rem;color:rgba(209,250,229,0.8);">Médicos disponibles</div>
+                            <div style="font-size:0.75rem;color:rgba(187,247,208,0.9);">Médicos disponibles</div>
                         </div>
                     </div>
                 </div>
@@ -120,12 +119,12 @@
                 <div class="app-card overflow-hidden">
                     <div class="app-card-header d-flex align-items-center justify-content-between">
                         <div class="d-flex align-items-center gap-2">
-                            <div style="width:4px;height:20px;background:#0d9488;border-radius:4px;"></div>
+                            <div class="section-accent"></div>
                             <span>Agenda de Hoy</span>
-                            <span class="badge rounded-pill" style="background:#ccfbf1;color:#0f766e;">{{ $citasHoy->count() }}</span>
+                            <span class="badge rounded-pill" style="background:#EFF6FF;color:#2563EB;">{{ $citasHoy->count() }}</span>
                         </div>
-                        <a href="{{ route('recepcionista.citas') }}" class="btn btn-link btn-sm text-decoration-none p-0"
-                           style="color:#0d9488;font-size:0.8rem;">Ver todas →</a>
+                        <a href="{{ route('recepcionista.citas') }}" class="btn btn-link btn-sm text-decoration-none p-0 text-primary"
+                           style="font-size:0.8rem;">Ver todas →</a>
                     </div>
                     <div class="table-responsive">
                         <table class="table app-table mb-0">

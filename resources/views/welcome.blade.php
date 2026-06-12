@@ -135,12 +135,12 @@
                 </div>
                 <div class="col-md-4">
                     <div class="service-card bg-white rounded-3 border p-4 h-100 shadow-sm">
-                        <div class="rounded-3 d-flex align-items-center justify-content-center mb-4" style="width:48px;height:48px;background:#f0fdfa;">
-                            <svg width="22" height="22" fill="none" stroke="#0d9488" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17H3a2 2 0 01-2-2V5a2 2 0 012-2h14a2 2 0 012 2v10a2 2 0 01-2 2h-2"/></svg>
+                        <div class="rounded-3 d-flex align-items-center justify-content-center mb-4" style="width:48px;height:48px;background:#EFF6FF;">
+                            <svg width="22" height="22" fill="none" stroke="#2563EB" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17H3a2 2 0 01-2-2V5a2 2 0 012-2h14a2 2 0 012 2v10a2 2 0 01-2 2h-2"/></svg>
                         </div>
                         <h5 class="fw-semibold mb-3">Historial Clínico Digital</h5>
                         <p class="text-muted small mb-4" style="line-height:1.7;">Acceso seguro e inmediato a expedientes médicos, recetas electrónicas y resultados de laboratorio desde cualquier dispositivo.</p>
-                        <a href="#" class="fw-semibold small text-decoration-none d-flex align-items-center gap-1" style="color:#0d9488;">
+                        <a href="#" class="fw-semibold small text-decoration-none d-flex align-items-center gap-1" style="color:#2563EB;">
                             Conocer más
                             <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                         </a>
@@ -164,12 +164,12 @@
     </section>
 
     {{-- MÉDICOS --}}
-    <section id="medicos" class="welcome-section" style="background:#f0fdfa;">
+    <section id="medicos" class="welcome-section" style="background:#EFF6FF;">
         <div class="container">
             <div class="text-center mb-5">
-                <div class="d-inline-flex align-items-center gap-2 rounded-pill px-3 py-2 mb-4 border" style="background:#ccfbf1;border-color:#99f6e4!important;">
-                    <span style="width:6px;height:6px;background:#0d9488;border-radius:50%;display:inline-block;flex-shrink:0;"></span>
-                    <span class="fw-semibold" style="font-size:0.72rem;color:#0f766e;letter-spacing:.04em;">Equipo Médico</span>
+                <div class="d-inline-flex align-items-center gap-2 rounded-pill px-3 py-2 mb-4 border" style="background:#EFF6FF;border-color:#BFDBFE!important;">
+                    <span style="width:6px;height:6px;background:#2563EB;border-radius:50%;display:inline-block;flex-shrink:0;"></span>
+                    <span class="fw-semibold" style="font-size:0.72rem;color:#1d4ed8;letter-spacing:.04em;">Equipo Médico</span>
                 </div>
                 <h2 class="fw-bold mb-3" style="font-size:clamp(1.6rem,3vw,2.2rem);">Conocé a nuestros especialistas</h2>
                 <p class="text-muted mx-auto" style="max-width:520px;line-height:1.7;">Profesionales certificados y disponibles para brindarte la mejor atención médica.</p>
@@ -180,12 +180,12 @@
                 <div class="col-sm-6 col-md-4 col-lg-3">
                     <div class="service-card bg-white rounded-3 border p-4 text-center shadow-sm h-100">
                         <div class="mx-auto mb-3 fw-bold rounded-circle d-flex align-items-center justify-content-center"
-                             style="width:64px;height:64px;font-size:1.5rem;background:linear-gradient(135deg,#0f766e,#0d9488);color:white;">
+                             style="width:64px;height:64px;font-size:1.5rem;background:linear-gradient(135deg,#1d4ed8,#2563EB);color:white;">
                             {{ strtoupper(substr($medico->user->name, 0, 1)) }}
                         </div>
                         <h6 class="fw-semibold mb-1">{{ $medico->user->name }}</h6>
                         <p class="text-muted small mb-3" style="font-size:0.8rem;">{{ $medico->especialidad->nombre ?? '—' }}</p>
-                        <span class="badge rounded-pill" style="background:#f0fdfa;color:#0f766e;border:1px solid #99f6e4;font-size:0.68rem;">
+                        <span class="badge rounded-pill" style="background:#EFF6FF;color:#2563EB;border:1px solid #BFDBFE;font-size:0.68rem;">
                             ✓ Disponible
                         </span>
                         @if($medico->descripcion)
@@ -209,7 +209,7 @@
     </section>
 
     {{-- PLAN PREMIUM --}}
-    <section id="premium" class="welcome-section" style="background:linear-gradient(135deg,#0f766e 0%,#0d9488 60%,#0891b2 100%);">
+    <section id="premium" class="welcome-section" style="background:linear-gradient(135deg,#1e3a8a 0%,#2563EB 60%,#0891b2 100%);">
         <div class="container">
             <div class="row g-5 align-items-center">
                 <div class="col-lg-6 text-white">

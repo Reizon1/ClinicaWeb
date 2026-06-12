@@ -17,8 +17,8 @@
 
         <header class="app-topbar justify-content-between">
             <div class="d-flex align-items-center gap-2">
-                <div class="kpi-icon" style="background:#ccfbf1;width:36px;height:36px;border-radius:8px;">
-                    <svg width="18" height="18" fill="none" stroke="#0f766e" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                <div class="kpi-icon" style="background:#EFF6FF;width:36px;height:36px;border-radius:8px;">
+                    <svg width="18" height="18" fill="none" stroke="#1d4ed8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
                 </div>
                 <div>
                     <h5 class="fw-bold mb-0" style="font-size:0.95rem;">Mis Pagos</h5>
@@ -30,28 +30,28 @@
         <main class="flex-grow-1" style="overflow-y:auto;">
 
             {{-- Hero KPIs --}}
-            <div class="px-4 py-4" style="background:linear-gradient(135deg,#0f766e,#0d9488,#0891b2);position:relative;overflow:hidden;">
+            <div class="px-4 py-4" style="background:linear-gradient(135deg,#1d4ed8,#2563EB,#0284c7);position:relative;overflow:hidden;">
                 <div style="position:absolute;top:-30px;right:-30px;width:180px;height:180px;border-radius:50%;background:rgba(255,255,255,0.08);pointer-events:none;"></div>
                 <div class="row g-3">
                     <div class="col-sm-4">
                         <div class="text-white">
-                            <div style="font-size:0.7rem;color:rgba(204,251,241,0.8);text-transform:uppercase;letter-spacing:0.08em;">Pagos Pendientes</div>
+                            <div style="font-size:0.7rem;color:rgba(191,219,254,0.8);text-transform:uppercase;letter-spacing:0.08em;">Pagos Pendientes</div>
                             <div class="fw-bold" style="font-size:1.75rem;">{{ $pagosPendientes->count() }}</div>
-                            <div style="font-size:0.82rem;color:rgba(204,251,241,0.9);">${{ number_format($pagosPendientes->sum('monto'), 2) }} por pagar</div>
+                            <div style="font-size:0.82rem;color:rgba(191,219,254,0.9);">${{ number_format($pagosPendientes->sum('monto'), 2) }} por pagar</div>
                         </div>
                     </div>
                     <div class="col-sm-4">
                         <div class="text-white">
-                            <div style="font-size:0.7rem;color:rgba(204,251,241,0.8);text-transform:uppercase;letter-spacing:0.08em;">Total Pagado</div>
+                            <div style="font-size:0.7rem;color:rgba(191,219,254,0.8);text-transform:uppercase;letter-spacing:0.08em;">Total Pagado</div>
                             <div class="fw-bold" style="font-size:1.75rem;">${{ number_format($totalPagado, 2) }}</div>
-                            <div style="font-size:0.82rem;color:rgba(204,251,241,0.9);">Historial completo</div>
+                            <div style="font-size:0.82rem;color:rgba(191,219,254,0.9);">Historial completo</div>
                         </div>
                     </div>
                     <div class="col-sm-4">
                         <div class="text-white">
-                            <div style="font-size:0.7rem;color:rgba(204,251,241,0.8);text-transform:uppercase;letter-spacing:0.08em;">Total Facturas</div>
+                            <div style="font-size:0.7rem;color:rgba(191,219,254,0.8);text-transform:uppercase;letter-spacing:0.08em;">Total Facturas</div>
                             <div class="fw-bold" style="font-size:1.75rem;">{{ $pagosPendientes->count() + $pagosCompletados->total() }}</div>
-                            <div style="font-size:0.82rem;color:rgba(204,251,241,0.9);">En tu cuenta</div>
+                            <div style="font-size:0.82rem;color:rgba(191,219,254,0.9);">En tu cuenta</div>
                         </div>
                     </div>
                 </div>
@@ -100,7 +100,7 @@
                 <div class="app-card overflow-hidden">
                     <div class="app-card-header d-flex align-items-center justify-content-between">
                         <div class="d-flex align-items-center gap-2">
-                            <div style="width:4px;height:20px;background:#0d9488;border-radius:4px;"></div>
+                            <div style="width:4px;height:20px;background:#2563EB;border-radius:4px;"></div>
                             <span>Historial de Pagos</span>
                         </div>
                         <span class="badge bg-light text-muted">{{ $pagosCompletados->total() }} registros</span>

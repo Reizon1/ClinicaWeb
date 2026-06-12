@@ -52,18 +52,18 @@
                                 {{-- Day header — click to expand citas --}}
                                 <button type="button"
                                         class="w-100 text-start px-3 py-2 border-bottom border-0 d-flex align-items-center gap-2 justify-content-between"
-                                        style="background:#f0fdfa;cursor:pointer;"
+                                        style="background:#EFF6FF;cursor:pointer;"
                                         data-bs-toggle="collapse"
                                         data-bs-target="#{{ $collapseId }}"
                                         aria-expanded="false"
                                         aria-controls="{{ $collapseId }}">
                                     <div class="d-flex align-items-center gap-2">
-                                        <div style="width:8px;height:8px;background:#0d9488;border-radius:50%;flex-shrink:0;"></div>
+                                        <div style="width:8px;height:8px;background:#2563EB;border-radius:50%;flex-shrink:0;"></div>
                                         <h6 class="fw-bold mb-0 text-capitalize">{{ $dia }}</h6>
                                     </div>
                                     <div class="d-flex align-items-center gap-2">
                                         @if($citasDia->count() > 0)
-                                            <span class="badge rounded-pill" style="background:#0d9488;font-size:0.68rem;">
+                                            <span class="badge rounded-pill" style="background:#2563EB;font-size:0.68rem;">
                                                 {{ $citasDia->count() }} {{ $citasDia->count() === 1 ? 'cita' : 'citas' }}
                                             </span>
                                         @else

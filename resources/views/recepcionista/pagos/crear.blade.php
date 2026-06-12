@@ -91,7 +91,7 @@
                             <label class="form-label fw-semibold small">Método de pago *</label>
                             <div class="row g-2">
                                 @foreach([
-                                    ['efectivo','Efectivo','#0f766e'],
+                                    ['efectivo','Efectivo','#1d4ed8'],
                                     ['stripe','Stripe','#1d4ed8'],
                                     ['paypal','PayPal','#4338ca'],
                                 ] as [$val, $label, $color])
@@ -109,7 +109,7 @@
 
                         <div class="d-flex gap-3 pt-1">
                             <a href="{{ route('recepcionista.citas') }}" class="btn btn-outline-secondary flex-grow-1">Cancelar</a>
-                            <button type="submit" class="btn fw-semibold flex-grow-1 text-white" style="background:#0d9488;">Registrar Pago</button>
+                            <button type="submit" class="btn btn-primary fw-semibold flex-grow-1">Registrar Pago</button>
                         </div>
                     </form>
                 </div>

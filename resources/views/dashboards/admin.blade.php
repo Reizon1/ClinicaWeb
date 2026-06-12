@@ -65,47 +65,51 @@
             {{-- KPIs --}}
             <div class="row g-3 mb-4">
                 <div class="col-6 col-xl-3">
-                    <div class="kpi-card d-flex align-items-center gap-3">
-                        <div class="kpi-icon" style="background:#ccfbf1;">
-                            <svg width="18" height="18" fill="none" stroke="#0d9488" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                    <div class="kpi-card kpi-gradient-blue text-white">
+                        <div class="d-flex align-items-center justify-content-between mb-3">
+                            <div class="kpi-icon" style="background:rgba(255,255,255,0.2);">
+                                <svg width="18" height="18" fill="none" stroke="white" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                            </div>
+                            <span style="font-size:0.68rem;background:rgba(255,255,255,0.15);padding:2px 8px;border-radius:20px;">Total</span>
                         </div>
-                        <div>
-                            <div class="text-muted" style="font-size:0.75rem;">Total Pacientes</div>
-                            <div class="fw-bold fs-4">{{ number_format($totalPacientes) }}</div>
-                        </div>
+                        <div class="fw-bold" style="font-size:2rem;line-height:1;">{{ number_format($totalPacientes) }}</div>
+                        <div style="font-size:0.75rem;color:rgba(191,219,254,0.9);margin-top:4px;">Total Pacientes</div>
                     </div>
                 </div>
                 <div class="col-6 col-xl-3">
-                    <div class="kpi-card d-flex align-items-center gap-3">
-                        <div class="kpi-icon" style="background:#f0fdf4;">
-                            <svg width="18" height="18" fill="none" stroke="#16a34a" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+                    <div class="kpi-card kpi-gradient-green text-white">
+                        <div class="d-flex align-items-center justify-content-between mb-3">
+                            <div class="kpi-icon" style="background:rgba(255,255,255,0.2);">
+                                <svg width="18" height="18" fill="none" stroke="white" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+                            </div>
+                            <span style="font-size:0.68rem;background:rgba(255,255,255,0.15);padding:2px 8px;border-radius:20px;">Activos</span>
                         </div>
-                        <div>
-                            <div class="text-muted" style="font-size:0.75rem;">Médicos Activos</div>
-                            <div class="fw-bold fs-4">{{ number_format($medicosActivos) }}</div>
-                        </div>
+                        <div class="fw-bold" style="font-size:2rem;line-height:1;">{{ number_format($medicosActivos) }}</div>
+                        <div style="font-size:0.75rem;color:rgba(187,247,208,0.9);margin-top:4px;">Médicos Activos</div>
                     </div>
                 </div>
                 <div class="col-6 col-xl-3">
-                    <div class="kpi-card d-flex align-items-center gap-3">
-                        <div class="kpi-icon" style="background:#fff7ed;">
-                            <svg width="18" height="18" fill="none" stroke="#ea580c" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                    <div class="kpi-card kpi-gradient-orange text-white">
+                        <div class="d-flex align-items-center justify-content-between mb-3">
+                            <div class="kpi-icon" style="background:rgba(255,255,255,0.2);">
+                                <svg width="18" height="18" fill="none" stroke="white" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                            </div>
+                            <span style="font-size:0.68rem;background:rgba(255,255,255,0.15);padding:2px 8px;border-radius:20px;">Hoy</span>
                         </div>
-                        <div>
-                            <div class="text-muted" style="font-size:0.75rem;">Citas de Hoy</div>
-                            <div class="fw-bold fs-4">{{ number_format($citasHoy) }}</div>
-                        </div>
+                        <div class="fw-bold" style="font-size:2rem;line-height:1;">{{ number_format($citasHoy) }}</div>
+                        <div style="font-size:0.75rem;color:rgba(254,243,199,0.9);margin-top:4px;">Citas de Hoy</div>
                     </div>
                 </div>
                 <div class="col-6 col-xl-3">
-                    <div class="kpi-card d-flex align-items-center gap-3">
-                        <div class="kpi-icon" style="background:#faf5ff;">
-                            <svg width="18" height="18" fill="none" stroke="#9333ea" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    <div class="kpi-card kpi-gradient-purple text-white">
+                        <div class="d-flex align-items-center justify-content-between mb-3">
+                            <div class="kpi-icon" style="background:rgba(255,255,255,0.2);">
+                                <svg width="18" height="18" fill="none" stroke="white" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            </div>
+                            <span style="font-size:0.68rem;background:rgba(255,255,255,0.15);padding:2px 8px;border-radius:20px;">Total</span>
                         </div>
-                        <div>
-                            <div class="text-muted" style="font-size:0.75rem;">Ingresos (PayPal/Stripe)</div>
-                            <div class="fw-bold fs-4">${{ number_format($ingresos, 2) }}</div>
-                        </div>
+                        <div class="fw-bold" style="font-size:2rem;line-height:1;">${{ number_format($ingresos, 0) }}</div>
+                        <div style="font-size:0.75rem;color:rgba(221,214,254,0.9);margin-top:4px;">Ingresos (Pagos)</div>
                     </div>
                 </div>
             </div>
@@ -121,7 +125,7 @@
                             <div class="d-flex align-items-end gap-1" style="height:140px;">
                                 @foreach($mesesLabels as $label => $num)
                                 <div class="flex-grow-1 d-flex flex-column align-items-center justify-content-end" style="height:100%;">
-                                    <div class="w-100 rounded-top" style="background:#0d9488;height:{{ $datosPorMes[$num] > 0 ? round(($datosPorMes[$num]/$maxV)*100) : 2 }}%;transition:height 0.3s;"></div>
+                                    <div class="w-100 rounded-top" style="background:linear-gradient(180deg,#2563EB,#1d4ed8);height:{{ $datosPorMes[$num] > 0 ? round(($datosPorMes[$num]/$maxV)*100) : 2 }}%;transition:height 0.3s;box-shadow:0 2px 4px rgba(37,99,235,0.3);"></div>
                                     <span class="text-muted mt-1" style="font-size:0.65rem;">{{ $label }}</span>
                                 </div>
                                 @endforeach

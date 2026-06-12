@@ -143,7 +143,7 @@
 
                     <div class="d-flex gap-3">
                         <a href="{{ route('dashboard.recepcionista') }}" class="btn btn-outline-secondary flex-grow-1">Cancelar</a>
-                        <button type="submit" class="btn fw-semibold flex-grow-1 text-white" style="background:#0d9488;">Registrar Paciente</button>
+                        <button type="submit" class="btn btn-primary fw-semibold flex-grow-1">Registrar Paciente</button>
                     </div>
                 </form>
             </div>

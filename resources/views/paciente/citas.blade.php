@@ -26,8 +26,8 @@
 
         <header class="app-topbar justify-content-between">
             <div class="d-flex align-items-center gap-2">
-                <div class="kpi-icon" style="background:#ccfbf1;width:36px;height:36px;border-radius:8px;">
-                    <svg width="18" height="18" fill="none" stroke="#0f766e" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                <div class="kpi-icon" style="background:#EFF6FF;width:36px;height:36px;border-radius:8px;">
+                    <svg width="18" height="18" fill="none" stroke="#1d4ed8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                 </div>
                 <div>
                     <h5 class="fw-bold mb-0" style="font-size:0.95rem;">Mis Citas</h5>
@@ -53,9 +53,9 @@
             @if($proximasCitas->isNotEmpty())
             <div class="mb-4">
                 <h6 class="fw-bold mb-3 d-flex align-items-center gap-2">
-                    <div style="width:4px;height:18px;background:#0d9488;border-radius:4px;"></div>
+                    <div style="width:4px;height:18px;background:#2563EB;border-radius:4px;"></div>
                     Próximas Citas
-                    <span class="badge rounded-pill" style="background:#ccfbf1;color:#0f766e;">{{ $proximasCitas->count() }}</span>
+                    <span class="badge rounded-pill" style="background:#EFF6FF;color:#1d4ed8;">{{ $proximasCitas->count() }}</span>
                 </h6>
                 <div class="row g-3">
                     @foreach($proximasCitas as $cita)
@@ -63,7 +63,7 @@
                         <div class="app-card p-3">
                             <div class="d-flex align-items-center justify-content-between mb-3">
                                 <div class="d-flex align-items-center gap-2">
-                                    <div class="avatar-circle text-white" style="width:40px;height:40px;font-size:0.9rem;background:#0d9488;">
+                                    <div class="avatar-circle text-white" style="width:40px;height:40px;font-size:0.9rem;background:#2563EB;">
                                         {{ strtoupper(substr($cita->medico->user->name,0,1)) }}
                                     </div>
                                     <div>
@@ -77,16 +77,16 @@
                             </div>
                             <div class="d-flex flex-column gap-1 mb-3">
                                 <div class="d-flex align-items-center gap-2 text-muted small">
-                                    <svg width="13" height="13" fill="none" stroke="#0d9488" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                                    <svg width="13" height="13" fill="none" stroke="#2563EB" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                                     {{ $cita->fecha_hora->format('d/m/Y') }}
                                 </div>
                                 <div class="d-flex align-items-center gap-2 text-muted small">
-                                    <svg width="13" height="13" fill="none" stroke="#0d9488" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                    <svg width="13" height="13" fill="none" stroke="#2563EB" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                                     {{ $cita->fecha_hora->format('h:i A') }}
                                 </div>
                                 @if($cita->motivo)
                                 <div class="d-flex align-items-center gap-2 text-muted small">
-                                    <svg width="13" height="13" fill="none" stroke="#0d9488" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"/></svg>
+                                    <svg width="13" height="13" fill="none" stroke="#2563EB" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"/></svg>
                                     {{ Str::limit($cita->motivo, 40) }}
                                 </div>
                                 @endif
@@ -136,7 +136,7 @@
                             <tr>
                                 <td>
                                     <div class="d-flex align-items-center gap-2">
-                                        <div class="avatar-circle text-white" style="width:28px;height:28px;font-size:0.65rem;background:#0d9488;">
+                                        <div class="avatar-circle text-white" style="width:28px;height:28px;font-size:0.65rem;background:#2563EB;">
                                             {{ strtoupper(substr($cita->medico->user->name,0,1)) }}
                                         </div>
                                         <span class="fw-medium">Dr. {{ $cita->medico->user->name }}</span>
@@ -162,7 +162,7 @@
                                 </td>
                                 <td>
                                     @if($cita->historialClinico)
-                                        <a href="{{ route('paciente.historial') }}" class="btn btn-link btn-sm p-0" style="color:#0d9488;font-size:0.8rem;">Ver</a>
+                                        <a href="{{ route('paciente.historial') }}" class="btn btn-link btn-sm p-0" style="color:#2563EB;font-size:0.8rem;">Ver</a>
                                     @else
                                         <span class="text-muted">—</span>
                                     @endif

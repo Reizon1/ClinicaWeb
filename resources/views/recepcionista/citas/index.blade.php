@@ -18,7 +18,7 @@
                 <h5 class="fw-bold mb-0">Gestión de Citas</h5>
                 <p class="text-muted mb-0" style="font-size:0.75rem;">Agenda, reprogramá y cancelá citas médicas</p>
             </div>
-            <a href="{{ route('recepcionista.citas.crear') }}" class="btn btn-sm fw-semibold text-white d-flex align-items-center gap-1" style="background:#0d9488;">
+            <a href="{{ route('recepcionista.citas.crear') }}" class="btn btn-primary btn-sm fw-semibold d-flex align-items-center gap-1">
                 <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
                 Nueva Cita
             </a>
@@ -55,7 +55,7 @@
                             <option value="{{ $m->id }}" {{ request('medico_id')==$m->id?'selected':'' }}>Dr. {{ $m->user->name }}</option>
                         @endforeach
                     </select>
-                    <button type="submit" class="btn btn-sm fw-semibold text-white" style="background:#0d9488;">Buscar</button>
+                    <button type="submit" class="btn btn-primary btn-sm fw-semibold">Buscar</button>
                     @if(request()->hasAny(['buscar','estado','medico_id']))
                         <a href="{{ route('recepcionista.citas') }}" class="btn btn-outline-secondary btn-sm">Limpiar</a>
                     @endif
@@ -102,7 +102,7 @@
                                 @elseif($cita->estado === 'completada')
                                     @if(!$cita->pago)
                                     <a href="{{ route('recepcionista.pagos.crear', $cita) }}"
-                                       class="btn btn-sm fw-semibold text-white d-flex align-items-center gap-1" style="background:#0d9488;font-size:0.72rem;">
+                                       class="btn btn-primary btn-sm fw-semibold d-flex align-items-center gap-1">
                                         <svg width="11" height="11" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
                                         Pagar
                                     </a>
