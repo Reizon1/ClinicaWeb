@@ -75,6 +75,7 @@
                         <option value="efectivo" {{ request('metodo_pago') === 'efectivo' ? 'selected' : '' }}>Efectivo</option>
                         <option value="stripe"   {{ request('metodo_pago') === 'stripe'   ? 'selected' : '' }}>Stripe</option>
                         <option value="paypal"   {{ request('metodo_pago') === 'paypal'   ? 'selected' : '' }}>PayPal</option>
+                        <option value="qr"       {{ request('metodo_pago') === 'qr'       ? 'selected' : '' }}>QR</option>
                     </select>
                     <select name="paciente_id" class="form-select form-select-sm" style="width:auto;" onchange="this.form.submit()">
                         <option value="">Todos los pacientes</option>
@@ -93,27 +94,43 @@
                 <table class="app-table">
                     <thead>
                         <tr>
+                            <th>Factura</th>
                             <th>Fecha</th>
                             <th>Paciente</th>
                             <th>Concepto</th>
                             <th>Monto</th>
                             <th>Método</th>
                             <th>Estado</th>
+                            <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
                         @forelse($pagos as $pago)
                         <tr>
-                            <td class="text-muted">{{ $pago->fecha_pago ? $pago->fecha_pago->format('d/m/Y H:i') : $pago->created_at->format('d/m/Y') }}</td>
-                            <td class="fw-semibold">{{ $pago->paciente->user->name }}</td>
-                            <td class="text-muted">{{ $pago->concepto }}</td>
-                            <td class="fw-bold">${{ number_format($pago->monto, 2) }}</td>
+                            <td class="text-muted" style="font-family:monospace;font-size:0.72rem;">{{ $pago->numero_factura ?? '—' }}</td>
+                            <td class="text-muted small">{{ $pago->fecha_pago ? $pago->fecha_pago->format('d/m/Y H:i') : $pago->created_at->format('d/m/Y') }}</td>
+                            <td>
+                                <div class="fw-semibold small">{{ $pago->paciente->user->name }}</div>
+                                @if($pago->beneficio_premium)
+                                    <span class="badge" style="background:#fef9c3;color:#92400e;font-size:0.65rem;">★ Premio</span>
+                                @endif
+                                @if($pago->descuento_porcentaje > 0)
+                                    <span class="badge" style="background:#dcfce7;color:#166534;font-size:0.65rem;">-{{ $pago->descuento_porcentaje }}%</span>
+                                @endif
+                            </td>
+                            <td class="text-muted small">{{ $pago->concepto }}</td>
+                            <td>
+                                <div class="fw-bold small">${{ number_format($pago->monto, 2) }}</div>
+                                @if($pago->monto_original && $pago->monto_original != $pago->monto)
+                                    <div class="text-muted" style="font-size:0.68rem;text-decoration:line-through;">${{ number_format($pago->monto_original, 2) }}</div>
+                                @endif
+                            </td>
                             <td>
                                 @php
-                                    $metStyles = ['efectivo'=>'background:#EFF6FF;color:#2563EB','stripe'=>'background:#eff6ff;color:#1d4ed8','paypal'=>'background:#eef2ff;color:#4338ca'];
+                                    $metStyles = ['efectivo'=>'background:#EFF6FF;color:#2563EB','stripe'=>'background:#eff6ff;color:#1d4ed8','paypal'=>'background:#eef2ff;color:#4338ca','qr'=>'background:#f0fdf4;color:#166534'];
                                 @endphp
                                 <span class="badge" style="{{ $metStyles[$pago->metodo_pago] ?? 'background:#f3f4f6;color:#374151' }}">
-                                    {{ ucfirst($pago->metodo_pago) }}
+                                    {{ strtoupper($pago->metodo_pago) }}
                                 </span>
                             </td>
                             <td>
@@ -123,6 +140,15 @@
                                 <span class="badge" style="{{ $estStyles[$pago->estado] ?? 'background:#f3f4f6;color:#374151' }}">
                                     {{ ucfirst($pago->estado) }}
                                 </span>
+                            </td>
+                            <td>
+                                @if($pago->numero_factura && $pago->estado === 'completado')
+                                <a href="{{ route('recepcionista.pagos.factura', $pago) }}" class="crud-btn crud-btn-view" title="Descargar Factura PDF">
+                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+                                </a>
+                                @else
+                                <span class="text-muted">—</span>
+                                @endif
                             </td>
                         </tr>
                         @empty

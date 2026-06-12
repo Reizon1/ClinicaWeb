@@ -1,7 +1,10 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminPaymentController;
 use App\Http\Controllers\Admin\ConfiguracionAdminController;
+use App\Http\Controllers\Admin\QrConfigController;
 use App\Http\Controllers\Admin\SuscripcionAdminController;
+use App\Http\Controllers\Paciente\PaymentController;
 use App\Http\Controllers\Recepcionista\PagoController as RecepcionistaPagoController;
 use App\Http\Controllers\Admin\EspecialidadAdminController;
 use App\Http\Controllers\Admin\MedicoAdminController;
@@ -52,6 +55,10 @@ Route::middleware(['auth', 'rol:paciente'])->group(function () {
     Route::get('/paciente/pagos',    [PacienteDashboardController::class, 'misPagos'])->name('paciente.pagos');
     Route::get('/citas/crear', [CitaController::class, 'create'])->name('citas.crear');
     Route::post('/citas',      [CitaController::class, 'store'])->name('citas.store');
+
+    // Checkout de pago (paciente paga directamente)
+    Route::get('/pagos/{cita}/checkout', [PaymentController::class, 'checkout'])->name('paciente.pago.checkout');
+    Route::post('/pagos',                [PaymentController::class, 'store'])->name('paciente.pago.store');
 });
 
 // ── Dashboard Médico ──────────────────────────────────────────────────────────
@@ -68,13 +75,14 @@ Route::middleware(['auth', 'rol:medico'])->group(function () {
     Route::delete('/horarios/{horario}', [HorarioMedicoController::class, 'destroy'])->name('horarios.destroy');
 
     // Historiales clínicos
-    Route::get('/historiales',                       [HistorialClinicoController::class, 'index'])->name('historiales.index');
-    Route::get('/historiales/nuevo',                 [HistorialClinicoController::class, 'create'])->name('historiales.create');
-    Route::post('/historiales',                      [HistorialClinicoController::class, 'store'])->name('historiales.store');
-    Route::get('/historiales/{historial}',           [HistorialClinicoController::class, 'show'])->name('historiales.show');
-    Route::get('/historiales/{historial}/editar',    [HistorialClinicoController::class, 'edit'])->name('historiales.edit');
-    Route::put('/historiales/{historial}',           [HistorialClinicoController::class, 'update'])->name('historiales.update');
-    Route::delete('/historiales/{historial}',        [HistorialClinicoController::class, 'destroy'])->name('historiales.destroy');
+    Route::get('/historiales',                            [HistorialClinicoController::class, 'index'])->name('historiales.index');
+    Route::get('/historiales/nuevo',                      [HistorialClinicoController::class, 'create'])->name('historiales.create');
+    Route::post('/historiales',                           [HistorialClinicoController::class, 'store'])->name('historiales.store');
+    Route::get('/historiales/paciente/{paciente}',        [HistorialClinicoController::class, 'paciente'])->name('historiales.paciente');
+    Route::get('/historiales/{historial}',                [HistorialClinicoController::class, 'show'])->name('historiales.show');
+    Route::get('/historiales/{historial}/editar',         [HistorialClinicoController::class, 'edit'])->name('historiales.edit');
+    Route::put('/historiales/{historial}',                [HistorialClinicoController::class, 'update'])->name('historiales.update');
+    Route::delete('/historiales/{historial}',             [HistorialClinicoController::class, 'destroy'])->name('historiales.destroy');
 
     // Recetas médicas
     Route::get('/recetas',                  [RecetaController::class, 'index'])->name('recetas.index');
@@ -110,10 +118,22 @@ Route::middleware(['auth', 'rol:recepcionista'])->group(function () {
     Route::get('/recepcionista/pagos',                   [RecepcionistaPagoController::class, 'index'])->name('recepcionista.pagos.index');
     Route::get('/recepcionista/pagos/crear/{cita}',      [RecepcionistaPagoController::class, 'create'])->name('recepcionista.pagos.crear');
     Route::post('/recepcionista/pagos',                  [RecepcionistaPagoController::class, 'store'])->name('recepcionista.pagos.store');
+    Route::get('/recepcionista/pagos/{pago}/factura',    [RecepcionistaPagoController::class, 'factura'])->name('recepcionista.pagos.factura');
+
+
+});
+
+// ── Panel de pagos compartido (Admin + Recepcionista) ─────────────────────────
+Route::middleware(['auth', 'rol:admin,recepcionista'])->group(function () {
+    Route::get('/panel/pagos',                 [AdminPaymentController::class, 'index'])->name('admin.pagos.index');
+    Route::patch('/panel/pagos/{pago}/estado', [AdminPaymentController::class, 'updateStatus'])->name('admin.pagos.update-status');
 });
 
 // ── Dashboard Administrador ───────────────────────────────────────────────────
 Route::middleware(['auth', 'rol:admin'])->group(function () {
+    // QR configuration — ADMIN ONLY (recepcionista blocked by this middleware group)
+    Route::get('/admin/config/qr',  [QrConfigController::class, 'show'])->name('admin.config.qr.show');
+    Route::post('/admin/config/qr', [QrConfigController::class, 'store'])->name('admin.config.qr.store');
     Route::get('/dashboard/admin', [AdminDashboardController::class, 'index'])
         ->name('dashboard.admin');
 
@@ -131,6 +151,7 @@ Route::middleware(['auth', 'rol:admin'])->group(function () {
     Route::get('/admin/especialidades',                        [EspecialidadAdminController::class, 'index'])->name('admin.especialidades.index');
     Route::get('/admin/especialidades/crear',                  [EspecialidadAdminController::class, 'create'])->name('admin.especialidades.create');
     Route::post('/admin/especialidades',                       [EspecialidadAdminController::class, 'store'])->name('admin.especialidades.store');
+    Route::get('/admin/especialidades/{especialidad}',         [EspecialidadAdminController::class, 'show'])->name('admin.especialidades.show');
     Route::get('/admin/especialidades/{especialidad}/editar',  [EspecialidadAdminController::class, 'edit'])->name('admin.especialidades.edit');
     Route::put('/admin/especialidades/{especialidad}',         [EspecialidadAdminController::class, 'update'])->name('admin.especialidades.update');
     Route::delete('/admin/especialidades/{especialidad}',      [EspecialidadAdminController::class, 'destroy'])->name('admin.especialidades.destroy');
@@ -146,12 +167,30 @@ Route::middleware(['auth', 'rol:admin'])->group(function () {
     Route::post('/admin/usuarios/{usuario}/rol',         [UsuarioAdminController::class, 'updateRol'])->name('admin.usuarios.rol');
     Route::delete('/admin/usuarios/{usuario}',           [UsuarioAdminController::class, 'destroy'])->name('admin.usuarios.destroy');
 
-    // Reportes
+    // Historiales clínicos (admin — solo lectura + eliminar)
+    Route::get('/admin/historiales',                         [HistorialClinicoController::class, 'index'])->name('admin.historiales.index');
+    Route::get('/admin/historiales/paciente/{paciente}',     [HistorialClinicoController::class, 'paciente'])->name('admin.historiales.paciente');
+    Route::get('/admin/historiales/{historial}',             [HistorialClinicoController::class, 'show'])->name('admin.historiales.show');
+    Route::delete('/admin/historiales/{historial}',          [HistorialClinicoController::class, 'destroy'])->name('admin.historiales.destroy');
+
+    // Citas de todos los médicos (admin calendar)
+    Route::get('/admin/citas', [\App\Http\Controllers\Admin\AdminCitasController::class, 'index'])->name('admin.citas.index');
+
+    // Reportes (PDF)
     Route::get('/admin/reportes', [ReporteAdminController::class, 'index'])->name('admin.reportes.index');
+    Route::get('/admin/reportes/pdf/citas',     [ReporteAdminController::class, 'pdfCitas'])->name('admin.reportes.pdf.citas');
+    Route::get('/admin/reportes/pdf/pacientes', [ReporteAdminController::class, 'pdfPacientes'])->name('admin.reportes.pdf.pacientes');
+    Route::get('/admin/reportes/pdf/pagos',     [ReporteAdminController::class, 'pdfPagos'])->name('admin.reportes.pdf.pagos');
 
     // Configuración
     Route::get('/admin/configuracion',  [ConfiguracionAdminController::class, 'index'])->name('admin.configuracion.index');
     Route::post('/admin/configuracion', [ConfiguracionAdminController::class, 'update'])->name('admin.configuracion.update');
+
+    // QR Pagos — gestión y aprobación
+    Route::get('/admin/pagos-qr',                         [\App\Http\Controllers\Admin\QRPagoAdminController::class, 'index'])->name('admin.pagos.qr.index');
+    Route::patch('/admin/pagos-qr/{pago}/aprobar',        [\App\Http\Controllers\Admin\QRPagoAdminController::class, 'aprobar'])->name('admin.pagos.qr.aprobar');
+    Route::patch('/admin/pagos-qr/{pago}/rechazar',       [\App\Http\Controllers\Admin\QRPagoAdminController::class, 'rechazar'])->name('admin.pagos.qr.rechazar');
+    Route::post('/admin/configuracion/qr',                [\App\Http\Controllers\Admin\QRPagoAdminController::class, 'uploadQR'])->name('admin.qr.upload');
 
     // Suscripciones Premium
     Route::get('/admin/suscripciones',          [SuscripcionAdminController::class, 'index'])->name('admin.suscripciones.index');

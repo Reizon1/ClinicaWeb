@@ -92,20 +92,43 @@ class PacienteDashboardController extends Controller
         $paciente = auth()->user()->paciente
             ?? \App\Models\Paciente::create(['user_id' => auth()->id()]);
 
-        $pagosPendientes = $paciente->pagos()
+        // Upcoming appointments (confirmed/pending) without payment → advance payment
+        $citasProximas = $paciente->citas()
+            ->with(['medico.user', 'especialidad'])
+            ->whereIn('estado', ['confirmada', 'pendiente'])
+            ->where('fecha_hora', '>', now())
+            ->whereDoesntHave('pago')
+            ->orderBy('fecha_hora')
+            ->get();
+
+        // Completed appointments that have NO payment yet
+        $citasSinPago = $paciente->citas()
+            ->with(['medico.user', 'especialidad'])
+            ->where('estado', 'completada')
+            ->whereDoesntHave('pago')
+            ->orderByDesc('fecha_hora')
+            ->get();
+
+        // Payments waiting for admin/receptionist approval
+        $pagosEnRevision = $paciente->pagos()
             ->with(['cita.medico.user', 'cita.especialidad'])
             ->where('estado', 'pendiente')
             ->orderByDesc('created_at')
             ->get();
 
-        $pagosCompletados = $paciente->pagos()
+        // All other payments (approved, rejected, completed, etc.)
+        $pagosHistorial = $paciente->pagos()
             ->with(['cita.medico.user', 'cita.especialidad'])
             ->where('estado', '!=', 'pendiente')
-            ->orderByDesc('fecha_pago')
+            ->orderByDesc('created_at')
             ->paginate(10);
 
-        $totalPagado = $paciente->pagos()->where('estado', 'completado')->sum('monto');
+        $totalPagado = $paciente->pagos()
+            ->whereIn('estado', ['aprobado', 'completado'])
+            ->sum('monto');
 
-        return view('paciente.pagos', compact('paciente', 'pagosPendientes', 'pagosCompletados', 'totalPagado'));
+        return view('paciente.pagos', compact(
+            'paciente', 'citasProximas', 'citasSinPago', 'pagosEnRevision', 'pagosHistorial', 'totalPagado'
+        ));
     }
 }

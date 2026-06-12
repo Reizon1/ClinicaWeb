@@ -4,17 +4,22 @@ namespace App\Http\Controllers;
 
 use App\Models\Cita;
 use App\Models\HistorialClinico;
+use App\Models\Paciente;
 use Illuminate\Http\Request;
 
 class HistorialClinicoController extends Controller
 {
     public function index(Request $request)
     {
-        $medico = auth()->user()->medico;
+        $user = auth()->user();
 
-        $query = HistorialClinico::with(['paciente.user', 'cita'])
-            ->where('medico_id', $medico->id)
+        $query = HistorialClinico::with(['paciente.user', 'medico.user', 'cita'])
             ->orderByDesc('fecha');
+
+        // Doctors only see their own records; admin sees all
+        if ($user->rol === 'medico') {
+            $query->where('medico_id', $user->medico->id);
+        }
 
         if ($request->filled('buscar')) {
             $b = '%' . $request->buscar . '%';
@@ -87,23 +92,43 @@ class HistorialClinicoController extends Controller
         return redirect()->route('historiales.index')->with('success', 'Historial clínico registrado correctamente.');
     }
 
+    public function paciente(Paciente $paciente)
+    {
+        // All doctors + admin can see the full timeline for any patient
+        $historiales = HistorialClinico::with(['medico.user', 'medico.especialidad', 'cita'])
+            ->where('paciente_id', $paciente->id)
+            ->orderByDesc('fecha')
+            ->get();
+
+        $paciente->load('user');
+
+        return view('historiales.paciente', compact('historiales', 'paciente'));
+    }
+
     public function show(HistorialClinico $historial)
     {
-        abort_if($historial->medico_id !== auth()->user()->medico->id, 403);
+        $user = auth()->user();
+        if ($user->rol === 'medico') {
+            abort_if($historial->medico_id !== $user->medico->id, 403);
+        }
         $historial->load(['paciente.user', 'cita', 'medico.especialidad', 'medico.user']);
         return view('historiales.show', compact('historial'));
     }
 
     public function edit(HistorialClinico $historial)
     {
-        abort_if($historial->medico_id !== auth()->user()->medico->id, 403);
+        $user = auth()->user();
+        abort_if($user->rol === 'admin', 403, 'Los administradores no pueden editar historiales directamente.');
+        abort_if($historial->medico_id !== $user->medico->id, 403);
         $historial->load(['paciente.user', 'cita']);
         return view('historiales.edit', compact('historial'));
     }
 
     public function update(Request $request, HistorialClinico $historial)
     {
-        abort_if($historial->medico_id !== auth()->user()->medico->id, 403);
+        $user = auth()->user();
+        abort_if($user->rol === 'admin', 403);
+        abort_if($historial->medico_id !== $user->medico->id, 403);
 
         $request->validate([
             'diagnostico'   => 'required|string|max:1000',
@@ -126,7 +151,9 @@ class HistorialClinicoController extends Controller
 
     public function destroy(HistorialClinico $historial)
     {
-        abort_if($historial->medico_id !== auth()->user()->medico->id, 403);
+        $user = auth()->user();
+        // Doctors cannot delete clinical records — only admins can
+        abort_if($user->rol === 'medico', 403, 'Los médicos no pueden eliminar historiales clínicos.');
         $historial->delete();
         return back()->with('success', 'Historial clínico eliminado correctamente.');
     }

@@ -10,20 +10,30 @@
 <body>
 <div class="d-flex" style="min-height:100vh;overflow:hidden;">
 
-    @include('partials.medico-sidebar', ['activeSection' => 'historiales'])
+    @if(auth()->user()->rol === 'admin')
+        @include('partials.admin-sidebar', ['activeSection' => 'historiales'])
+    @else
+        @include('partials.medico-sidebar', ['activeSection' => 'historiales'])
+    @endif
 
     <div class="flex-grow-1 d-flex flex-column" style="overflow:hidden;">
         <header class="app-topbar justify-content-between">
             <div class="d-flex align-items-center gap-3">
-                <a href="{{ route('historiales.index') }}" class="btn btn-light btn-sm p-2">
+                @if(auth()->user()->rol === 'admin')
+                    <a href="{{ route('admin.historiales.paciente', $historial->paciente) }}" class="btn btn-light btn-sm p-2">
+                @else
+                    <a href="{{ route('historiales.paciente', $historial->paciente) }}" class="btn btn-light btn-sm p-2">
+                @endif
                     <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
                 </a>
                 <div>
-                    <h5 class="fw-bold mb-0">Historial Clínico</h5>
+                    <h5 class="fw-bold mb-0">Detalle de Consulta</h5>
                     <p class="text-muted mb-0" style="font-size:0.75rem;">{{ $historial->paciente->user->name }} – {{ $historial->fecha->format('d/m/Y') }}</p>
                 </div>
             </div>
+            @if(auth()->user()->rol !== 'admin')
             <a href="{{ route('historiales.edit', $historial) }}" class="btn btn-primary btn-sm">Editar</a>
+            @endif
         </header>
 
         <main class="flex-grow-1 p-4" style="overflow-y:auto;">

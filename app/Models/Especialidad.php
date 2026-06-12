@@ -14,10 +14,12 @@ class Especialidad extends Model
         'descripcion',
         'icono',
         'activa',
+        'precio',
     ];
 
     protected $casts = [
-        'activa' => 'boolean',  // convierte 0/1 de la BD a true/false en PHP
+        'activa' => 'boolean',
+        'precio' => 'decimal:2',
     ];
 
     // ── Relaciones ────────────────────────────────────────────────

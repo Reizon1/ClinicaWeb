@@ -126,14 +126,20 @@
                                 @endif
                             </td>
                             <td>
-                                <div class="d-flex gap-3 align-items-center">
-                                    <a href="{{ route('admin.usuarios.show', $usuario) }}" class="text-muted fw-semibold" style="font-size:0.75rem;">Ver</a>
-                                    <a href="{{ route('admin.usuarios.edit', $usuario) }}" class="text-primary fw-semibold" style="font-size:0.75rem;">Editar</a>
+                                <div class="d-flex gap-1 align-items-center">
+                                    <a href="{{ route('admin.usuarios.show', $usuario) }}" class="crud-btn crud-btn-view" title="Ver detalle">
+                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                                    </a>
+                                    <a href="{{ route('admin.usuarios.edit', $usuario) }}" class="crud-btn crud-btn-edit" title="Editar">
+                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                                    </a>
                                     @if($usuario->id !== auth()->id())
                                         <button onclick="abrirModalUsuario('{{ route('admin.usuarios.destroy', $usuario) }}', '{{ addslashes($usuario->name) }}')"
-                                                class="btn btn-link btn-sm p-0 text-danger fw-semibold" style="font-size:0.75rem;">Eliminar</button>
+                                                class="crud-btn crud-btn-delete" title="Eliminar">
+                                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+                                        </button>
                                     @else
-                                        <span class="text-muted">—</span>
+                                        <span class="text-muted" style="font-size:0.72rem;">—</span>
                                     @endif
                                 </div>
                             </td>

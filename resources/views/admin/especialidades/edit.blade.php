@@ -37,6 +37,18 @@
                         <textarea name="descripcion" rows="3" maxlength="500"
                                   class="form-control form-control-sm">{{ old('descripcion', $especialidad->descripcion) }}</textarea>
                     </div>
+                    <div>
+                        <label class="form-label fw-semibold small">Precio de consulta (USD) *</label>
+                        <div class="input-group input-group-sm">
+                            <span class="input-group-text fw-bold">$</span>
+                            <input type="number" name="precio"
+                                   value="{{ old('precio', number_format($especialidad->precio, 2, '.', '')) }}"
+                                   required min="0" max="99999.99" step="0.01"
+                                   class="form-control @error('precio') is-invalid @enderror">
+                            @error('precio')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                        </div>
+                        <p class="text-muted mt-1 mb-0" style="font-size:0.72rem;">Se muestra automáticamente al paciente en el checkout.</p>
+                    </div>
                     <div class="d-flex align-items-center gap-2 rounded-3 p-3" style="background:#f9fafb;">
                         <input type="checkbox" name="activa" id="activa" value="1"
                                class="form-check-input" {{ old('activa', $especialidad->activa) ? 'checked' : '' }}>

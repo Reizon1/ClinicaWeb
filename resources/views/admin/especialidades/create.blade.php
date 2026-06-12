@@ -37,6 +37,17 @@
                         <textarea name="descripcion" rows="3" maxlength="500" placeholder="Describí brevemente la especialidad..."
                                   class="form-control form-control-sm">{{ old('descripcion') }}</textarea>
                     </div>
+                    <div>
+                        <label class="form-label fw-semibold small">Precio de consulta (USD) *</label>
+                        <div class="input-group input-group-sm">
+                            <span class="input-group-text fw-bold">$</span>
+                            <input type="number" name="precio" value="{{ old('precio', '50.00') }}"
+                                   required min="0" max="99999.99" step="0.01" placeholder="0.00"
+                                   class="form-control @error('precio') is-invalid @enderror">
+                            @error('precio')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                        </div>
+                        <p class="text-muted mt-1 mb-0" style="font-size:0.72rem;">Este precio se mostrará automáticamente al paciente en el checkout.</p>
+                    </div>
                     <div class="d-flex gap-3 pt-1">
                         <a href="{{ route('admin.especialidades.index') }}" class="btn btn-outline-secondary flex-grow-1">Cancelar</a>
                         <button type="submit" class="btn btn-primary flex-grow-1 fw-semibold">Crear Especialidad</button>

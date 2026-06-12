@@ -96,11 +96,17 @@
                                     @endif
                                 </td>
                                 <td>
-                                    <div class="d-flex align-items-center gap-2">
-                                        <a href="{{ route('recetas.show', $r) }}" class="btn btn-link btn-sm p-0 text-muted">Ver</a>
-                                        <a href="{{ route('recetas.edit', $r) }}" class="btn btn-link btn-sm p-0 text-primary">Editar</a>
+                                    <div class="d-flex align-items-center gap-1">
+                                        <a href="{{ route('recetas.show', $r) }}" class="crud-btn crud-btn-view" title="Ver receta">
+                                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                                        </a>
+                                        <a href="{{ route('recetas.edit', $r) }}" class="crud-btn crud-btn-edit" title="Editar receta">
+                                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                                        </a>
                                         <button onclick="abrirModalReceta('{{ route('recetas.destroy', $r) }}','{{ addslashes($r->paciente->user->name) }}')"
-                                                class="btn btn-link btn-sm p-0 text-danger">Eliminar</button>
+                                                class="crud-btn crud-btn-delete" title="Eliminar receta">
+                                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+                                        </button>
                                     </div>
                                 </td>
                             </tr>

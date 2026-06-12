@@ -120,6 +120,37 @@
                 </div>
             </div>
 
+            {{-- PDF Downloads --}}
+            <div class="app-card p-4 mb-4">
+                <h6 class="fw-semibold mb-3 d-flex align-items-center gap-2">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+                    Descargar Reportes en PDF
+                </h6>
+                <div class="row g-3">
+                    @foreach([
+                        ['label'=>'Reporte de Citas',    'route'=>'admin.reportes.pdf.citas',     'color'=>'#2563eb'],
+                        ['label'=>'Reporte de Pacientes','route'=>'admin.reportes.pdf.pacientes',  'color'=>'#16a34a'],
+                        ['label'=>'Reporte de Pagos',    'route'=>'admin.reportes.pdf.pagos',      'color'=>'#7c3aed'],
+                    ] as $rep)
+                    <div class="col-md-4">
+                        <form method="GET" action="{{ route($rep['route']) }}" class="d-flex flex-column gap-2 p-3 rounded-3 border" style="background:#fafafa;">
+                            <div class="fw-semibold small" style="color:{{ $rep['color'] }};">{{ $rep['label'] }}</div>
+                            <div class="d-flex gap-2 align-items-center">
+                                <input type="date" name="desde" value="{{ date('Y-01-01') }}" class="form-control form-control-sm">
+                                <span class="text-muted small">–</span>
+                                <input type="date" name="hasta" value="{{ date('Y-12-31') }}" class="form-control form-control-sm">
+                            </div>
+                            <button type="submit" class="btn btn-sm fw-semibold d-flex align-items-center gap-1 justify-content-center"
+                                    style="background:{{ $rep['color'] }};color:#fff;border:none;">
+                                <svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                                Descargar PDF
+                            </button>
+                        </form>
+                    </div>
+                    @endforeach
+                </div>
+            </div>
+
             @if($totalCitas > 0)
             <div class="app-card p-4">
                 <h6 class="fw-semibold mb-3">Resumen de Rendimiento</h6>

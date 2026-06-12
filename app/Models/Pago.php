@@ -11,15 +11,24 @@ class Pago extends Model
         'cita_id',
         'concepto',
         'monto',
-        'metodo_pago',              // 'paypal' | 'stripe' | 'efectivo'
-        'estado',                   // 'pendiente' | 'completado' | 'fallido' | 'reembolsado'
-        'referencia_transaccion',   // ID que devuelve PayPal o Stripe
+        'monto_original',
+        'descuento_porcentaje',
+        'beneficio_premium',
+        'metodo_pago',              // 'qr'|'tarjeta'|'fisico'|'paypal'|'stripe'|'efectivo'
+        'estado',                   // 'pendiente'|'aprobado'|'rechazado'|'completado'|'fallido'
+        'referencia_transaccion',
+        'comprobante_path',
+        'codigo_referencia',
+        'numero_factura',
         'fecha_pago',
     ];
 
     protected $casts = [
-        'monto'      => 'decimal:2',    // siempre 2 decimales (ej: 45.00)
-        'fecha_pago' => 'datetime',
+        'monto'                => 'decimal:2',
+        'monto_original'       => 'decimal:2',
+        'descuento_porcentaje' => 'decimal:2',
+        'beneficio_premium'    => 'boolean',
+        'fecha_pago'           => 'datetime',
     ];
 
     // ── Relaciones ────────────────────────────────────────────────
@@ -30,9 +39,28 @@ class Pago extends Model
         return $this->belongsTo(Paciente::class);
     }
 
+    // Acceso directo al User a través del paciente (helper)
+    public function user()
+    {
+        return $this->hasOneThrough(
+            \App\Models\User::class,
+            Paciente::class,
+            'id',         // FK on pacientes
+            'id',         // FK on users
+            'paciente_id',
+            'user_id'
+        );
+    }
+
     // El pago corresponde a una cita (puede ser nulo)
     public function cita()
     {
         return $this->belongsTo(Cita::class);
+    }
+
+    // Helper: is this payment considered "approved/complete"?
+    public function estaAprobado(): bool
+    {
+        return in_array($this->estado, ['aprobado', 'completado']);
     }
 }

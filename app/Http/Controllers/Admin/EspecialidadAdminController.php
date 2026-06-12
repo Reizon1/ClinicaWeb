@@ -34,18 +34,29 @@ class EspecialidadAdminController extends Controller
         $request->validate([
             'nombre'      => 'required|string|max:100|unique:especialidads,nombre',
             'descripcion' => 'nullable|string|max:500',
+            'precio'      => 'required|numeric|min:0|max:99999.99',
         ], [
             'nombre.required' => 'El nombre de la especialidad es obligatorio.',
             'nombre.unique'   => 'Esta especialidad ya existe.',
+            'precio.required' => 'El precio de la consulta es obligatorio.',
+            'precio.min'      => 'El precio debe ser mayor o igual a 0.',
         ]);
 
         Especialidad::create([
             'nombre'      => $request->nombre,
             'descripcion' => $request->descripcion,
+            'precio'      => $request->precio,
             'activa'      => true,
         ]);
 
         return redirect()->route('admin.especialidades.index')->with('success', 'Especialidad creada correctamente.');
+    }
+
+    public function show(Especialidad $especialidad)
+    {
+        $especialidad->load(['medicos.user']);
+        $totalCitas = $especialidad->citas()->count();
+        return view('admin.especialidades.show', compact('especialidad', 'totalCitas'));
     }
 
     public function edit(Especialidad $especialidad)
@@ -58,14 +69,17 @@ class EspecialidadAdminController extends Controller
         $request->validate([
             'nombre'      => 'required|string|max:100|unique:especialidads,nombre,' . $especialidad->id,
             'descripcion' => 'nullable|string|max:500',
+            'precio'      => 'required|numeric|min:0|max:99999.99',
         ], [
             'nombre.required' => 'El nombre de la especialidad es obligatorio.',
             'nombre.unique'   => 'Esta especialidad ya existe.',
+            'precio.required' => 'El precio de la consulta es obligatorio.',
         ]);
 
         $especialidad->update([
             'nombre'      => $request->nombre,
             'descripcion' => $request->descripcion,
+            'precio'      => $request->precio,
             'activa'      => $request->boolean('activa'),
         ]);
 

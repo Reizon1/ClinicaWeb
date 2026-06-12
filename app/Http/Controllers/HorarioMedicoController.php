@@ -98,7 +98,28 @@ class HorarioMedicoController extends Controller
     public function destroy(HorarioMedico $horario)
     {
         abort_if($horario->medico_id !== auth()->user()->medico->id, 403);
+
+        $diaMap = [
+            'lunes' => 2, 'martes' => 3, 'miércoles' => 4, 'jueves' => 5,
+            'viernes' => 6, 'sábado' => 7, 'domingo' => 1,
+        ];
+        $numeroDia = $diaMap[$horario->dia_semana] ?? null;
+
+        if ($numeroDia) {
+            $citasActivas = \App\Models\Cita::where('medico_id', $horario->medico_id)
+                ->whereIn('estado', ['pendiente', 'confirmada'])
+                ->where('fecha_hora', '>=', now()->startOfDay())
+                ->whereRaw('DAYOFWEEK(fecha_hora) = ?', [$numeroDia])
+                ->whereRaw('TIME(fecha_hora) >= ?', [$horario->hora_inicio])
+                ->whereRaw('TIME(fecha_hora) < ?', [$horario->hora_fin])
+                ->exists();
+
+            if ($citasActivas) {
+                return back()->with('error', 'No se puede eliminar este horario. Hay una cita activa programada para este momento.');
+            }
+        }
+
         $horario->delete();
-        return back()->with('success', 'Horario eliminado.');
+        return back()->with('success', 'Horario eliminado correctamente.');
     }
 }

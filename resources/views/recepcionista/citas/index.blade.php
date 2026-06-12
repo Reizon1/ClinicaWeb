@@ -88,11 +88,15 @@
                             </td>
                             <td>
                                 @if(!in_array($cita->estado, ['completada', 'cancelada']))
-                                <div class="d-flex gap-2 align-items-center">
-                                    <button onclick="toggleReprog(this)" class="btn btn-link btn-sm p-0 text-primary fw-semibold" style="font-size:0.75rem;">Reprogramar</button>
+                                <div class="d-flex gap-1 align-items-center">
+                                    <button onclick="toggleReprog(this)" class="crud-btn crud-btn-reschedule" title="Reprogramar cita">
+                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                                    </button>
                                     <button type="button"
                                             onclick="confirmarCancelarCita('{{ route('recepcionista.citas.cancelar', $cita) }}')"
-                                            class="btn btn-link btn-sm p-0 text-danger fw-semibold" style="font-size:0.75rem;">Cancelar</button>
+                                            class="crud-btn crud-btn-delete" title="Cancelar cita">
+                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+                                    </button>
                                 </div>
                                 <form method="POST" action="{{ route('recepcionista.citas.reprogramar', $cita) }}" class="reprog-form d-none mt-2 d-flex gap-2">
                                     @csrf @method('PATCH')
